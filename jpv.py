@@ -1,6 +1,6 @@
 # coding=utf8
 """
-mal.py - My Anime List Module
+jpv.py - J-Pop and Vocaloid songs
 """
 
 from willie.module import commands,rule
