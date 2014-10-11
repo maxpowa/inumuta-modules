@@ -311,7 +311,8 @@ def title_auto(bot, trigger):
     try:
         results = process_urls(bot, trigger, urls)
     except Exception:
-        safety_check(bot, trigger)
+        pass
+    safety_check(bot, trigger)
     bot.memory['last_seen_url'][trigger.sender] = urls[-1]
     
     if results:
