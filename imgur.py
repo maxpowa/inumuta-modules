@@ -155,7 +155,7 @@ def image(link_id, bot):
         return bot.say('[imgur] [{0} - {1} views]'.format(title, \
                                                                         str(img['views'])))
 
-@rule('.+(?:https?://)?(?:i\.)?imgur\.com/(.*)(?: .+)?')
+@rule('.*(?:i\.)?imgur\.com/(.*)(?: .+)?.*')
 def imgur(bot, trigger):
     """
     Parses the input URL and calls the appropriate function for the resource
@@ -212,7 +212,9 @@ def imgur(bot, trigger):
         return bot.reply("[imgur] Unauthorized action.")
 
     #Separate the URL path into an ordered list of the form ['gallery', 'id']
-    resource_path_parts = filter(None, resource_path.split('/'))
+    resource_path_parts = filter(None, resource_path.split('/'))[-2:]
+    
+    #bot.reply(str(resource_path_parts))
 
     #Handle a simple link to imgur.com: no ID is given, meaning that the length of the above list is null
     if len(resource_path_parts) == 0:
