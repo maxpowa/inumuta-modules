@@ -31,15 +31,20 @@ def ud_search(bot, trigger):
       data = json.loads(response.read())
       #bot.say(str(data))
     try:
-      definition = data['list'][0]['definition']
+      definition = data['list'][0]['definition'].replace('\n', ' ')
     except KeyError:
       bot.say('[UrbanDictionary] Something went wrong bruh')
     except IndexError:
       bot.say('[UrbanDictionary] No results, do you even spell bruh?')
     else:
-      thumbsup = data['list'][0]['thumbs_up']
-      thumbsdown = data['list'][0]['thumbs_down']
-      udoutput = "[UrbanDictionary] %s; %s >> %s %s" % (query, definition, color(str(thumbsup)+'+', u'03'), color(str(thumbsdown)+'-', u'04'))
+      thumbsup = color(str(data['list'][0]['thumbs_up'])+'+', u'03')
+      thumbsdown = color(str(data['list'][0]['thumbs_down'])+'-', u'04')
+      permalink = data['list'][0]['permalink']
+      length = len(thumbsup)+len(thumbsdown)+len(permalink)+35
+      ellipsies = ''
+      if (len(definition)+length) > 445:
+        ellipsies = '...'
+      udoutput = "[UrbanDictionary] %s; %.*s%s | %s >> %s %s" % (query, 445-length, definition, ellipsies, permalink, thumbsup, thumbsdown)
       if not "spam spam" in udoutput:
           bot.say(udoutput)
       else:
