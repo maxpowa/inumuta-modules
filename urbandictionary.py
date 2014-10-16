@@ -1,5 +1,6 @@
 """
-ud.py - A communication tool to aid Europe and USA understand each other in #crude on irc.freenode.net
+urbandictionary.py - Query urbandictionary
+Copyright 2014 Max Gurela
 Copyright 2014, justFen
 Licensed under the Eiffel Forum License 2.
 

@@ -1,5 +1,6 @@
 """
 twitter.py - Willie Twitter Module
+Copyright 2014 Max Gurela
 Copyright 2008-10, Michael Yanovich, opensource.osu.edu/~yanovich/wiki/
 Copyright 2011, Edward Powell, embolalia.net
 Licensed under the Eiffel Forum License 2.

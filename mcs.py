@@ -1,6 +1,9 @@
 # coding=utf8
 """
-mcstatus.py
+mcstatus.py - Check minecraft server status / services related things -- Uses Dinnerbone's python server status lib
+Copyright 2014 Max Gurela
+
+Licensed under the Eiffel Forum License 2.
 """
 
 from mcstatus import MinecraftServer

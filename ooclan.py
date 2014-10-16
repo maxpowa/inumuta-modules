@@ -1,3 +1,10 @@
+"""
+ooclan.py - GG Bot
+Copyright 2014 Max Gurela
+
+Licensed under the Eiffel Forum License 2.
+"""
+
 from willie.module import rule, rate
 import random
 

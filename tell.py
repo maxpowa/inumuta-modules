@@ -1,6 +1,7 @@
 # coding=utf8
 """
 tell.py - Willie Tell and Ask Module
+Copyright 2014 Max Gurela
 Copyright 2008, Sean B. Palmer, inamidst.com
 Licensed under the Eiffel Forum License 2.
 

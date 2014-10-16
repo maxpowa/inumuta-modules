@@ -1,6 +1,9 @@
 # coding=utf8
 """
 modsio.py - Mods.io Willie module
+Copyright 2014 Max Gurela
+
+Licensed under the Eiffel Forum License 2.
 """
 
 from willie import web

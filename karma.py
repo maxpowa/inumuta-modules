@@ -3,6 +3,7 @@
 
 """
 karma.py - A karma module for willie.
+Copyright 2014 Max Gurela
 Copyright 2013, Timothy Lee <marlboromoo@gmail.com>
 Licensed under the MIT License.
 """
@@ -248,7 +249,7 @@ def karma(bot, trigger):
         if trigger.group(2):
             who = trigger.group(2).strip().split()[0]
             karma, reason= get_karma(table, who)
-            bot.say("%s=%s" % (who, karma))
+            bot.say("%s == %s" % (who, karma))
         else:
             bot.say(".karma <nick> - Reports karma status for <nick>.")
     else:

@@ -1,7 +1,9 @@
 # -*- coding: utf8 -*-
 """
 imgur.py - Willie imgur Information Module
+Copyright 2014, Max Gurela
 Copyright © 2014, iceTwy, <icetwy@icetwy.re>
+
 Licensed under the Eiffel Forum License 2.
 """
 

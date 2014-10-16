@@ -15,6 +15,10 @@ Copyright © 2014, Elad Alfassa, <elad@fedoraproject.org>
 Licensed under the Eiffel Forum License 2.
  
 This module uses virustotal.com
+
+Modified by Max Gurela
+Copyright 2014 Max Gurela
+Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
 from __future__ import print_function

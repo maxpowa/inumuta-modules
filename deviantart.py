@@ -1,8 +1,9 @@
 # coding=utf8
 """
-deviantart.py - Deviantart Willie module
+deviantart.py - Deviantart Willie module, Displays additional info about deviantart links
+Copyright 2014 Max Gurela
 
-Displays additional info about deviantart links
+Licensed under the Eiffel Forum License 2.
 """
 
 from willie import web

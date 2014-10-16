@@ -1,3 +1,10 @@
+"""
+fun.py - Just a collection of random commands
+Copyright 2014 Max Gurela
+
+Licensed under the Eiffel Forum License 2.
+"""
+
 from willie import module,web
 from willie.formatting import color
 import json
@@ -10,6 +17,13 @@ from random import randint, choice
 @module.commands('cwd')
 def cwd(bot, trigger):
     bot.say(os.getcwd())
+
+@module.commands('under')
+def underwhere(bot, trigger):
+    if trigger.group(2) == None:
+        return
+    if trigger.group(2).strip() == 'where':
+        bot.say('Under here: https://www.youtube.com/watch?v=_ak4rincQ5Y')
 
 @module.commands('rainbow')
 def rainbow(bot, trigger):

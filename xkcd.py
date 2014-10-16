@@ -4,6 +4,7 @@ xkcd.py - XKCD Module
 Copyright 2010, Michael Yanovich (yanovich.net), and Morgan Goose
 Copyright 2012, Lior Ramati
 Copyright 2013, Edward Powell (embolalia.com)
+Copyright 2014, Max Gurela
 Licensed under the Eiffel Forum License 2.
 
 http://willie.dftba.net

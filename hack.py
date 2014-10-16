@@ -1,6 +1,9 @@
 # coding=utf8
 """
-hack.py - Hacker Module
+hack.py - Pretend you're doing hacker-ish things (based on http://shinytoylabs.com/jargon/)
+Copyright 2014 Max Gurela
+
+Licensed under the Eiffel Forum License 2.
 """
 
 from willie.module import commands

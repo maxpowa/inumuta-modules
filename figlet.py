@@ -1,3 +1,10 @@
+"""
+figlet.py - A simple interface to pyfiglet
+Copyright 2014 Max Gurela
+
+Licensed under the Eiffel Forum License 2.
+"""
+
 from willie.module import commands, rate, thread, NOLIMIT
 from optparse import OptionParser
 from pyfiglet import Figlet,FontNotFound

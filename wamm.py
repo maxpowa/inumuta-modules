@@ -1,3 +1,10 @@
+"""
+wamm.py - #WAMM4LYFE
+Copyright 2014 Max Gurela
+
+Licensed under the Eiffel Forum License 2.
+"""
+
 from willie import module
 
 @module.commands('wammspeak','ts3','ts')

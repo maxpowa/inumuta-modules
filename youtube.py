@@ -4,6 +4,7 @@ youtube.py - Willie YouTube Module
 Copyright 2012, Dimitri Molenaars, Tyrope.nl.
 Copyright © 2012-2014, Elad Alfassa, <elad@fedoraproject.org>
 Copyright 2012, Edward Powell, embolalia.net
+Copyright 2014 Max Gurela
 Licensed under the Eiffel Forum License 2.
 
 http://willie.dfbta.net

@@ -1,6 +1,9 @@
 # coding=utf8
 """
 mal.py - My Anime List Module
+Copyright 2014 Max Gurela
+
+Licensed under the Eiffel Forum License 2.
 """
 
 from willie.module import commands, thread

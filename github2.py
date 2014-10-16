@@ -1,6 +1,11 @@
 # coding=utf8
 """
-github.py - Willie Github Module
+github2.py - Willie Github Module
+Copyright 2014 Max Gurela
+Copyright 2012, Dimitri Molenaars http://tyrope.nl/
+Licensed under the Eiffel Forum License 2.
+
+http://willie.dftba.net/
 """
 
 from willie import web, tools
