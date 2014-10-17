@@ -24,7 +24,7 @@ def ud_search(bot, trigger):
     url = url.replace(u'%25', u'%')
     #bot.say(url)
     try:
-      response = urllib.urlopen(url)
+      response = web.get_urllib_object(url, 20)
     except UnicodeError:
       bot.say('[UrbanDictionary] ENGLISH MOTHERFUCKER, DO YOU SPEAK IT?')
       return
