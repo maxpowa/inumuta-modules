@@ -61,8 +61,8 @@ def magic(bot, trigger):
     """
     .magic [target] - Cast your magic wand!
     """
-    if trigger.group(3):
-        bot.say(u'(\u2229 \u0361\u00B0 \u035C\u0296 \u0361\u00B0)\u2283\u2501\u2606\uFF9F. * \uFF65 \uFF61\uFF9F, * ' + trigger.group(3).strip())
+    if trigger.group(2):
+        bot.say(u'(\u2229 \u0361\u00B0 \u035C\u0296 \u0361\u00B0)\u2283\u2501\u2606\uFF9F. * \uFF65 \uFF61\uFF9F, * ' + trigger.group(2).strip())
     else:
         bot.say(u'(\u2229 \u0361\u00B0 \u035C\u0296 \u0361\u00B0)\u2283\u2501\u2606\uFF9F. * \uFF65 \uFF61\uFF9F, *')
 

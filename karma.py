@@ -222,18 +222,20 @@ def meet_karma(bot, trigger, parse_fun, karma_fun):
             karma_fun(table, who, reason)
             karma, reason= get_karma(table, who)
             if feedback:
-                bot.say("%s=%s" % (who, karma))
+                bot.say("%s == %s" % (who, karma))
 
 ###############################################################################
 # Event & Command
 ###############################################################################
 
+@willie.module.rate(10)
 @willie.module.rule(r'^[\w][\S]+[\+\+]$')
 def meet_promote_karma(bot, trigger):
     """Update karma status for specify IRC user if get '++' message.
     """
     return meet_karma(bot, trigger, parse_promote, promote_karma)
 
+@willie.module.rate(10)
 @willie.module.rule(r'^[\w][\S]+[\-\-]$')
 def meet_demote_karma(bot, trigger):
     """Update karma status for specify IRC user if get '--' message.
