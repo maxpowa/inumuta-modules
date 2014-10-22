@@ -11,28 +11,60 @@ import willie.web as web
 import json
 
 def search(title):
-    request = web.get('http://daraku-mal-api.net/restful-services/anime/JSON/search/'+title.replace(' ', '+'))
-    show = json.loads(request)
-    return show
+    response = '[{}]'
+    if is_integer(title.strip()):
+        response = web.get('https://mal-api.test.ramblingahoge.net/anime/'+title, verify_ssl=False)
+        return json.loads('['+response+']')
+    else:
+        response = web.get('https://mal-api.test.ramblingahoge.net/anime/search?q='+title.replace(' ', '+'), verify_ssl=False)
+        return json.loads(response)
 
+def is_integer(s):
+    try: 
+        int(s)
+        return True
+    except ValueError:
+        return False
+    
 @thread(True)
 @commands('mal', 'myanimelist')
 def mal(bot, trigger):
     """
-    .mal [-s] <show> - Search for information about anime (-s displays synopsis)
+    .mal [-s|-a] <show|id> - Search for information about an anime
+    -s displays synopsis
+    -a lists all search results (if more than one), result formatting: "Title (score|episode count) [id]"
     """ 
     synopsis = False
+    list_results = False
     query = trigger.group(2)
     if trigger.group(3).strip() == '-s':
         synopsis = True
         query = trigger.group(2).replace('-s','',1)
-    result = search(query.strip())
-    show = result[0]
+    elif trigger.group(3).strip() == '-a':
+        list_results = True
+        query = trigger.group(2).replace('-a','',1)
+    shows = search(query.strip())
+    if len(shows) > 1 and list_results:
+        out_list = ['[MAL] Found ', str(len(shows)), ' series matching your search term \'', query.strip(), '\': ']
+        for show in shows:
+            out_list += show['title']
+            out_list += ' ('
+            out_list += str(show['members_score'])
+            out_list += '|'
+            out_list += str(show['episodes'])
+            out_list += ') ['
+            out_list += str(show['id'])
+            out_list += '], '
+        bot.say((''.join(out_list))[:-2])
+        return
+    else:
+        show = shows[0]
+    #bot.say(str(result))
     if not 'id' in show:
         out_list = ['[MAL] Unable to find a show matching \"', trigger.group(2).strip(), '\"']
         bot.say(''.join(out_list))
     else:
-        out_list = ['[MAL] ', show['title'], ' | ', show['type'], ' | Score: ', show['score'], ' | Episodes: ', show['episodes'], ' | http://myanimelist.net/anime/', show['id']]
+        out_list = ['[MAL] ', show['title'], ' | ', show['type'], ' | Score: ', str(show['members_score']), ' | Episodes: ', str(show['episodes']), ' | ', show['classification'], ' | http://myanimelist.net/anime/', str(show['id'])]
         bot.say(''.join(out_list))
         if synopsis:
             bot.say(''.join(['[MAL] Synopsis: ', show['synopsis']]))
