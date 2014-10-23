@@ -201,7 +201,10 @@ def zalgo_cmd(bot, trigger):
     .zalgo [text] - Zalgo-izes text. Will zalgo the word 'zalgo' if no text is given.
     """
     if trigger.group(2):
-        bot.say(''.join(map(mungle, trigger.group(2).decode('utf8'))).encode('utf8'))
+        try:
+            bot.say(''.join(map(mungle, trigger.group(2).decode('utf8'))).encode('utf8'))
+        except UnicodeEncodeError:
+            bot.say(''.join(map(mungle, trigger.group(2).encode('ascii','ignore'))).encode('utf8'))
     else:
         bot.say(''.join(map(mungle, 'zalgo'.decode('utf8'))).encode('utf8'))
 
