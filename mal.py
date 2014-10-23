@@ -13,10 +13,10 @@ import json
 def search(title):
     response = '[{}]'
     if is_integer(title.strip()):
-        response = web.get('https://mal-api.test.ramblingahoge.net/anime/'+title, verify_ssl=False)
+        response = web.get('https://mal-api.test.ramblingahoge.net/anime/'+web.quote(title), verify_ssl=False)
         return json.loads('['+response+']')
     else:
-        response = web.get('https://mal-api.test.ramblingahoge.net/anime/search?q='+title.replace(' ', '+'), verify_ssl=False)
+        response = web.get('https://mal-api.test.ramblingahoge.net/anime/search?q='+web.quote(title), verify_ssl=False)
         return json.loads(response)
 
 def is_integer(s):
@@ -58,10 +58,15 @@ def mal(bot, trigger):
         bot.say((''.join(out_list))[:-2])
         return
     else:
-        show = shows[0]
+        try:
+            show = shows[0]
+        except:
+            out_list = ['[MAL] Unable to find a show matching \"', query.strip(), '\"']
+            bot.say(''.join(out_list))
+            return
     #bot.say(str(result))
     if not 'id' in show:
-        out_list = ['[MAL] Unable to find a show matching \"', trigger.group(2).strip(), '\"']
+        out_list = ['[MAL] Unable to find a show matching \"', query.strip(), '\"']
         bot.say(''.join(out_list))
     else:
         out_list = ['[MAL] ', show['title'], ' | ', show['type'], ' | Score: ', str(show['members_score']), ' | Episodes: ', str(show['episodes']), ' | ', show['classification'], ' | http://myanimelist.net/anime/', str(show['id'])]
