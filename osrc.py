@@ -120,16 +120,19 @@ def os_reportcard(bot, trigger):
     """
     .osrc [nick] - If no nick is given, it will assume your IRC nick.
     """
-    if not trigger.group(3):
-        raw = web.get('http://osrc.dfm.io/'+trigger.nick+'.json')
-        rawjson = json.loads(raw)
-        usage = rawjson['usage']
-        bot.say(format_text(trigger.nick, usage))
-    else:
-        raw = web.get('http://osrc.dfm.io/'+trigger.group(3)+'.json')
-        rawjson = json.loads(raw)
-        usage = rawjson['usage']
-        bot.say(format_text(trigger.group(3), usage))
+    try:
+        if not trigger.group(3):
+            raw = web.get('http://osrc.dfm.io/'+trigger.nick+'.json')
+            rawjson = json.loads(raw)
+            usage = rawjson['usage']
+            bot.say(format_text(trigger.nick, usage))
+        else:
+            raw = web.get('http://osrc.dfm.io/'+trigger.group(3)+'.json')
+            rawjson = json.loads(raw)
+            usage = rawjson['usage']
+            bot.say(format_text(trigger.group(3), usage))
+    except:
+        bot.say('User does not have github account, or has no activity.')
 
 def format_text(user, usage):
     user_vector = usage["week"]
