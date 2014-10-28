@@ -5,18 +5,18 @@ Adapted for use with Willie from https://github.com/infinitylabs/uguubot/blob/ma
 
 Licensed under the Eiffel Forum License 2 (It's GPL compatible!).
 """
-from willie import web
 from willie.module import commands, rule
 from bs4 import BeautifulSoup
 import urllib2
 import re
 import random
+import booruhelper
 
 yandere_cache = []
 
 def refresh_cache():
     "gets a page of random yande.re posts and puts them into a dictionary "
-    url = 'https://yande.re/post?page=%s' % random.randint(1,11000)
+    url = 'https://yande.re/post?tags=rating:safe&page=%s' % random.randint(1,11000)
     soup = get_soup(url)
 
     for result in soup.findAll('li'):
@@ -31,6 +31,13 @@ def refresh_cache():
             yandere_cache.append((result['id'].replace('p',''), rating[0], score[0], tags[0], user, img['href']))
 
 def get_yandere_tags(inp):
+    search = ''
+    if not inp:
+        search = 'rating:safe'
+    else:
+        search = inp.replace(' ','+').replace('explicit','rating:explicit').replace('nsfw','rating:explicit').replace('safe','rating:safe').replace('sfw','rating:safe')
+    if not 'rating:' in search:
+        search += '+rating:safe'
     url = 'https://yande.re/post?tags=%s' % inp.replace(' ','+')
     soup = get_soup(url)
     imagelist = soup.find('ul', {'id': 'post-list-posts'}).findAll('li')
@@ -71,7 +78,7 @@ def yandere(bot, trigger):
         refresh_cache()
 
 def get_soup(url):
-    return BeautifulSoup(web.get(url), 'lxml')
+    return BeautifulSoup(booruhelper.get(url), 'lxml')
 
 def unquote(s):
     return urllib2.unquote(s)

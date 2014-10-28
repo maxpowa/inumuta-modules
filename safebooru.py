@@ -1,15 +1,15 @@
 """
 safebooru.py - People on IRC will love your leggings fetish!
 Copyright 2014 Max Gurela
-Adapted for use with Willie from https://github.com/infinitylabs/uguubot/blob/master/plugins/safebooru.py
+Adapted for use with Willie from https://github.com/infinitylabs/uguubot/blob/master/plugins/gelbooru.py
 
 Licensed under the Eiffel Forum License 2 (It's GPL compatible!).
 """
-from willie import web
 from willie.module import commands, rule
 from bs4 import BeautifulSoup
 import random
 import re
+import booruhelper
 
 safebooru_cache = []
 lastsearch = ''
@@ -18,8 +18,15 @@ def refresh_cache(inp):
     global safebooru_cache
     safebooru_cache = []
     num = 0
+    search = ''
+    if inp == '':
+        search = 'rating:safe'
+    else:
+        search = inp.replace(' ','+').replace('explicit','rating:explicit').replace('nsfw','rating:explicit').replace('safe','rating:safe').replace('sfw','rating:safe')
+    if not 'rating:' in search:
+        search += '+rating:safe'
     search = inp.replace(' ','+').replace('explicit','rating:explicit').replace('nsfw','rating:explicit').replace('safe','rating:safe').replace('sfw','rating:safe')
-    soup = get_soup('http://safebooru.org/index.php?page=dapi&s=post&q=index&limit=20&tags={}'.format(search))
+    soup = get_soup('http://safebooru.org/index.php?page=dapi&s=post&q=index&limit=10&tags={}'.format(search))
     posts = soup.find_all('post')
 
     while num < len(posts):
@@ -29,18 +36,18 @@ def refresh_cache(inp):
     random.shuffle(safebooru_cache)
     return
 
-@commands('gb', 'safebooru')
+@commands('sb', 'safebooru')
 def safebooru(bot, trigger):
     """
     .safebooru <tags> -- Gets a random image, based on given tags from safebooru.org
     """
     global lastsearch
     global safebooru_cache
-
-    if not trigger.group(2):
-        bot.say('You must include tags in your search.')
-        return
-    search = trigger.group(2).strip().lower()
+    
+    if trigger.group(2):
+        search = trigger.group(2).strip().lower()
+    else:
+        search = ''
     if not search in lastsearch or len(safebooru_cache) < 2: refresh_cache(search)
     lastsearch = search
 
@@ -70,4 +77,4 @@ def safebooru_url(bot, trigger):
     bot.say(u'\x02[Safebooru]\x02 Score: \x02{}\x02 | Rating: {} | Tags: {}'.format(score, rating, tags.strip()))
     
 def get_soup(url):
-    return BeautifulSoup(web.get(url), 'lxml')
+    return BeautifulSoup(booruhelper.get(url), 'lxml')

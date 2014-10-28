@@ -5,21 +5,27 @@ Adapted for use with Willie from https://github.com/infinitylabs/uguubot/blob/ma
 
 Licensed under the Eiffel Forum License 2 (It's GPL compatible!).
 """
-from willie import web
 from willie.module import commands, rule
 from bs4 import BeautifulSoup
 import random
 import re
+import booruhelper
 
 gelbooru_cache = []
 lastsearch = ''
 
-def refresh_cache(inp):
+def refresh_cache(bot, inp):
     global gelbooru_cache
     gelbooru_cache = []
     num = 0
-    search = inp.replace(' ','+').replace('explicit','rating:explicit').replace('nsfw','rating:explicit').replace('safe','rating:safe').replace('sfw','rating:safe')
-    soup = get_soup('http://gelbooru.com/index.php?page=dapi&s=post&q=index&limit=20&tags={}'.format(search))
+    search = ''
+    if inp == '':
+        search = 'rating:safe'
+    else:
+        search = inp.replace(' ','+').replace('explicit','rating:explicit').replace('nsfw','rating:explicit').replace('safe','rating:safe').replace('sfw','rating:safe')
+    if not 'rating:' in search:
+        search += '+rating:safe'
+    soup = get_soup('http://gelbooru.com/index.php?page=dapi&s=post&q=index&limit=10&tags={}'.format(search))
     posts = soup.find_all('post')
 
     while num < len(posts):
@@ -37,11 +43,11 @@ def gelbooru(bot, trigger):
     global lastsearch
     global gelbooru_cache
 
-    if not trigger.group(2):
-        bot.say('You must include tags in your search.')
-        return
-    search = trigger.group(2).strip().lower()
-    if not search in lastsearch or len(gelbooru_cache) < 2: refresh_cache(search)
+    if trigger.group(2):
+        search = trigger.group(2).strip().lower()
+    else:
+        search = ''
+    if not search in lastsearch or len(gelbooru_cache) < 2: refresh_cache(bot, search)
     lastsearch = search
 
     if len(gelbooru_cache) == 0: 
@@ -70,4 +76,4 @@ def gelbooru_url(bot, trigger):
     bot.say(u'\x02[Gelbooru]\x02 Score: \x02{}\x02 | Rating: {} | Tags: {}'.format(score, rating, tags.strip()))
     
 def get_soup(url):
-    return BeautifulSoup(web.get(url), 'lxml')
+    return BeautifulSoup(booruhelper.get(url), 'lxml')
