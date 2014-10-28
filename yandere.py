@@ -48,7 +48,7 @@ def get_yandere_tags(inp):
     elif rating == 'Questionable': rating = "\x02\x037Questionable\x03\x02"
     elif rating == 'Safe': rating = "\x02\x033Safe\x03\x02"
 
-    return (u'\x02[Yande.re]\x02 Score: \x02{}\x02 | Rating: {} | Tags: {} | https://yande.re/post/show/{}'.format(score[0], rating, tags[0].strip(), imageid))
+    return (u'\x02[Yande.re]\x02 Score: \x02{}\x02 | Rating: {} | https://yande.re/post/show/{} | Tags: {}'.format(score[0], rating, imageid, tags[0].strip()))
 
 @commands('yandere', 'yande.re')
 def yandere(bot, trigger):
@@ -66,7 +66,7 @@ def yandere(bot, trigger):
     elif rating == 'Questionable': rating = "\x02\x037Questionable\x03\x02"
     elif rating == 'Safe': rating = "\x02\x033Safe\x03\x02"
     
-    bot.say(u'\x02[Yande.re]\x02 Score: \x02{}\x02 | Rating: {} | Tags: {} | https://yande.re/post/show/{}'.format(score, rating, tags, id))
+    bot.say(u'\x02[Yande.re]\x02 Score: \x02{}\x02 | Rating: {} | https://yande.re/post/show/{} | Tags: {}'.format(score, rating, id, tags))
     if len(yandere_cache) < 3:
         refresh_cache()
 
