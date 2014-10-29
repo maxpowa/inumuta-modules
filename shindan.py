@@ -7,6 +7,7 @@ Licensed under the Eiffel Forum License 2.
 
 from willie import web
 from willie.module import commands
+from bs4 import BeautifulSoup
 import re
 import json
 
@@ -19,10 +20,12 @@ def shindan(bot, trigger):
     if (trigger.group(4)):
         name = trigger.group(4)
     data = web.urlencode({'u': name, 'from': ''}).encode('ascii')
-    raw = web.post('http://en.shindanmaker.com/'+trigger.group(3).strip(), data)
+    soup = get_soup(web.post('http://en.shindanmaker.com/'+trigger.group(3).strip(), data))
+    shindan = soup.find(attrs={'class':re.compile("result")})
     try:
-        result = re.search('caption: "(.+)",$', raw[12500:13750].decode('ascii', 'ignore'), re.M).group(1)
-        bot.say(str(result))
+        bot.say(shindan.text.strip())
     except Exception as e:
         bot.say('418 I\'m a teapot')
-        bot.say(str(e))
+
+def get_soup(raw):
+    return BeautifulSoup(raw, 'lxml')
