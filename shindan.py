@@ -7,6 +7,7 @@ Licensed under the Eiffel Forum License 2.
 
 from willie import web
 from willie.module import commands
+import translate
 from bs4 import BeautifulSoup
 import re
 import json
@@ -14,18 +15,42 @@ import json
 @commands('shindan')
 def shindan(bot, trigger):
     """
-    .shindan <id> [name] - Do the shindanmaker thing! (Waifu id: 215100 | Teh_Colt's Drama Gen id: 490953)
+    .shindan <id> [name] - Do the shindanmaker thing! Will automatically translate japanese shindans to english. (Waifu id: 215100 | Teh_Colt's Drama Gen id: 490953)
     """
-    name = trigger.nick
+    if not trigger.group(3) or not trigger.group(3).isdigit() or int(trigger.group(3).strip()) < 2000:
+        bot.say('You must specify a shindanmaker ID (Waifu id: 215100 | Teh_Colt\'s Drama Gen id: 490953)')
+        return
+    
+    name = trigger.nick    
     if (trigger.group(4)):
         name = trigger.group(4)
     data = web.urlencode({'u': name, 'from': ''}).encode('ascii')
-    soup = get_soup(web.post('http://en.shindanmaker.com/'+trigger.group(3).strip(), data))
-    shindan = soup.find(attrs={'class':re.compile("result")})
+    url = follow_redirects('http://en.shindanmaker.com/'+trigger.group(3).strip())
     try:
-        bot.say(shindan.text.strip())
+        soup = get_soup(web.post(url, data))
+        shindan = soup.find(attrs={'class':re.compile("result")})
+        if 'en' in url:
+            bot.say(shindan.text.strip())
+        else:
+            msg, in_lang = translate.translate(shindan.text.strip())
+            if in_lang == 'ja':
+                in_lang = 'Japanese'
+            bot.say('%s (Translated from %s)' % (msg, in_lang))
     except Exception as e:
         bot.say('418 I\'m a teapot')
 
+def follow_redirects(url):
+    """
+    Follow HTTP 3xx redirects, and return the actual URL. Return None if
+    there's a problem.
+    """
+    try:
+        connection = web.get_urllib_object(url, 60)
+        url = connection.geturl() or url
+        connection.close()
+    except:
+        return None
+    return url
+        
 def get_soup(raw):
     return BeautifulSoup(raw, 'lxml')
