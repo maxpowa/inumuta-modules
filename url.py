@@ -310,6 +310,8 @@ def title_auto(bot, trigger):
     """
     if re.match(bot.config.core.prefix + 'title', trigger):
         return
+    if re.match(bot.config.core.prefix + '(?:prem|premium|leech)', trigger):
+        return
     urls = re.findall(url_finder, trigger)
     results = None
     try:
@@ -321,6 +323,9 @@ def title_auto(bot, trigger):
     
     if results:
         for title, domain in results[:4]:
+            if domain == '9gag.com':
+                bot.say('Eww... 9gag')
+                return
             message = '[ %s ] - %s' % (title, domain)
             # Guard against responding to other instances of this bot.
             if message != trigger:
