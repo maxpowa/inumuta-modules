@@ -38,7 +38,10 @@ def shutdown(bot):
 
 def ytget(bot, trigger, uri):
     bytes = web.get(uri)
-    result = json.loads(bytes)
+    try:
+        result = json.loads(bytes)
+    except ValueError:
+        return 'err'
     try:
         if 'feed' in result:
             video_entry = result['feed']['entry'][0]
