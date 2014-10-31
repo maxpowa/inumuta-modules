@@ -37,32 +37,35 @@ def pokedex(bot, trigger):
         bot.notice(u'\u200b', recipient=trigger.nick)
         bot.notice(u'You may use the pokedex to research the following things:', recipient=trigger.nick)
         bot.notice(u' - Pok\u00e9mon         .dex Abra or .dex 63', recipient=trigger.nick)
+        bot.notice(u' - Pok\u00e9mon stats   .dex -s Abra or .dex -s 63', recipient=trigger.nick)
         bot.notice(u' - Pok\u00e9mon moves   .dex move:tackle', recipient=trigger.nick)
         bot.notice(u' - Pok\u00e9mon types   .dex type:psychic', recipient=trigger.nick)
         bot.notice(u' - Items           .dex item:master ball', recipient=trigger.nick)
-        bot.notice(u'For language-specific results, just prepend @<lang code>. (e.g. .dex @en:charge)')
+        bot.notice(u'For language-specific results, just prepend @<lang code>. (e.g. .dex @en:charge)', recipient=trigger.nick)
         return
     
+    query = trigger.group(2).strip();
+    all_stats = (trigger.group(3).lower() == '-s')
+    if all_stats:
+        query = query.replace(trigger.group(3), '').strip()
+    
     ##TODO: REMOVE
-    bot.say(u'[Pok\u00E9dex] There\'s a time and a place for everything. But not now. http://puu.sh/cvW4m/e510f8be5b.jpg')
-    return
+    #bot.say(u'[Pok\u00E9dex] There\'s a time and a place for everything. But not now. http://puu.sh/cvW4m/e510f8be5b.jpg')
+    #return
     ##TODO: REMOVE
     
     url = 'http://veekun.com/dex/lookup?lookup='
     if trigger.group(3).isdigit() and 'pokemon:' not in trigger.group(3):
         url = 'http://veekun.com/dex/lookup?lookup=pokemon:'
     
-    url = follow_redirects(bot, url+trigger.group(2).strip())
+    url = follow_redirects(bot, url+query)
     url = urllib2.unquote(url)
     if not url:
         bot.say(u'[Pok\u00E9dex] Invalid query, please try again.')
         return
     
-    bot.say(url)
-    
     soup = get_soup(url)
     if soup:
-        bot.say(u'[Pok\u00E9dex] Got a response...')
         try:
             crumb = soup.find('ul', id='breadcrumbs').text.lower()
         except:
@@ -72,13 +75,13 @@ def pokedex(bot, trigger):
         if 'moves' in crumb:
             parse_move(bot, soup)
         elif u'pok\u00E9mon' in crumb:
-            parse_poke(bot, soup)
+            parse_poke(bot, soup, all_stats)
         elif 'item' in crumb:
             parse_item(bot, soup)
         elif 'type' in crumb:
             parse_type(bot, soup)
         elif 'disambiguation' in crumb:
-            parse_disambig(bot, soup)
+            parse_disambig(bot, soup, trigger.nick)
         elif 'abilities' in crumb:
             parse_abilities(bot, soup)
         else:
@@ -108,7 +111,7 @@ def parse_move(bot, soup):
     bot.say(u'[Pok\u00E9dex] There\'s a time and place for everything.')
     return
 
-def parse_poke(bot, soup):
+def parse_poke(bot, soup, stats=False):
     pokemon = dict()
     soup = soup.find('div', id='content')
     
@@ -121,9 +124,9 @@ def parse_poke(bot, soup):
     
     part = soup.find('div', class_='dex-column-container')
     pokemon['gen'] = part.find_all('div', class_='dex-column')[0].find_all('dd')[0].find('img').get('alt', '')
-    pokemon['number'] = part.find_all('div', class_='dex-column')[0].find_all('dd')[1].text.replace('\n','').strip()
+    pokemon['number'] = part.find_all('div', class_='dex-column')[0].find_all('dd')[1].text.replace('\n','').strip().zfill(3)
     pokemon['gender'] = part.find_all('div', class_='dex-column')[1].find_all('dd')[0].text.replace('\n','').strip()
-    pokemon['egg_type'] = part.find_all('div', class_='dex-column')[1].find_all('dd')[1].text.replace('\n','').strip()
+    pokemon['egg_types'] = [egg.text for egg in part.find_all('div', class_='dex-column')[1].find('ul', class_='inline-commas').find_all('li')]
     pokemon['steps_hatch'] = ' '.join(part.find_all('div', class_='dex-column')[1].find_all('dd')[3].text.replace('\n','').strip().split())
     pokemon['base_exp'] = part.find_all('div', class_='dex-column')[2].find_all('dd')[0].text.replace('\n','').strip()
     
@@ -135,8 +138,55 @@ def parse_poke(bot, soup):
     pokemon['base_SpDef'] = part.find_all('div', class_='dex-pokemon-stats-bar')[4].text
     pokemon['base_speed'] = part.find_all('div', class_='dex-pokemon-stats-bar')[5].text
     pokemon['base_total'] = part.find_all('div', class_='dex-pokemon-stats-bar')[6].text
-    bot.say(u'[Pok\u00E9dex] Parsed. Formatting...')
-    bot.say(unicode(pokemon))
+    
+    output = []
+    if not stats:
+        output+=u'[Pok\u00E9dex] #'
+        output+=pokemon['number']
+        output+=' '
+        output+=pokemon['name']
+        output+=' | '
+        for type in pokemon['types']:
+            output+=type
+            output+='/'
+        output.pop()
+        output+=' | '
+        for ability in pokemon['abilities']:
+            output+=ability
+            output+='/'
+        output.pop()
+        output+=' | '
+        output+=pokemon['gen']
+        output+=' | '
+        output+=pokemon['gender']
+        output+=' | Egg: '
+        for ability in pokemon['egg_types']:
+            output+=ability
+            output+='/'
+        output.pop()
+    else:
+        output+=u'[Pok\u00E9dex] #'
+        output+=pokemon['number']
+        output+=' '
+        output+=pokemon['name']
+        output+=' | '
+        output+=pokemon['base_exp']
+        output+=' EXP | Speed '
+        output+=pokemon['base_speed']
+        output+=' | '
+        output+=pokemon['base_hp']
+        output+=' HP | Attack '
+        output+=pokemon['base_atk']
+        output+=' | Defense '
+        output+=pokemon['base_def']
+        output+=' | Sp. Atk '
+        output+=pokemon['base_SpAtk']
+        output+=' | Sp. Def '
+        output+=pokemon['base_SpDef']
+        output+=' | Total '
+        output+=pokemon['base_total']
+        
+    bot.say(''.join(output))
     return
 
 def parse_item(bot, soup):
@@ -147,9 +197,17 @@ def parse_type(bot, soup):
     bot.say(u'[Pok\u00E9dex] There\'s a time and place for everything.')
     return
 
-def parse_disambig(bot, soup):
-    bot.say(u'[Pok\u00E9dex] There\'s a time and place for everything.')
-    return
+def parse_disambig(bot, soup, sender=None):
+    soup = soup.find('div', id='content')
+    
+    things = [' '.join(thing.text.replace('\n','').split()) for thing in soup.find('ul', class_="classic-list").find_all('li') ]
+    things = [thing for thing in things if 'Conquest' not in thing]
+    
+    if (len(things) > 10):
+        things = things[:10]
+    bot.say(u'[Pok\u00E9dex] Sorry, I couldn\'t find exactly what you\'re looking for. I did find ' + str(len(things)) + ' possible results though. (transmitted via notice)')
+    if (len(things) > 1):
+        [ bot.notice(' - '+re.sub(r'\(.+\)$', '', thing), recipient=sender) for thing in things ]
     
 def parse_abilities(bot, soup):
     bot.say(u'[Pok\u00E9dex] There\'s a time and place for everything.')
