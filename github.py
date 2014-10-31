@@ -9,7 +9,7 @@ http://willie.dftba.net/
 """
 
 from willie import web, tools
-from willie.module import commands, rule, NOLIMIT
+from willie.module import commands, rule, NOLIMIT, interval
 from willie.formatting import bold
 import sys
 if sys.version_info.major < 3:
@@ -59,3 +59,15 @@ def issue_info(bot, trigger, match=None):
     ]
     bot.say(''.join(response))
     #bot.say(str(data))
+
+@commands('github')
+def cmd_github(bot, trigger):
+    if trigger.group(2):
+        if trigger.group(2).lower() == 'status':
+            current = json.loads(web.get('https://status.github.com/api/status.json'))
+            status = current['status']
+            if status == 'major': status = "\x02\x034Broken\x03\x02"
+            elif status == 'minor': status = "\x02\x037Shakey\x03\x02"
+            elif status == 'good': status = "\x02\x033Online\x03\x02"
+            bot.say('[Github] Current Status: '+status)
+            
