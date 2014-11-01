@@ -69,12 +69,12 @@ def magic(bot, trigger):
 @module.commands('spoiler')
 def reverse(bot, trigger):
     """
-    .spoiler <text> - Create a 'spoiler' that can be read by selecting the text
+    .spoiler <where> <text> - Create a 'spoiler' that can be read by selecting the text
     """
-    if trigger.group(2):
-        bot.say(u'\u202E\u202E' + trigger.group(2))
+    if trigger.group(3):
+        bot.msg(trigger.group(3), u'\u202E\u202E' + trigger.group(2).replace(trigger.group(3), '').strip())
     else:
-        bot.say('You must provide text')
+        bot.say('Usage: .spoiler <where> <text>')
 
 @module.commands('kernel')
 def kernel(bot, trigger):

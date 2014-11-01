@@ -20,8 +20,7 @@ import sys
 def ud_search(bot, trigger):
     query = trigger.group(2).strip()
     
-    url = 'http://api.urbandictionary.com/v0/define?%s' %(web.urlencode({'term': quote(query.encode('utf-8'))}))
-    url = url.replace(u'%25', u'%')
+    url = 'http://api.urbandictionary.com/v0/define?term=%s' %(query.encode('utf-8'))
     #bot.say(url)
     try:
       response = web.get_urllib_object(url, 20)
