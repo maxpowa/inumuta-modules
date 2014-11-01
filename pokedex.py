@@ -8,13 +8,14 @@ Licensed under the Eiffel Forum License 2.
 
 from willie import web
 from willie.module import commands, rule, thread, example
+from util import timing
 from bs4 import BeautifulSoup
 import re
 import urllib2
 
 user_agent = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:17.0) Gecko/17.0' \
              ' Firefox/17.0'
-             
+
 @thread(True)
 @commands('dex','pokedex',u'pok\u00e9dex')
 @example('.pokedex Charmander', '8')
@@ -106,10 +107,37 @@ def follow_redirects(bot, url):
         
 def get_soup(url):
     return BeautifulSoup(web.get(url, headers={'User-Agent':user_agent}), 'lxml')
-    
+
 def parse_move(bot, soup):
-    bot.say(u'[Pok\u00E9dex] There\'s a time and place for everything.')
-    return
+    soup = soup.find('div', id='content')
+    title = soup.find('p', id='dex-page-name').text
+    types = [ img['title'].split(':')[0] for img in soup.find('p', id='dex-page-types').find_all('img') ]
+    
+    summary = soup.find('div', class_='dex-page-beside-portrait').find('p').text
+    
+    soup = soup.find('div', class_='dex-column-container')
+    
+    power = soup.find_all('div', class_='dex-column')[0].find_all('dd')[0].text
+    accuracy = soup.find_all('div', class_='dex-column')[0].find_all('dd')[1].text
+    pp = soup.find_all('div', class_='dex-column')[0].find_all('dd')[2].text
+    target = soup.find_all('div', class_='dex-column')[0].find_all('dd')[3].text
+    effect_chance = soup.find_all('div', class_='dex-column')[0].find_all('dd')[4].text
+    
+    output = [u'[Pok\u00E9dex] ',title,' | ',types[1],'/',types[0],' | ',summary]
+    output+=' | Dmg: '
+    output+=power.split(';')[0].strip()
+    output+=' | Acc: '
+    output+=accuracy.strip()
+    output+=' | PP: '
+    output+=pp.split(',')[0].strip()
+    output+=' | Flags: '
+            
+    flags = [ item.find('a').text for item in soup.find_all('div', class_='dex-column')[1].find('ul').find_all('li') if not item.has_attr('class') ]
+    for flag in flags:
+        output+=flag
+        output+=', '
+    
+    bot.say(''.join(output[:-2]))
 
 def parse_poke(bot, soup, stats=False):
     pokemon = dict()
@@ -190,8 +218,20 @@ def parse_poke(bot, soup, stats=False):
     return
 
 def parse_item(bot, soup):
-    bot.say(u'[Pok\u00E9dex] There\'s a time and place for everything.')
-    return
+    soup = soup.find('div', id='content')
+    title = soup.find('p', id='dex-page-name').text
+    
+    soup = soup.find('div', class_='dex-page-beside-portrait')
+    summary = soup.find('p').text
+    
+    cost = soup.find('dl').find_all('dd')[0].text.strip()
+    flags = [ item.text for item in soup.find('dl').find('ul', class_='classic-list').find_all('li') ]
+    
+    output = [ u'[Pok\u00E9dex] ', title, ' | ', cost, ' | ', summary, ' | Flags: ' ]
+    for flag in flags:
+        output+=flag.lower()
+        output+=', '
+    bot.say(''.join(output[:-2]))
     
 def parse_type(bot, soup):
     soup = soup.find('div', id='content')
