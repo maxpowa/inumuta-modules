@@ -85,7 +85,7 @@ def pokedex(bot, trigger):
         elif 'abilities' in crumb:
             parse_abilities(bot, soup)
         else:
-            bot.say(u'[Pok\u00E9dex] Please return to Professor Oak, you are missing an important software patch. '+crumb)
+            bot.say(u'[Pok\u00E9dex] There is no Pok\u00E9dex function that sufficiently matches what you\'re trying.')
             return
     else:
         bot.say(u'[Pok\u00E9dex] http://puu.sh/cvW4m/e510f8be5b.jpg')
@@ -194,9 +194,52 @@ def parse_item(bot, soup):
     return
     
 def parse_type(bot, soup):
-    bot.say(u'[Pok\u00E9dex] There\'s a time and place for everything.')
-    return
-
+    soup = soup.find('div', id='content')
+    title = soup.find('p', id='dex-page-name').text
+    
+    soup = soup.find('div', class_='dex-page-beside-portrait')
+    dealt = soup.find_all('ul', class_='dex-type-list')[0].find_all('li')
+    taken = soup.find_all('ul', class_='dex-type-list')[1].find_all('li')
+    
+    for i, li in enumerate(dealt):
+        dealt[i] = (li.find('a').find('img').get('title'), li.text.strip())
+    dealt.sort(key=lambda x: x[1])
+    
+    for i, li in enumerate(taken):
+        taken[i] = (li.find('a').find('img').get('title'), li.text.strip())
+    taken.sort(key=lambda x: x[1])
+    
+    red=u'\x034'
+    green=u'\x033'
+    yellow=u'\x038'
+    reset=u'\x03'
+    
+    output = [u'[Pok\u00E9dex] ',title,u' | Legend:',green,' 2x',reset,yellow,u' \xbdx',reset,red,' 0x',reset,' | Damage Dealt: ']
+    for type,value in dealt:
+        if value != '1' and type != title:
+            if value == '0': type = red+type+reset
+            elif value == u'\xbd': type = yellow+type+reset
+            elif value == '2': type = green+type+reset
+            output+=type
+            output+=', '
+    output = output[:-2]
+    output+=' | Damage Taken: '
+    for type,value in taken:
+        if value != '1' and type != title:
+            if value == '0': type = red+type+reset
+            elif value == u'\xbd': type = yellow+type+reset
+            elif value == '2': type = green+type+reset
+            output+=type
+            output+=', '
+            
+    bot.say(''.join(output[:-2]))
+    
+def parse_abilities(bot, soup):
+    soup = soup.find('div', id='content')
+    title = soup.find('p', id='dex-page-name').text
+    summary = re.sub(r'\(.+\)$', '', soup.find('div', class_='dex-page-beside-portrait').find('div', class_="markdown").text)
+    bot.say(u'[Pok\u00E9dex] '+title+': '+summary)
+  
 def parse_disambig(bot, soup, sender=None):
     soup = soup.find('div', id='content')
     
@@ -206,9 +249,4 @@ def parse_disambig(bot, soup, sender=None):
     if (len(things) > 10):
         things = things[:10]
     bot.say(u'[Pok\u00E9dex] Sorry, I couldn\'t find exactly what you\'re looking for. I did find ' + str(len(things)) + ' possible results though. (transmitted via notice)')
-    if (len(things) > 1):
-        [ bot.notice(' - '+re.sub(r'\(.+\)$', '', thing), recipient=sender) for thing in things ]
-    
-def parse_abilities(bot, soup):
-    bot.say(u'[Pok\u00E9dex] There\'s a time and place for everything.')
-    return
+    [ bot.notice(' - '+re.sub(r'\(.+\)$', '', thing), recipient=sender) for thing in things ]
