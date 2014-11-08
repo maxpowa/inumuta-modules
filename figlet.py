@@ -54,9 +54,9 @@ def create_figlet(bot, trigger):
 
     if opts.help:
         if not trigger.is_privmsg:
-            bot.reply("I am sending you a PM of the figlet help")
+            bot.reply("I am sending you a notice of the figlet module help")
         for line in parser.format_help().strip().splitlines():
-            bot.msg(trigger.nick, line)
+            bot.notice(line, recipient=trigger.nick)
         return NOLIMIT
 
     if opts.list_fonts:
@@ -69,9 +69,9 @@ def create_figlet(bot, trigger):
 
     if len(args) == 0:
         if not trigger.is_privmsg:
-            bot.reply("I am sending you a PM of the figlet help")
+            bot.reply("I am sending you a notice of the figlet module help")
         for line in parser.format_help().strip().splitlines():
-            bot.msg(trigger.nick, line)
+            bot.notice(line, recipient=trigger.nick)
         return NOLIMIT
 
     text = ' '.join(args)
