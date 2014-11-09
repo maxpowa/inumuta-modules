@@ -35,16 +35,20 @@ def player_me_regex(bot, trigger):
     data = trigger.group(1)
     if 'feed' in data:
         return
+    
     handle_input(bot, data.split(), trigger)
     
 @rule('.*player\.me/feed/(\d+).*')
 def player_me_feed(bot, trigger):
     url = 'https://player.me/api/v1/feed/'+trigger.group(1)
     
-    raw = web.get(url)
-    response = json.loads(raw)
+    try:
+        raw = web.get(url)
+        response = json.loads(raw)['results']
+    except:
+        return
     
-    bot.say('[Player.me] {}: {} via {}'.format(response['results']['user']['username'], ' '.join(response['results']['data']['post_raw'].split()), response['results']['source']))
+    bot.say('[Player.me] {}: {} via {}'.format(response['user']['username'], ' '.join(response['data']['post_raw'].split()), response['source']))
     
 @timing
 def handle_input(bot, trigger_args, trigger):
