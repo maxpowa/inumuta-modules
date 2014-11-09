@@ -15,24 +15,37 @@ from util import timing
 from optparse import OptionParser
 import json
 
-@rule('.*player\.me/(\w+).*')
+
 @commands('player')
 @example('.player maxpowa')
 @example('.player -g WAMM')
-def player_me(bot, trigger, match=None):
+def player_me(bot, trigger):
     """
     .player [user] - Show information on a Player.me user
     """
-    try:
-        data = trigger.group(2)
-    except IndexError:
-        data = trigger.group(1)
+    data = trigger.group(2)
 
     if not data:
         data = trigger.nick
     
     handle_input(bot, data.split(), trigger)
-
+    
+@rule('.*player\.me/(\w+).*')
+def player_me_regex(bot, trigger):
+    data = trigger.group(1)
+    if 'feed' in data:
+        return
+    handle_input(bot, data.split(), trigger)
+    
+@rule('.*player\.me/feed/(\d+).*')
+def player_me_feed(bot, trigger):
+    url = 'https://player.me/api/v1/feed/'+trigger.group(1)
+    
+    raw = web.get(url)
+    response = json.loads(raw)
+    
+    bot.say('[Player.me] {}: {} via {}'.format(response['results']['user']['username'], ' '.join(response['results']['data']['post_raw'].split()), response['results']['source']))
+    
 @timing
 def handle_input(bot, trigger_args, trigger):
 
