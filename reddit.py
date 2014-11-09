@@ -11,6 +11,7 @@ from __future__ import unicode_literals
 from willie.module import commands, rule, example, NOLIMIT
 from willie.formatting import bold, color, colors
 from willie import tools
+import HTMLParser
 import praw
 import re
 domain = r'https?://(?:www\.|np\.)?reddit\.com'
@@ -64,9 +65,10 @@ def rpost_info(bot, trigger, match=None):
         point_color = colors.RED
 
     percent = color(unicode(s.upvote_ratio * 100) + '%', point_color)
-
+    
+    h = HTMLParser.HTMLParser()
     message = message.format(
-        title=s.title, link=link, nsfw=nsfw, points=s.score, percent=percent,
+        title=h.unescape(s.title), link=link, nsfw=nsfw, points=s.score, percent=percent,
         comments=s.num_comments, author=author)
     bot.say(message)
 
