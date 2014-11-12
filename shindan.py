@@ -29,13 +29,16 @@ def shindan(bot, trigger):
     try:
         soup = get_soup(web.post(url, data))
         shindan = soup.find(attrs={'class':re.compile("result")})
-        if 'en' in url:
-            bot.say(shindan.text.strip())
+        if shindan is None:
+            bot.say('The shindanmaker ID %s does not exist!' % (trigger.group(3).strip(),))
         else:
-            msg, in_lang = translate.translate(shindan.text.strip())
-            if in_lang == 'ja':
-                in_lang = 'Japanese'
-            bot.say('%s (Translated from %s)' % (msg, in_lang))
+            if 'en' in url:
+                bot.say(shindan.text.strip())
+            else:
+                msg, in_lang = translate.translate(shindan.text.strip())
+                if in_lang == 'ja':
+                    in_lang = 'Japanese'
+                bot.say('%s (Translated from %s)' % (msg, in_lang))
     except Exception as e:
         bot.say('418 I\'m a teapot')
 
