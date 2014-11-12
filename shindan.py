@@ -28,7 +28,7 @@ def shindan(bot, trigger):
     url = follow_redirects('http://en.shindanmaker.com/'+trigger.group(3).strip())
     try:
         soup = get_soup(web.post(url, data))
-        shindan = soup.find(attrs={'class':re.compile("result")})
+        shindan = soup.find(class_='result')
         if shindan is None:
             bot.say('The shindanmaker ID %s does not exist!' % (trigger.group(3).strip(),))
         else:
