@@ -18,4 +18,4 @@ def death_event(bot, trigger):
             'https://www.youtube.com/watch?v=5es0NNtSNCU',
             'http://i.imgur.com/FqLvsiE.jpg'
         ]
-        bot.say('gg ' + trigger.group(1).strip()[:1] + u'\u200B' + trigger.group(1).strip()[1:] + ', ' + random.choice(opts))
+        bot.say('gg ' + trigger.group(1).strip()[:1] + u'\u0081' + trigger.group(1).strip()[1:] + ', ' + random.choice(opts))

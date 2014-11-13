@@ -35,7 +35,7 @@ def pokedex(bot, trigger):
     if trigger.group(3).lower() == 'manual':
         bot.action(u'opens the Pok\u00E9dex man pages (transmitted via notice)')
         bot.notice(u'The pok\u00e9dex is operated with two base commands, either .dex or .pokedex', recipient=trigger.nick)
-        bot.notice(u'\u200b', recipient=trigger.nick)
+        bot.notice(u'\u0081', recipient=trigger.nick)
         bot.notice(u'You may use the pokedex to research the following things:', recipient=trigger.nick)
         bot.notice(u' - Pok\u00e9mon         .dex Abra or .dex 63', recipient=trigger.nick)
         bot.notice(u' - Pok\u00e9mon stats   .dex -s Abra or .dex -s 63', recipient=trigger.nick)

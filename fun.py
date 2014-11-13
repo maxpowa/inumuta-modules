@@ -96,6 +96,16 @@ def rimshot(bot, trigger):
     .rimshot - Badum-tiss
     """
     bot.say('*Badumtsss*')
+    
+@module.commands('uwot')
+def uwot(bot, trigger):
+    """
+    .uwot [target] - http://vazkii.us/uwot.ogg
+    """
+    if trigger.group(2):
+        bot.say(trigger.group(2).strip() + ': http://vazkii.us/uwot.ogg')
+    else:
+        bot.reply('http://vazkii.us/uwot.ogg')
 
 @module.commands('swirl')
 def swirl(bot, trigger):

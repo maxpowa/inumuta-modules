@@ -22,7 +22,7 @@ def drama(bot, trigger):
         words = finder.search(raw).group(1).split()
         out = []
         for word in words:
-            out.append(word[:1] + u'\u200B' + word[1:])
+            out.append(word[:1] + u'\u0081' + word[1:])
         bot.say(' '.join(out))
     except Exception:
         bot.say('418 I\'m a teapot')
