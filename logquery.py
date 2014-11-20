@@ -13,7 +13,7 @@ import re
 import socket
 
 from willie.irc import Bot
-from willie.module import commands, OP
+from willie.module import commands, interval, OP
 from willie.tools import stderr
 
 from collections import deque
@@ -110,6 +110,11 @@ def lq_utils(bot, trigger):
         for msg in messages:
             bot.notice(parse_msg(msg), recipient=trigger.nick)
         bot_log = True
+        
+@interval(900)
+def autosave(bot):
+    save_messages(bot)
+    return
         
 def format_msg(msg):
     return u'<{}/{}> {}'.format(msg['nick'], msg['source'], msg['content'])
