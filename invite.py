@@ -1,4 +1,10 @@
+# coding=utf8
+"""
+invite.py - Invite all the things
+Copyright 2014 Max Gurela
 
+Licensed under the Eiffel Forum License 2.
+"""
 
 from willie.module import commands, event, rule, priority, OP
 
