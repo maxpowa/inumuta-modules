@@ -133,6 +133,7 @@ def query_log(bot, query):
     
     if len(matches) == 0:                                                                   # No results, let the user know
         bot.say('[logquery] No results')
+        return
         
     if query[0] == 'count':                                                                 # Show the count
         bot.say(str(len(matches)))      
