@@ -42,6 +42,9 @@ def osu_user(bot, trigger):
     #bot.say(url)
     raw = web.get('https://osu.ppy.sh/api/get_user'+data)
     response = json.loads(raw)
+    if not response:
+        bot.say('['+color('osu!', u'13')+'] '+'Invalid user')
+        return
     if not response[0]:
         bot.say('['+color('osu!', u'13')+'] '+'Invalid user')
         return
