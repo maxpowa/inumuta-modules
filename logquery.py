@@ -13,6 +13,7 @@ import re
 import socket
 
 from willie.irc import Bot
+from willie.tools import Nick, WillieMemory
 from willie.module import commands, interval, OP
 from willie.tools import stderr
 
@@ -65,7 +66,7 @@ def shutdown(bot):
     Bot.log_raw = log_raw                                       # Put back original log_raw
     print('[logquery] Vanilla log_raw successfully injected')
     
-    save_messages(bot)                                          # Save past messages to log
+    save_messages(bot)                                          # Save past messages to log    
 
 @commands('logquery')
 def logquery(bot, trigger):
@@ -99,6 +100,8 @@ def lq_utils(bot, trigger):
         for msg in messages:
             bot.notice(parse_msg(msg), recipient=trigger.nick)
         PAUSE_LOG = False
+    if trigger.group(3) == 'len':
+        bot.reply(str(len(bot.memory['find_lines'][trigger.sender][Nick(trigger.nick)])))
         
 @interval(900)
 def autosave(bot):

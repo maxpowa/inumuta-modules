@@ -28,17 +28,18 @@ def info(genre, title):
     request = web.get('http://jpv.everythingisawesome.us/api/v1/song/'+genre+'/'+title)
     return json.loads(request)
 
-def search(title):
+def search(bot, title):
     request = web.get('http://jpv.everythingisawesome.us/api/v1/list.php?genre=all&format=json')
     songs = json.loads(request)
     for song in songs:
-        if song['title'].lower() == title.lower():
-            return song
+        if song:
+            if song['title'].lower() == title.lower():
+                return song
     return None
 
 @commands('jpv')
 def jpv(bot, trigger): 
-    song = search(trigger.group(2).strip())
+    song = search(bot, trigger.group(2).strip())
     if song is None:
         bot.say('[JPV] Unable to find a song matching \"'+trigger.group(2).strip()+'\"')
     else:

@@ -14,8 +14,8 @@ import datetime
 import willie.tools
 import threading
 import sys
-from willie.tools import Nick, iterkeys
-from willie.module import commands, nickname_commands, rule, priority, example
+from willie.tools import iterkeys
+from willie.module import commands
 
 maximum = 4
 
@@ -30,10 +30,10 @@ def load_notes(fn, lock):
                 line = line.decode('utf-8')
             if line:
                 try:
-                    tellee, teller, verb, timenow, msg = line.split('\t', 4)
+                    tellee, msg = line.split('\t', 1)
                 except ValueError:
                     continue  # @@ hmm
-                result.setdefault(tellee, []).append((teller, verb, timenow, msg))
+                result.setdefault(tellee, []).append(msg)
         f.close()
     finally:
         lock.release()
@@ -48,7 +48,7 @@ def dump_notes(fn, data, lock):
             for remindon in data[tellee]:
                 line = remindon
                 try:
-                    to_write = line + '\n'
+                    to_write = tellee + '\t' + line + '\n'
                     if sys.version_info.major < 3:
                         to_write = to_write.encode('utf-8')
                     f.write(to_write)
@@ -80,7 +80,7 @@ def setup(self):
 
 @commands('note', 'notes')
 def note(bot, trigger):
-    """Give someone a message the next time they're seen"""
+    """ Give someone a message the next time they're seen """
     teller = trigger.nick
     
     if not os.path.exists(bot.note_filename):
