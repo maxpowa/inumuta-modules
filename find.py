@@ -7,7 +7,7 @@ Licensed under the Eiffel Forum License 2.
 
 http://willie.dftba.net
 
-Contributions from: Matt Meinwald and Morgan Goose
+Contributions from: Matt Meinwald, Morgan Goose and Max Gurela
 This module will fix spelling errors if someone corrects them
 using the sed notation (s///) commonly found in vi/vim.
 """
