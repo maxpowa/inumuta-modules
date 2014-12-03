@@ -171,17 +171,20 @@ def ytinfo(bot, trigger, found_match=None):
     video_info = ytget(bot, trigger, uri)
     if video_info is 'err':
         return
-
-    #combine variables and print
-    message = '[You' + color('Tube', colors.WHITE, colors.RED) + ']' + \
-              ' Title: ' + video_info['title'] + \
-              ' | Uploader: ' + video_info['uploader'] + \
-              ' | Uploaded: ' + video_info['uploaded'] + \
-              ' | Duration: ' + video_info['length'] + \
-              ' | Views: ' + video_info['views'] + \
-              ' | Comments: ' + video_info['comments'] + \
-              ' | ' + color(video_info['likes'] + '+',colors.GREEN) + \
-              ' | ' + color(video_info['dislikes'] + '-',colors.RED)
+    
+    try:
+        #combine variables and print
+        message = '[You' + color('Tube', colors.WHITE, colors.RED) + ']' + \
+                  ' Title: ' + video_info['title'] + \
+                  ' | Uploader: ' + video_info['uploader'] + \
+                  ' | Uploaded: ' + video_info['uploaded'] + \
+                  ' | Duration: ' + video_info['length'] + \
+                  ' | Views: ' + video_info['views'] + \
+                  ' | Comments: ' + video_info['comments'] + \
+                  ' | ' + color(video_info['likes'] + '+',colors.GREEN) + \
+                  ' | ' + color(video_info['dislikes'] + '-',colors.RED)
+    except:
+        return
 
     bot.say(HTMLParser().unescape(message))
 

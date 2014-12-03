@@ -12,6 +12,7 @@ from willie.module import commands,rule
 from willie.formatting import color
 import willie.web as web
 import json
+import types
 
 def configure(config):
     """
@@ -49,21 +50,28 @@ def osu_user(bot, trigger):
         bot.say('['+color('osu!', u'13')+'] '+'Invalid user')
         return
     user = response[0]
+    level = 0
+    accuracy = 0
+    try:
+        level = int(float(user['level']))
+        accuracy = int(float(user['accuracy']))
+    except:
+        pass
     output = [
         '[', color('osu!', u'13'), '] ',
-        user['username'],
+        str(user['username']),
         ' | Level ',
-        str(int(float(user['level']))),
+        str(level),
         ' | Rank ',
-        user['pp_rank'],
+        str(user['pp_rank']),
         ' | Play Count ',
-        user['playcount'],
+        str(user['playcount']),
         ' | Ranked Score ',
-        user['ranked_score'],
+        str(user['ranked_score']),
         ' | Total Score ',
-        user['total_score'],
+        str(user['total_score']),
         ' | Accuracy ~',
-        str(int(float(user['accuracy']))),
+        str(accuracy),
         '%'
     ]
     bot.say(''.join(output))
