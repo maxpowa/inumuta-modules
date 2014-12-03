@@ -15,7 +15,7 @@ from __future__ import unicode_literals
 
 import re
 from willie.tools import Nick, WillieMemory
-from willie.module import rule, priority
+from willie.module import rule, priority, thread
 from willie.formatting import bold
 
 
@@ -85,6 +85,7 @@ def collectlines(bot, trigger):
 $					# end of the message
           """)
 @priority('high')
+@thread(True)
 def findandreplace(bot, trigger):
     # Don't bother in PM
     if trigger.is_privmsg:
