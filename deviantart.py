@@ -27,7 +27,10 @@ def get_info(url=None):
 
 @rule('.*https?://((?:.+\.)?deviantart\.com/.*).*')
 def get_page_info(bot, trigger):
-    requested = get_info('http://' + trigger.group(1))
+    try:
+        requested = get_info('http://' + trigger.group(1))
+    except:
+        return
     if not requested:
         bot.say('{} Error:  does not exist.'.format(get_prefix()))
     else:

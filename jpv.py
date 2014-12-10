@@ -28,20 +28,20 @@ def info(genre, title):
     request = web.get('http://jpv.everythingisawesome.us/api/v1/song/'+genre+'/'+title)
     return json.loads(request)
 
-def search(bot, title):
+def search(bot, trigger, title):
     request = web.get('http://jpv.everythingisawesome.us/api/v1/list.php?genre=all&format=json')
     songs = json.loads(request)
+    found_songs = 0
     for song in songs:
         if song:
             if song['title'].lower() == title.lower():
-                return song
-    return None
+                found_songs = found_songs + 1
+                bot.say('[JPV] ' + song['artist'] + ' - ' + song['title'] + ' | ' + song['album'] + ' | ' + song['album_artist'] + ' | ' + song['genre'] + ' | http://jpv.everythingisawesome.us/song/?song={}'.format(song['filename'].replace('.mp3', '')))
+    if found_songs == 0:
+        bot.say('[JPV] Unable to find a song matching \"'+trigger.group(2).strip()+'\"')
 
 @commands('jpv')
 def jpv(bot, trigger): 
-    song = search(bot, trigger.group(2).strip())
-    if song is None:
-        bot.say('[JPV] Unable to find a song matching \"'+trigger.group(2).strip()+'\"')
-    else:
-        bot.say('[JPV] ' + song['artist'] + ' - ' + song['title'] + ' | ' + song['album'] + ' | ' + song['album_artist'] + ' | ' + song['genre'] + ' | http://jpv.everythingisawesome.us/song/?song={}'.format(song['filename'].replace('.mp3', '')))
+    search(bot, trigger, trigger.group(2).strip())
+        
 
