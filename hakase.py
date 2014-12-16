@@ -5,10 +5,10 @@ Copyright 2014, Max Gurela http://everythingisawesome.us
 Licensed under the Eiffel Forum License 2.
 """
 
-from willie.module import commands
+from willie.module import commands, rule
 
-@commands('hakase', 'hakasie', 'nano')
-def nano_hakase(bot, trigger):
+@commands('hakasie')
+def hakasie(bot, trigger):
     """
     Nano: HAKASEHAKASEHAKASEHAKASE
     Hakase: NANONANONANONANO
@@ -17,3 +17,13 @@ def nano_hakase(bot, trigger):
         bot.say(trigger.group(2).strip() + ': https://www.youtube.com/embed/5MJQhe6XdWg?autoplay=1')
     else:
         bot.reply('https://www.youtube.com/embed/5MJQhe6XdWg?autoplay=1')
+
+@rule('(HAKASE|hakase){3,}')
+@commands('hakase')
+def nano(bot, trigger):
+    bot.reply('NANONANONANONANONANONANO')
+    
+@rule('(NANO|nano){3,}')
+@commands('nano')
+def hakase(bot, trigger):
+    bot.reply('HAKASEHAKASEHAKASEHAKASEHAKASEHAKASE')

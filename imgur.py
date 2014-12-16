@@ -80,13 +80,16 @@ def album(link_id, bot):
     The bot will output the title, the number of images and the number of views
     of the album.
     """
-    client = ImgurClient(bot.config.imgur.client_id)
-    api_response = client.resource('album', link_id)
-    album = api_response['data']
-    return bot.say('[imgur] [{0} - {1} images, ' \
-                   '{2} views]'.format(album['title'],
-                                       str(album['images_count']), \
-                                       str(album['views'])))
+    try:
+        client = ImgurClient(bot.config.imgur.client_id)
+        api_response = client.resource('album', link_id)
+        album = api_response['data']
+        return bot.say('[imgur] [{0} - {1} images, ' \
+                       '{2} views]'.format(album['title'],
+                                           str(album['images_count']), \
+                                           str(album['views'])))
+    except:
+        return
 
 def gallery(link_id, bot):
     """
@@ -94,27 +97,30 @@ def gallery(link_id, bot):
     The bot will output the title, the type (image/album/gif), the number of
     views, the number of upvotes/downvotes of the gallery resource.
     """
-    client = ImgurClient(bot.config.imgur.client_id)
-    api_response = client.resource('gallery', link_id)
-    gallery = api_response['data']
-    if gallery['is_album']:
-        return bot.say('[imgur] [{0} - {1} views ' \
-                       '({2}+ and {3}-)]'.format(gallery['title'], \
-                                                         str(gallery['views']), \
-                                                         str(gallery['ups']), \
-                                                         str(gallery['downs'])))
-    if gallery['animated'] == True:
-        return bot.say('[imgur] [{0} - {1} views ' \
-                       '({2}+ and {3}-)]'.format(gallery['title'], \
-                                                         str(gallery['views']), \
-                                                         str(gallery['ups']), \
-                                                         str(gallery['downs'])))
-    else:
-        return bot.say('[imgur] [{0} - {1} views ' \
-                       '({2}+ and {3}-)]'.format(gallery['title'], \
-                                                         str(gallery['views']),
-                                                         str(gallery['ups']),
-                                                         str(gallery['downs'])))
+    try:
+        client = ImgurClient(bot.config.imgur.client_id)
+        api_response = client.resource('gallery', link_id)
+        gallery = api_response['data']
+        if gallery['is_album']:
+            return bot.say('[imgur] [{0} - {1} views ' \
+                           '({2}+ and {3}-)]'.format(gallery['title'], \
+                                                             str(gallery['views']), \
+                                                             str(gallery['ups']), \
+                                                             str(gallery['downs'])))
+        if gallery['animated'] == True:
+            return bot.say('[imgur] [{0} - {1} views ' \
+                           '({2}+ and {3}-)]'.format(gallery['title'], \
+                                                             str(gallery['views']), \
+                                                             str(gallery['ups']), \
+                                                             str(gallery['downs'])))
+        else:
+            return bot.say('[imgur] [{0} - {1} views ' \
+                           '({2}+ and {3}-)]'.format(gallery['title'], \
+                                                             str(gallery['views']),
+                                                             str(gallery['ups']),
+                                                             str(gallery['downs'])))
+    except:
+        return
 
 def user(username, bot):
     """
@@ -122,18 +128,21 @@ def user(username, bot):
     The bot will output the name, and the numbers of submissions, comments and
     liked resources, of the selected user.
     """
-    client = ImgurClient(bot.config.imgur.client_id)
-    api_response_account = client.resource('account', username)
-    api_response_gallery_profile = client.resource('account', username + '/gallery_profile')
-    account = api_response_account['data']
-    gallery_profile = api_response_gallery_profile['data']
-    return bot.say('[imgur] [{0} | {1} rep, ' \
-                   '{2} gallery submissions, {3} comments ' \
-                   'and {4} likes]'.format(account['url'], \
-                                           str(account['reputation']), \
-                                           str(gallery_profile['total_gallery_submissions']), \
-                                           str(gallery_profile['total_gallery_comments']), \
-                                           str(gallery_profile['total_gallery_likes'])))
+    try:
+        client = ImgurClient(bot.config.imgur.client_id)
+        api_response_account = client.resource('account', username)
+        api_response_gallery_profile = client.resource('account', username + '/gallery_profile')
+        account = api_response_account['data']
+        gallery_profile = api_response_gallery_profile['data']
+        return bot.say('[imgur] [{0} | {1} rep, ' \
+                       '{2} gallery submissions, {3} comments ' \
+                       'and {4} likes]'.format(account['url'], \
+                                               str(account['reputation']), \
+                                               str(gallery_profile['total_gallery_submissions']), \
+                                               str(gallery_profile['total_gallery_comments']), \
+                                               str(gallery_profile['total_gallery_likes'])))
+    except:
+        return
 
 def image(link_id, bot):
     """
@@ -141,21 +150,22 @@ def image(link_id, bot):
     The bot will output the title, the type (image/gif) and the number of views
     of the selected image.
     """
-    client = ImgurClient(bot.config.imgur.client_id)
-    api_response = client.resource('image', link_id)
-    img = api_response['data']
-    if img['title']:
-        title = img['title']
-    if not img['title'] and img['description']:
-        title = img['description']
-    if not img['title'] and not img['description']:
-        title = 'untitled'
-    if img['animated']:
-        return bot.say('[imgur] [{0} - {1} views]'.format(title, \
-                                                                     str(img['views'])))
-    else:
-        return bot.say('[imgur] [{0} - {1} views]'.format(title, \
-                                                                        str(img['views'])))
+    try:
+        client = ImgurClient(bot.config.imgur.client_id)
+        api_response = client.resource('image', link_id)
+        img = api_response['data']
+        if img['title']:
+            title = img['title']
+        if not img['title'] and img['description']:
+            title = img['description']
+        if not img['title'] and not img['description']:
+            title = 'untitled'
+        if img['animated']:
+            return bot.say('[imgur] [{0} - {1} views]'.format(title, str(img['views'])))
+        else:
+            return bot.say('[imgur] [{0} - {1} views]'.format(title, str(img['views'])))
+    except:
+        return
 
 @rule('.*(?:i\.)?imgur\.com/(.*)(?: .+)?.*')
 def imgur(bot, trigger):

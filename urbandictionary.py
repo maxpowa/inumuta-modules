@@ -9,7 +9,7 @@ http://justfen.com
 
 import re
 from willie import web
-from willie.module import commands, example
+from willie.module import commands, example, VOICE
 from willie.formatting import color
 from urllib2 import quote
 import json
@@ -23,30 +23,36 @@ def ud_search(bot, trigger):
     url = 'http://api.urbandictionary.com/v0/define?term=%s' %(query.encode('utf-8'))
     #bot.say(url)
     try:
-      response = web.get_urllib_object(url, 20)
+        response = web.get_urllib_object(url, 20)
     except UnicodeError:
-      bot.say('[UrbanDictionary] ENGLISH MOTHERFUCKER, DO YOU SPEAK IT?')
-      return
+        bot.say('[UrbanDictionary] ENGLISH MOTHERFUCKER, DO YOU SPEAK IT?')
+        return
     else:
-      data = json.loads(response.read())
-      #bot.say(str(data))
+        data = json.loads(response.read())
+        #bot.say(str(data))
     try:
-      definition = data['list'][0]['definition'].replace('\n', ' ')
+        definition = data['list'][0]['definition'].replace('\n', ' ')
     except KeyError:
-      bot.say('[UrbanDictionary] Something went wrong bruh')
+        bot.say('[UrbanDictionary] Something went wrong bruh')
     except IndexError:
-      bot.say('[UrbanDictionary] No results, do you even spell bruh?')
+        bot.say('[UrbanDictionary] No results, do you even spell bruh?')
     else:
-      thumbsup = color(str(data['list'][0]['thumbs_up'])+'+', u'03')
-      thumbsdown = color(str(data['list'][0]['thumbs_down'])+'-', u'04')
-      permalink = data['list'][0]['permalink']
-      length = len(thumbsup)+len(thumbsdown)+len(permalink)+35
-      ellipsies = ''
-      if (len(definition)+length) > 445:
-        ellipsies = '...'
-      udoutput = "[UrbanDictionary] %s; %.*s%s | %s >> %s %s" % (query, 445-length, definition, ellipsies, permalink, thumbsup, thumbsdown)
-      if not "spam spam" in udoutput:
-          bot.say(udoutput)
-      else:
-          bot.say('[UrbanDictionary] Negative ghostrider')
+        thumbsup = color(str(data['list'][0]['thumbs_up'])+'+', u'03')
+        thumbsdown = color(str(data['list'][0]['thumbs_down'])+'-', u'04')
+        permalink = data['list'][0]['permalink']
+        length = len(thumbsup)+len(thumbsdown)+len(permalink)+35
+        ellipsies = ''
+        if (len(definition)+length) > 445:
+          ellipsies = '...'
+        udoutput = "[UrbanDictionary] %s; %.*s%s | %s >> %s %s" % (query, 445-length, definition, ellipsies, permalink, thumbsup, thumbsdown)
+        if not "spam spam" in udoutput:
+            if bot.privileges[trigger.sender][trigger.nick] < VOICE:
+                bot.notice(udoutput, recipient=trigger.nick)
+            else:
+                bot.say(udoutput)
+        else:
+            if bot.privileges[trigger.sender][trigger.nick] < VOICE:
+                bot.notice('[UrbanDictionary] Negative ghostrider', recipient=trigger.nick)
+            else:
+                bot.say('[UrbanDictionary] Negative ghostrider')
 

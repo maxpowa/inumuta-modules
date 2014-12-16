@@ -90,7 +90,7 @@ def gettweet(willie, trigger, found_match=None):
             willie.say('[Twitter] ' + twituser + ": " + h.unescape(str(status.text).replace('\n', ' ')))
     except:
         willie.reply("You have inputted an invalid user.")
-gettweet.commands = ['twit']
+gettweet.commands = ['twit','twitter']
 gettweet.priority = 'medium'
 gettweet.example = '.twit aplusk [tweetNum] or .twit 381982018927853568'
 
@@ -117,7 +117,7 @@ def f_info(willie, trigger):
         willie.reply("@" + str(twituser) + ": " + str(name) + ". " + "ID: " + str(id) + ". Friend Count: " + friendcount + ". Followers: " + followers + ". Favourites: " + str(favourites) + ". Location: " + str(location) + ". Description: " + str(description))
     except:
         willie.reply("You have inputted an invalid user.")
-f_info.commands = ['twitinfo']
+f_info.commands = ['twitinfo','twitter-info','twituser']
 f_info.priority = 'medium'
 f_info.example = '.twitinfo aplsuk'
 
