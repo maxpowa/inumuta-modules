@@ -25,18 +25,18 @@ def info(genre, title):
         title = title+'.mp3'
     genre = urllib.unquote(genre)
     title = urllib.unquote(title)
-    request = web.get('http://jpv.everythingisawesome.us/api/v1/song/'+genre+'/'+title)
+    request = web.get('http://test.everythingisawesome.us/api/v1/song/'+genre+'/'+title)
     return json.loads(request)
 
 def search(bot, trigger, title):
-    request = web.get('http://jpv.everythingisawesome.us/api/v1/list.php?genre=all&format=json')
+    request = web.get('http://test.everythingisawesome.us/api/v1/list.php?genre=all&format=json')
     songs = json.loads(request)
     found_songs = 0
     for song in songs:
         if song:
             if song['title'].lower() == title.lower():
                 found_songs = found_songs + 1
-                bot.say('[JPV] ' + song['artist'] + ' - ' + song['title'] + ' | ' + song['album'] + ' | ' + song['album_artist'] + ' | ' + song['genre'] + ' | http://jpv.everythingisawesome.us/song/?song={}'.format(song['filename'].replace('.mp3', '')))
+                bot.say('[JPV] ' + song['artist'] + ' - ' + song['title'] + ' | ' + song['album'] + ' | ' + song['album_artist'] + ' | ' + song['genre'] + ' | http://jpv.everythingisawesome.us/song/?song={}'.format(song['href'].replace('.mp3', '')))
     if found_songs == 0:
         bot.say('[JPV] Unable to find a song matching \"'+trigger.group(2).strip()+'\"')
 
