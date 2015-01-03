@@ -265,7 +265,7 @@ def _clean_cache(bot):
     # explode
     oldest_key_age = 0
     oldest_key = ''
-    for key, data in willie.tools.iteritems(bot.memory['safety_cache']):
+    for key, data in bot.tools.iteritems(bot.memory['safety_cache']):
         if data['age'] > oldest_key_age:
             oldest_key_age = data['age']
             oldest_key = key
@@ -346,7 +346,7 @@ def process_urls(bot, trigger, urls):
         if not url.startswith(exclusion_char):
             # Magic stuff to account for international domain names
             try:
-                url = willie.web.iri_to_uri(url)
+                url = web.iri_to_uri(url)
             except:
                 pass
             # First, check that the URL we got doesn't match

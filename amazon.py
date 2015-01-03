@@ -12,7 +12,7 @@ from lxml import html
 import json
 import re
 
-@rule(r'(http.*(www\.)?amazon\.com/[^ ]+)')
+@rule(r'(https?:\/\/(www\.)?amazon\.com/[^ ]+)')
 def amazon_url(bot, trigger):
     item = html.fromstring(web.get(trigger.group(1)))
     try: title = item.xpath("//span[@id='productTitle']/text()")[0]
