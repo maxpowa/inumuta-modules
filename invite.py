@@ -19,7 +19,7 @@ def invite_join_chan(bot, trigger):
     Join a channel Inumuta is invited to, allows plebs to have the bot in their chan.
     """
     if trigger.admin:
-	return
+	    return
 
     if trigger.args[1].lower() in restricted_channels:
         if not restricted_channels[trigger.args[1].lower()] == trigger.nick:    
