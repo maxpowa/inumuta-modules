@@ -31,9 +31,9 @@ phrases = [ "%people% launched a DoS attack on the website of %thing%",
     "%people% complains that %people% replaced %thing% by %thing%",
     "%people% complains that %people% replaced %thing% by %thing% in %pack%",
     "%people% complains that %people% removed %function% in %pack%",
-    "%people% decided that %thing% is too %adj% and replaced it with %thing%",
-    "%people% %says% %thing% is %adj%.",
-    "%people% %says% %thing% is literally %adj%.",
+    "%people% decided that %thing% is too %adjective% and replaced it with %thing%",
+    "%people% %says% %thing% is %adjective%.",
+    "%people% %says% %thing% is literally %adjective%.",
     "%thing% is not updated for the latest version of Minecraft.",
     "%people% removes %thing% from %pack%.",
     "%people% adds %thing% to %pack%.",
@@ -59,8 +59,8 @@ phrases = [ "%people% launched a DoS attack on the website of %thing%",
     "%people% adds %function% to %thing% by request of %people%",
     "%people% removes %function% from %thing% by request of %people%",
     "%people% removes compatibility between %thing% and %thing% by request of %people%",
-    "%people% %says% %people%'s attitude is %adj%",
-    "%people% %says% %site%'s attitude is %adj%",
+    "%people% %says% %people%'s attitude is %adjective%",
+    "%people% %says% %site%'s attitude is %adjective%",
     "%people% quits the development team of %thing%",
     "%people% %says% %thing% is too much like %thing%",
     "%people% %says% %thing% is a ripoff of %thing%",
@@ -69,17 +69,17 @@ phrases = [ "%people% launched a DoS attack on the website of %thing%",
     "%people% decides to %ban% %people% from %pack%",
     "%thing% doesn't work with %thing% since the latest update",
     "%people% sues %thing%",
-    "%people% %says% %thing% is %adj% on %site%",
+    "%people% %says% %thing% is %adjective% on %site%",
     "%people% %says% %thing% is full of %badsoft%",
     "%people% %says% %thing% causes %drama%",
     "%people% %says% %thing% causes %drama% when used with %thing%",
-    "%people% %says% using %thing% and %thing% together is %adj%",
+    "%people% %says% using %thing% and %thing% together is %adjective%",
     "%people% rants about %thing% on %site%",
     "%people% rants about %function% in mods on %site%",
     "%people% steals code from %thing%",
     "%thing% breaks %function%",
     "%people% sues %thing% developers",
-    "%people% reminds you that %thing% is %adj%",
+    "%people% reminds you that %thing% is %adjective%",
     "%people% and %people% get into a drama fight on %site%",
     "Fans of %thing% and %thing% argue on %site%",
     "%people% and %people% argue about %thing%",
@@ -362,7 +362,12 @@ parts = {
     "MachineMuse",
     "M3gaFr3ak",
     "Lunatrius",
-    "wha-ha-ha"
+    "wha-ha-ha",
+    "maxpowa",
+    "boni",
+    "meew0",
+    "Glassmaker",
+    "sk89q",
   ],
   "price": [
     "$200",
@@ -469,8 +474,8 @@ parts = {
     "Natura",
     "Hexxit",
     "Iron Chests",
-    "open-source mods",
-    "closed-source mods",
+    "An open-source mod",
+    "A closed-source mod",
     "Not Enough Mods",
     "Ender IO",
     "Mekanism",
@@ -537,14 +542,17 @@ def setup(bot):
     parts['thing'] = [(thing[:1] + u'\u200B' + thing[1:]) for thing in parts['thing']]
     parts['people'] = [(person[:1] + u'\u200B' + person[1:]) for person in parts['people']]
 
-def replace_tokens(input):
+def replace_tokens(input, used=[]):
     result = token.search(input)
     if not result or not result.group(1):
         return input
     obj = result.group(1)
-    input = input.replace('%'+obj+'%', random.choice(parts[obj]), 1)
-    return replace_tokens(input)
-        
+    repl = random.choice(parts[obj])
+    while (repl in used):
+        repl = random.choice(parts[obj])
+    used.append(repl)
+    input = input.replace('%'+obj+'%', repl, 1)
+    return replace_tokens(input, used)
 
 @commands('drama')
 def drama(bot, trigger):
