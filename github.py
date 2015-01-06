@@ -73,6 +73,10 @@ def issue_info(bot, trigger, match=None):
     except (KeyError):
         bot.say('[Github] API says this is an invalid issue. Please report this if you know it\'s a correct link!')
         return NOLIMIT
+        
+    if body.strip() == '':
+        body = 'No description provided.'
+    
     response = [
         bold('[Github]'),
         ' [', 
@@ -88,8 +92,7 @@ def issue_info(bot, trigger, match=None):
     ]
     bot.say(''.join(response))
     #bot.say(str(data))
-
-@timing
+    
 def get_data(bot, trigger, URL):
     try:
         raw = fetch_api_endpoint(bot, URL)
@@ -120,6 +123,10 @@ def get_data(bot, trigger, URL):
     
     return data
     
+@rule(r'https?://github\.com/([^ /]+?)/([^ /]+)/?(?!\S)')
+def data_url(bot, trigger):
+    URL = 'https://api.github.com/repos/%s/%s' % (trigger.group(1), trigger.group(2))
+    fmt_response(bot, trigger, URL, True)
     
 @commands('github', 'gh')
 def github_repo(bot, trigger, match=None):
@@ -128,11 +135,24 @@ def github_repo(bot, trigger, match=None):
     
     if repo.lower() == 'status':
         current = json.loads(web.get('https://status.github.com/api/status.json'))
+        lastcomm = json.loads(web.get('https://status.github.com/api/last-message.json'))
+        
         status = current['status']
         if status == 'major': status = "\x02\x034Broken\x03\x02"
         elif status == 'minor': status = "\x02\x037Shakey\x03\x02"
         elif status == 'good': status = "\x02\x033Online\x03\x02"
-        return bot.say('[Github] Current Status: '+status)
+        
+        lstatus = lastcomm['status']
+        if lstatus == 'major': lstatus = "\x02\x034Broken\x03\x02"
+        elif lstatus == 'minor': lstatus = "\x02\x037Shakey\x03\x02"
+        elif lstatus == 'good': lstatus = "\x02\x033Online\x03\x02"
+        
+        timezone = get_timezone(bot.db, bot.config, None, trigger.nick)
+        if not timezone:
+            timezone = 'UTC'
+        lastcomm['created_on'] = format_time(bot.db, bot.config, timezone, trigger.nick, trigger.sender, from_utc(lastcomm['created_on']))
+        
+        return bot.say('[Github] Current Status: '+status+' | Last Message: '+lstatus+': '+lastcomm['body']+' ('+lastcomm['created_on']+')')
     elif repo.lower() == 'rate-limit':
         return bot.say(fetch_api_endpoint(bot, 'https://api.github.com/rate_limit'))
     
@@ -140,6 +160,16 @@ def github_repo(bot, trigger, match=None):
         repo = trigger.nick.strip() + '/' + repo
     URL = 'https://api.github.com/repos/%s' % (repo.strip())
     
+    fmt_response(bot, trigger, URL)
+    #bot.say(''.join(response))
+    
+def from_utc(utcTime,fmt="%Y-%m-%dT%H:%M:%SZ"):
+    """
+    Convert UTC time string to time.struct_time
+    """
+    return datetime.datetime.strptime(utcTime, fmt)
+    
+def fmt_response(bot, trigger, URL, from_regex=False):
     data = get_data(bot, trigger, URL)
     
     if not data:
@@ -150,22 +180,20 @@ def github_repo(bot, trigger, match=None):
         ' ', 
         data['full_name'], 
         ' - ',
-        data['description'],
-        ' | ', 
-        data['language'].strip(),
+        data['description']
+    ]
+    
+    if not data['language'].strip() == '':
+        response.extend([' | ', data['language'].strip()])
+    
+    response.extend([
         ' | Last Push: ',
         str(data['pushed_at']),
         ' | Open Issues: ',
-        str(data['open_issues']),
-        ' | ',
-        data['html_url']
-    ]
+        str(data['open_issues'])
+    ])
+    
+    if not from_regex:
+        response.extend([' | ', data['html_url']])
         
     bot.write(('PRIVMSG', trigger.sender), ''.join(response))
-    #bot.say(''.join(response))
-    
-def from_utc(utcTime,fmt="%Y-%m-%dT%H:%M:%SZ"):
-    """
-    Convert UTC time string to time.struct_time
-    """
-    return datetime.datetime.strptime(utcTime, fmt)
