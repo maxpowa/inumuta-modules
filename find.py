@@ -14,7 +14,7 @@ using the sed notation (s///) commonly found in vi/vim.
 from __future__ import unicode_literals
 
 import re
-from willie.tools import Nick, WillieMemory
+from willie.tools import Identifier, WillieMemory
 from willie.module import rule, priority, thread
 from willie.formatting import bold
 
@@ -32,14 +32,14 @@ def collectlines(bot, trigger):
     if trigger.is_privmsg:
         return
 
-    # Add a log for the channel and nick, if there isn't already one
+    # Add a log for the channel and Identifier, if there isn't already one
     if trigger.sender not in bot.memory['find_lines']:
         bot.memory['find_lines'][trigger.sender] = WillieMemory()
-    if Nick(trigger.nick) not in bot.memory['find_lines'][trigger.sender]:
-        bot.memory['find_lines'][trigger.sender][Nick(trigger.nick)] = list()
+    if Identifier(trigger.nick) not in bot.memory['find_lines'][trigger.sender]:
+        bot.memory['find_lines'][trigger.sender][Identifier(trigger.nick)] = list()
 
     # Create a temporary list of the user's lines in a channel
-    templist = bot.memory['find_lines'][trigger.sender][Nick(trigger.nick)]
+    templist = bot.memory['find_lines'][trigger.sender][Identifier(trigger.nick)]
     line = trigger.group()
     if line.startswith("s/"):  # Don't remember substitutions
         return
@@ -51,16 +51,16 @@ def collectlines(bot, trigger):
 
     del templist[:-10]  # Keep the log to 10 lines per person
 
-    bot.memory['find_lines'][trigger.sender][Nick(trigger.nick)] = templist
+    bot.memory['find_lines'][trigger.sender][Identifier(trigger.nick)] = templist
 
 
-#Match nick, s/find/replace/flags. Flags and nick are optional, nick can be
+#Match Identifier, s/find/replace/flags. Flags and Identifier are optional, Identifier can be
 #followed by comma or colon, anything after the first space after the third
 #slash is ignored, you can escape slashes with backslashes, and if you want to
 #search for an actual backslash followed by an actual slash, you're shit out of
 #luck because this is the fucking regex of death as it is.
 @rule(r"""^			# start of the message
-(?:(\S+)[:,]\s+)? 	# CAPTURE nick
+(?:(\S+)[:,]\s+)? 	# CAPTURE Identifier
 (?:					# BEGIN first sed expression
   s/				#   sed replacement expression delimiter
   (					#   BEGIN needle component
@@ -92,13 +92,13 @@ def findandreplace(bot, trigger):
         return
 
     # Correcting other person vs self.
-    rnick = Nick(trigger.group(1) or trigger.nick)
+    rIdentifier = Identifier(trigger.group(1) or trigger.nick)
 
     search_dict = bot.memory['find_lines']
     # only do something if there is conversation to work with
     if trigger.sender not in search_dict:
         return
-    if Nick(rnick) not in search_dict[trigger.sender]:
+    if Identifier(rIdentifier) not in search_dict[trigger.sender]:
         return
 
     rest = [trigger.group(2), trigger.group(3)]
@@ -126,7 +126,7 @@ def findandreplace(bot, trigger):
     except re.error as e:
         bot.reply(u'That ain\'t valid regex! (%s)' % (e.message))
         return
-    for line in reversed(search_dict[trigger.sender][rnick]):
+    for line in reversed(search_dict[trigger.sender][rIdentifier]):
         if line.startswith("\x01ACTION"):
             me = True  # /me command
             line = line[8:]
@@ -141,16 +141,16 @@ def findandreplace(bot, trigger):
 
     # Save the new "edited" message.
     action = (me and '\x01ACTION ') or ''  # If /me message, prepend \x01ACTION
-    templist = search_dict[trigger.sender][rnick]
+    templist = search_dict[trigger.sender][rIdentifier]
     templist.append(action + new_phrase)
-    search_dict[trigger.sender][rnick] = templist
+    search_dict[trigger.sender][rIdentifier] = templist
     bot.memory['find_lines'] = search_dict
 
     # output
     if not me:
         new_phrase = '%s to say: %s' % (bold('meant'), new_phrase)
     if trigger.group(1):
-        phrase = '%s thinks %s %s' % (trigger.nick, rnick, new_phrase)
+        phrase = '%s thinks %s %s' % (trigger.nick, rIdentifier, new_phrase)
     else:
         phrase = '%s %s' % (trigger.nick, new_phrase)
 

@@ -15,7 +15,7 @@ import json
 import random
 import re
 from willie import web
-from willie.modules.search import google_search
+from search import google_search
 from willie.module import (commands, rule)
 
 ignored_sites = [
