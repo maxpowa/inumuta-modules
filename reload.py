@@ -90,18 +90,6 @@ def f_update(bot, trigger):
 
     f_reload(bot, trigger)
 
-    
-@willie.module.nickname_commands("listmods")
-@willie.module.priority("low")
-@willie.module.thread(True)
-def f_listmods(bot, trigger):
-    """Lists enabled modules, for use by admins only."""
-    if not trigger.admin:
-        return
-     
-    mods = bot.config.enumerate_modules()
-    mods = sorted(list(mods.keys()))
-    bot.msg(trigger.sender, "Enabled modules: "+', '.join(mods), max_messages=10)
 
 @willie.module.nickname_commands("load")
 @willie.module.priority("low")
@@ -145,14 +133,6 @@ def pm_f_reload(bot, trigger):
     """Wrapper for allowing delivery of .reload command via PM"""
     if trigger.is_privmsg:
         f_reload(bot, trigger)
-        
-@willie.module.commands("listmods")
-@willie.module.priority("low")
-@willie.module.thread(True)
-def pm_f_listmods(bot, trigger):
-    """Wrapper for allowing delivery of .listmods command via PM"""
-    if trigger.is_privmsg:
-        f_listmods(bot, trigger)
 
 
 @willie.module.commands('update')

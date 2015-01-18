@@ -130,7 +130,7 @@ def f_update(willie, trigger):
 
         print api.me().name
 
-        update = str(trigger.group(2)) + " ^" + trigger.nick
+        update = str(trigger.group(2))
         if len(update) <= 140:
             api.update_status(update)
             willie.reply("Successfully posted to my twitter account.")
