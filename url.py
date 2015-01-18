@@ -8,39 +8,13 @@ Copyright © 2014 Elad Alfassa <elad@fedoraproject.org>
 Licensed under the Eiffel Forum License 2.
 
 http://willie.dftba.net
-
-using built in
-safety.py - Alerts about malicious URLs
-Copyright © 2014, Elad Alfassa, <elad@fedoraproject.org>
-Licensed under the Eiffel Forum License 2.
- 
-This module uses virustotal.com
-
-Modified by Max Gurela
-Copyright 2014 Max Gurela
-Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
-from __future__ import print_function
 
-from willie import web, tools
-from willie.module import commands, rule, example, interval
-from willie.config import ConfigurationError
-from willie.formatting import color, bold
-
-import sys
-import json
-import time
-import os.path
 import re
- 
-if sys.version_info.major > 2:
-    unicode = str
-    from urllib.request import urlretrieve
-    from urllib.parse import urlparse
-else:
-    from urllib import urlretrieve
-    from urlparse import urlparse
+import sys
+from willie import web, tools
+from willie.module import commands, rule, example
 
 
 url_finder = None
@@ -58,12 +32,6 @@ re_dcc = re.compile(r'(?i)dcc\ssend')
 max_bytes = 655360
 
 
-## Safety globals
-vt_base_api_url = 'https://www.virustotal.com/vtapi/v2/url/'
-malware_domains = []
-known_good = []
-## end Safety globals
-
 def configure(config):
     """
 
@@ -71,27 +39,19 @@ def configure(config):
     | ---- | ------- | ------- |
     | exclude | https?://git\.io/.* | A list of regular expressions for URLs for which the title should not be shown. |
     | exclusion_char | ! | A character (or string) which, when immediately preceding a URL, will stop the URL's title from being shown. |
-    
-    | [safety] | example | purpose |
-    | ---- | ------- | ------- |
-    | enabled_by_default | True | Enable safety on implicity on channels |
-    | vt_api_key | ea4ca709a686edfcc96a144c224935776e2ba46b77 | VirusTotal API key |
-    | known_good | youtube.com,vimeo.com,.*\.tumblr.com | list of "known good" domains to ignore |
     """
     if config.option('Exclude certain URLs from automatic title display', False):
         if not config.has_section('url'):
             config.add_section('url')
-        config.add_list('url', 'exclude', 'Enter regular expressions for each URL you would like to exclude.',
+        config.add_list(
+            'url',
+            'exclude',
+            'Enter regular expressions for each URL you would like to exclude.',
             'Regex:')
-        config.interactive_add('url', 'exclusion_char',
+        config.interactive_add(
+            'url',
+            'exclusion_char',
             'Prefix to suppress URL titling', '!')
-    
-    # Safety Module
-    if config.option('Configure malicious URL protection?'):
-        config.add_section('safety')
-        config.add_option('safety', 'enabled_by_default', 'Enable malicious URL checking for channels by default?', True)
-        config.interactive_add('safety', 'vt_api_key', 'VirusTotal API Key (not mandatory)', None)
-    # End safety module
 
 
 def setup(bot=None):
@@ -128,153 +88,8 @@ def setup(bot=None):
         exclusion_char = bot.config.url.exclusion_char
 
     url_finder = re.compile(r'(?u)(%s?(?:http|https|ftp)(?:://\S+))' %
-        (exclusion_char))
-        
-    # Safety module
-    if not bot.config.has_section('safety'):
-        raise ConfigurationError("Safety module not configured")
-    if bot.db and not bot.db.preferences.has_columns('safety'):
-        bot.db.preferences.add_columns(['safety'])
-    bot.memory['safety_cache'] = tools.WillieMemory()
-    for item in bot.config.safety.get_list('known_good'):
-        known_good.append(re.compile(item, re.I))
- 
-    loc = os.path.join(bot.config.homedir, 'malwaredomains.txt')
-    if os.path.isfile(loc):
-        if os.path.getmtime(loc) < time.time() - 24 * 60 * 60 * 7:
-            # File exists but older than one week, update
-            _download_malwaredomains_db(loc)
-    else:
-        _download_malwaredomains_db(loc)
-    with open(loc, 'r') as f:
-        for line in f:
-            malware_domains.append(unicode(line).strip().lower())
-    # End Safety module
+                            (exclusion_char))
 
-#################
-# Safety Module #
-#################
-
-def _download_malwaredomains_db(path):
-    print('Downloading malwaredomains db...')
-    urlretrieve('http://mirror1.malwaredomains.com/files/justdomains', path)
-    
-def safety_check(bot, trigger):
-    """ Check for malicious URLs """
-    check = True    # Enable URL checking
-    strict = False  # Strict mode: kick on malicious URL
-    positives = 0   # Number of engines saying it's malicious
-    total = 0       # Number of total engines
-    use_vt = True   # Use VirusTotal
-    if bot.config.has_section('safety'):
-        check = bot.config.safety.enabled_by_default
-        if check is None:
-            # If not set, assume default
-            check = True
-        else:
-            check = bool(check)
-    # DB overrides config:
-    if bot.db and trigger.sender.lower() in bot.db.preferences:
-        setting = bot.db.preferences.get(trigger.sender.lower(), 'safety')
-        if setting == 'off':
-            return False # Not checking
-        elif setting in ['on', 'strict', 'local', 'local strict']:
-            check = True
-        if setting == 'strict' or setting == 'local strict':
-            strict = True
-        if setting == 'local' or setting == 'local strict':
-            use_vt = False
- 
-    if not check:
-        return False # Not overriden by DB, configured default off
- 
-    netloc = urlparse(trigger).netloc
-    if any(regex.search(netloc) for regex in known_good):
-        return False # Whitelisted
- 
-    apikey = bot.config.safety.vt_api_key
-    try:
-        if apikey is not None and use_vt:
-            payload = {'resource': unicode(trigger),
-                       'apikey': apikey,
-                       'scan': '1'}
- 
-            if trigger not in bot.memory['safety_cache']:
-                result = web.post(vt_base_api_url+'report', payload)
-                if sys.version_info.major > 2:
-                    result = result.decode('utf-8')
-                result = json.loads(result)
-                age = time.time()
-                data = {'positives': result['positives'],
-                        'total': result['total'],
-                        'age': age}
-                bot.memory['safety_cache'][trigger] = data
-                if len(bot.memory['safety_cache']) > 1024:
-                    _clean_cache(bot)
-            else:
-                print('using cache')
-                result = bot.memory['safety_cache'][trigger]
-            positives = result['positives']
-            total = result['total']
-    except Exception as e:
-        bot.debug('[safety]', e, 'debug')
-        pass  # Ignoring exceptions with VT so MalwareDomains will always work
- 
-    if unicode(netloc).lower() in malware_domains:
-        # malwaredomains is more trustworthy than some VT engines
-        # therefor it gets a weight of 10 engines when calculating confidence
-        positives += 10
-        total += 10
- 
-    if positives > 1:
-        # Possibly malicious URL detected!
-        confidence = '{}%'.format(round((positives / total) * 100))
-        msg = 'link posted by %s is possibliy malicious ' % bold(trigger.nick)
-        msg += '(confidence %s - %s/%s)' % (confidence, positives, total)
-        bot.say('[' + bold(color('WARNING', 'red')) + '] ' + msg)
-        if strict:
-            bot.write(['KICK', trigger.sender, trigger.nick, 'Posted a malicious link'])
-        return True
-        
-    return False
-    
-@commands('safety')
-def toggle_safety(bot, trigger):
-    """ Set safety setting for channel """
-    allowed_states = ['strict', 'on', 'off', 'local', 'local strict']
-    if not trigger.group(2) or trigger.group(2).lower() not in allowed_states:
-        options = ' / '.join(allowed_states)
-        bot.reply('Available options: %s' % options)
-        return
-    if not bot.db:
-        bot.reply('No database configured, can\'t modify settings')
-        return
-    if not trigger.isop and not trigger.admin:
-        bot.reply('Only channel operators can change safety settings')
- 
-    channel = trigger.sender.lower()
-    bot.db.preferences.update(channel, {'safety': trigger.group(2).lower()})
-    bot.reply('Safety is now set to %s in this channel' % trigger.group(2))
- 
- 
-# Clean the cache every day, also when > 1024 entries
-@interval(24 * 60 * 60)
-def _clean_cache(bot):
-    """ Cleanup old entries in URL cache """
-    # TODO probably should be using locks here, to make sure stuff doesn't
-    # explode
-    oldest_key_age = 0
-    oldest_key = ''
-    for key, data in bot.tools.iteritems(bot.memory['safety_cache']):
-        if data['age'] > oldest_key_age:
-            oldest_key_age = data['age']
-            oldest_key = key
-    if oldest_key in bot.memory['safety_cache']:
-        del bot.memory['safety_cache'][oldest_key]
-
-#####################
-# End safety module #
-#####################
 
 @commands('title')
 @example('.title http://google.com', '[ Google ] - google.com')
@@ -310,26 +125,21 @@ def title_auto(bot, trigger):
     """
     if re.match(bot.config.core.prefix + 'title', trigger):
         return
-    if re.match(bot.config.core.prefix + '(?:prem|premium|leech)', trigger):
-        return
+
+    # Avoid fetching known malicious links
+    if 'safety_cache' in bot.memory and trigger in bot.memory['safety_cache']:
+        if bot.memory['safety_cache'][trigger]['positives'] > 1:
+            return
+
     urls = re.findall(url_finder, trigger)
-    results = None
-    try:
-        results = process_urls(bot, trigger, urls)
-    except Exception:
-        pass
-    safety_check(bot, trigger)
+    results = process_urls(bot, trigger, urls)
     bot.memory['last_seen_url'][trigger.sender] = urls[-1]
-    
-    if results:
-        for title, domain in results[:4]:
-            if domain == '9gag.com':
-                bot.say('Eww... 9gag')
-                return
-            message = '[ %s ] - %s' % (title, domain)
-            # Guard against responding to other instances of this bot.
-            if message != trigger:
-                bot.say(message)
+
+    for title, domain in results[:4]:
+        message = '[ %s ] - %s' % (title, domain)
+        # Guard against responding to other instances of this bot.
+        if message != trigger:
+            bot.say(message)
 
 
 def process_urls(bot, trigger, urls):
@@ -355,6 +165,8 @@ def process_urls(bot, trigger, urls):
                 continue
             # Then see if it redirects anywhere
             new_url = follow_redirects(url)
+            if not new_url:
+                continue
             # Then see if the final URL matches anything
             matched = check_callbacks(bot, trigger, new_url, new_url != url)
             if matched:
@@ -362,7 +174,7 @@ def process_urls(bot, trigger, urls):
             # Finally, actually show the URL
             title = find_title(url)
             if title:
-                results.append((title, get_hostname(new_url or url)))
+                results.append((title, get_hostname(url)))
     return results
 
 
@@ -387,11 +199,7 @@ def check_callbacks(bot, trigger, url, run=True):
     ``True`` if the url matched anything in the callbacks list.
     """
     # Check if it matches the exclusion list first
-    matched = False
-    try:
-        matched = any(regex.search(url) for regex in bot.memory['url_exclude'])
-    except Exception:
-        pass
+    matched = any(regex.search(url) for regex in bot.memory['url_exclude'])
     # Then, check if there's anything in the callback list
     for regex, function in tools.iteritems(bot.memory['url_callbacks']):
         match = regex.search(url)
@@ -407,7 +215,7 @@ def find_title(url):
     try:
         content, headers = web.get(url, return_headers=True, limit_bytes=max_bytes)
     except UnicodeDecodeError:
-        return # Fail silently when data can't be decoded
+        return  # Fail silently when data can't be decoded
 
     # Some cleanup that I don't really grok, but was in the original, so
     # we'll keep it (with the compiled regexes made global) for now.

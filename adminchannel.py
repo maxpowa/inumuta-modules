@@ -13,7 +13,7 @@ from __future__ import unicode_literals
 import re
 from willie import formatting
 from willie.module import commands, priority, OP, HALFOP
-from willie.tools import Nick
+from willie.tools import Identifier
 
 
 def default_mask(trigger):
@@ -23,12 +23,6 @@ def default_mask(trigger):
     topic_ = formatting.color('| ' + topic_, formatting.colors.PURPLE)
     arg = formatting.color('{}', formatting.colors.GREEN)
     return '{} {} {} {}'.format(welcome, chan, topic_, arg)
-
-
-def setup(bot):
-    #Having a db means pref's exists. Later, we can just use `if bot.db`.
-    if bot.db and not bot.db.preferences.has_columns('topic_mask'):
-        bot.db.preferences.add_columns(['topic_mask'])
 
 
 @commands('op')
@@ -113,7 +107,7 @@ def kick(bot, trigger):
     argc = len(text)
     if argc < 2:
         return
-    opt = Nick(text[1])
+    opt = Identifier(text[1])
     nick = opt
     channel = trigger.sender
     reasonidx = 2
@@ -165,7 +159,7 @@ def ban(bot, trigger):
     argc = len(text)
     if argc < 2:
         return
-    opt = Nick(text[1])
+    opt = Identifier(text[1])
     banmask = opt
     channel = trigger.sender
     if not opt.is_nick():
@@ -193,7 +187,7 @@ def unban(bot, trigger):
     argc = len(text)
     if argc < 2:
         return
-    opt = Nick(text[1])
+    opt = Identifier(text[1])
     banmask = opt
     channel = trigger.sender
     if not opt.is_nick():
@@ -221,7 +215,7 @@ def quiet(bot, trigger):
     argc = len(text)
     if argc < 2:
         return
-    opt = Nick(text[1])
+    opt = Identifier(text[1])
     quietmask = opt
     channel = trigger.sender
     if not opt.is_nick():
@@ -249,7 +243,7 @@ def unquiet(bot, trigger):
     argc = len(text)
     if argc < 2:
         return
-    opt = Nick(text[1])
+    opt = Identifier(text[1])
     quietmask = opt
     channel = trigger.sender
     if not opt.is_nick():
@@ -279,7 +273,7 @@ def kickban(bot, trigger):
     argc = len(text)
     if argc < 4:
         return
-    opt = Nick(text[1])
+    opt = Identifier(text[1])
     nick = opt
     mask = text[2]
     reasonidx = 3
@@ -315,8 +309,7 @@ def topic(bot, trigger):
 
     narg = 1
     mask = None
-    if bot.db and channel in bot.db.preferences:
-        mask = bot.db.preferences.get(channel, 'topic_mask')
+    mask = bot.db.get_channel_value(channel, 'topic_mask')
     mask = mask or default_mask(trigger)
     mask = mask.replace('%s', '{}')
     narg = len(re.findall('{}', mask))
@@ -343,11 +336,8 @@ def set_mask(bot, trigger):
     """
     if bot.privileges[trigger.sender][trigger.nick] < OP:
         return
-    if not bot.db:
-        bot.say("I'm afraid I can't do that.")
-    else:
-        bot.db.preferences.update(trigger.sender.lower(), {'topic_mask': trigger.group(2)})
-        bot.say("Gotcha, " + trigger.nick)
+    bot.db.set_channel_value(trigger.sender, 'topic_mask', trigger.group(2))
+    bot.say("Gotcha, " + trigger.nick)
 
 
 @commands('showmask')
@@ -355,9 +345,6 @@ def show_mask(bot, trigger):
     """Show the topic mask for the current channel."""
     if bot.privileges[trigger.sender][trigger.nick] < OP:
         return
-    if not bot.db:
-        bot.say("I'm afraid I can't do that.")
-    elif trigger.sender.lower() in bot.db.preferences:
-        bot.say(bot.db.preferences.get(trigger.sender.lower(), 'topic_mask'))
-    else:
-        bot.say(default_mask(trigger))
+    mask = bot.db.get_channel_value(trigger.sender, 'topic_mask')
+    mask = mask or default_mask(trigger)
+    bot.say(mask)

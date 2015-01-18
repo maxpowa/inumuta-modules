@@ -4,18 +4,16 @@ youtube.py - Willie YouTube Module
 Copyright 2012, Dimitri Molenaars, Tyrope.nl.
 Copyright © 2012-2014, Elad Alfassa, <elad@fedoraproject.org>
 Copyright 2012, Edward Powell, embolalia.net
-Copyright 2014 Max Gurela
 Licensed under the Eiffel Forum License 2.
 
 http://willie.dfbta.net
 
 This module will respond to .yt and .youtube commands and searches the youtubes.
 """
-from __future__ import unicode_literals
+from __future__ import unicode_literals, division
 
 from willie import web, tools
 from willie.module import rule, commands, example
-from willie.formatting import color,colors
 import json
 import re
 import sys
@@ -25,6 +23,7 @@ else:
     from html.parser import HTMLParser
 
 regex = re.compile('(youtube.com/watch\S*v=|youtu.be/)([\w-]+)')
+
 
 def setup(bot):
     if not bot.memory.contains('url_callbacks'):
@@ -38,10 +37,7 @@ def shutdown(bot):
 
 def ytget(bot, trigger, uri):
     bytes = web.get(uri)
-    try:
-        result = json.loads(bytes)
-    except ValueError:
-        return 'err'
+    result = json.loads(bytes)
     try:
         if 'feed' in result:
             video_entry = result['feed']['entry'][0]
@@ -88,8 +84,8 @@ def ytget(bot, trigger, uri):
         if duration < 1:
             vid_info['length'] = 'LIVE'
         else:
-            hours = duration / (60 * 60)
-            minutes = duration / 60 - (hours * 60)
+            hours = duration // (60 * 60)
+            minutes = duration // 60 - (hours * 60)
             seconds = duration % 60
             vid_info['length'] = ''
             if hours:
@@ -171,20 +167,16 @@ def ytinfo(bot, trigger, found_match=None):
     video_info = ytget(bot, trigger, uri)
     if video_info is 'err':
         return
-    
-    try:
-        #combine variables and print
-        message = '[You' + color('Tube', colors.WHITE, colors.RED) + ']' + \
-                  ' Title: ' + video_info['title'] + \
-                  ' | Uploader: ' + video_info['uploader'] + \
-                  ' | Uploaded: ' + video_info['uploaded'] + \
-                  ' | Duration: ' + video_info['length'] + \
-                  ' | Views: ' + video_info['views'] + \
-                  ' | Comments: ' + video_info['comments'] + \
-                  ' | ' + color(video_info['likes'] + '+',colors.GREEN) + \
-                  ' | ' + color(video_info['dislikes'] + '-',colors.RED)
-    except:
-        return
+
+    #combine variables and print
+    message = '[YouTube] Title: ' + video_info['title'] + \
+              ' | Uploader: ' + video_info['uploader'] + \
+              ' | Uploaded: ' + video_info['uploaded'] + \
+              ' | Duration: ' + video_info['length'] + \
+              ' | Views: ' + video_info['views'] + \
+              ' | Comments: ' + video_info['comments'] + \
+              ' | Likes: ' + video_info['likes'] + \
+              ' | Dislikes: ' + video_info['dislikes']
 
     bot.say(HTMLParser().unescape(message))
 
