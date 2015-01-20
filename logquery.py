@@ -1,7 +1,7 @@
 # coding=utf8
 """
-logquery.py - Simple log query module (replaces log_raw, so there may be incompatibility with other modules that do so)
-Copyright 2014 Max Gurela
+logquery.py - Simple log query module
+Copyright 2015 Max Gurela
 
 Licensed under the Eiffel Forum License 2.
 """
