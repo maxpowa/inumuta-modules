@@ -6,25 +6,35 @@ Copyright 2015 Max Gurela
 Licensed under the Eiffel Forum License 2.
 """
 
-from willie.module import commands, rule, unblockable
-from datetime import datetime
+from willie.module import commands, rule, unblockable, event, thread, priority
+from datetime import datetime, date
 import sqlite3
 import re
+import os
 
-def setup(bot):
-    conn = bot.db.connect()
-    c = conn.cursor()
+filename = 'logquery.db'
 
+def dict_factory(cursor, row):
+    d = {}
+    for idx,col in enumerate(cursor.description):
+        d[col[0]] = row[idx]
+    return d
+
+def connect():
+    """Return a raw database connection object."""
+    return sqlite3.connect(filename)
+
+def _create():
+    """Create the basic database structure."""
+    # Do nothing if the db already exists.
     try:
-        c.execute('SELECT * FROM logquery')
-    except StandardError:
-        create_table(bot, c)
-        conn.commit()
-    conn.close()
+        execute('SELECT * FROM logquery;')
+    except:
+        pass
+    else:
+        return
 
-
-def create_table(bot, c):
-    c.execute('''CREATE TABLE IF NOT EXISTS logquery (
+    execute('''CREATE TABLE IF NOT EXISTS logquery (
         id INTEGER PRIMARY KEY,
         channel TEXT,
         nick TEXT,
@@ -35,31 +45,27 @@ def create_table(bot, c):
         sent_at TIMESTAMP
         )''')
 
-@rule('.*')
-@unblockable
-def log_message(bot, message):
-    "Log every message in a channel"
-    # if this is a private message and we're not logging those, return early
-    if message.sender.is_nick():
-        return
+def execute(*args, **kwargs):
+    """Execute an arbitrary SQL query against the database.
 
-    intent = 'PRIVMSG'
-    if 'intent' in message.tags:
-        intent = message.tags['intent']
+    Returns a cursor object, on which things like `.fetchall()` can be
+    called per PEP 249."""
+    with connect() as conn:
+        conn.row_factory = dict_factory
+        cur = conn.cursor()
+        return cur.execute(*args, **kwargs)
 
-    conn = bot.db.connect()
-    c = conn.cursor()
-
-    # Insert new text into table
-    c.execute('INSERT INTO logquery (channel, nick, ident, host, message, intent, sent_at) VALUES (?,?,?,?,?,?,?)',
-        (message.sender, message.nick, message.user, message.host, message.match.string, intent, datetime.now()))
-
-    # Ensure no more than x amount of messages exist for the current channel
-    c.execute('DELETE FROM logquery WHERE channel=? AND id NOT IN (SELECT id FROM logquery WHERE channel=? ORDER BY datetime(sent_at) DESC LIMIT 500)',
-        (message.sender, message.sender))
-
-    conn.commit()
-    conn.close()
+def setup(bot):
+    path = bot.config.logquery.filename
+    config_dir, config_file = os.path.split(bot.config.filename)
+    config_name, _ = os.path.splitext(config_file)
+    if path is None:
+        path = os.path.join(config_dir, 'logquery.db')
+    path = os.path.expanduser(path)
+    if not os.path.isabs(path):
+        path = os.path.normpath(os.path.join(config_dir, path))
+    filename = path
+    _create()
 
 @commands('logquery')
 def logquery(bot, trigger):
@@ -73,18 +79,20 @@ def logquery(bot, trigger):
 
     query_log(bot, base_query[0])    # Grab the first tuple match and set that as the base query
 
+@commands('logquery-util')
+def lq_utils(bot, trigger):
+    if not trigger.admin:           # If you aren't a bot admin, get outta this command!
+        return
+    if trigger.group(3) == 'clear':                                 # Clear the log
+        execute('DELETE FROM logquery')
+        bot.say('Cleared DB!')
+        return
+
 def query_log(bot, query):
     matches = []
 
-    conn = bot.db.connect()
-    conn.row_factory = sqlite3.Row
-    c = conn.cursor()
-
-    c.execute(*construct_query(query[1]))
+    c = execute(*construct_query(query[1]))
     matches = c.fetchall()
-
-    conn.commit()
-    conn.close()
 
     if len(matches) == 0:                                                                   # No results, let the user know
         bot.say('[logquery] No results, try .logquery help for usage')
@@ -124,8 +132,8 @@ def construct_query(query):
         where.append(' OR '.join(current))
 
     if where:
-        sql = '{} WHERE {} {}'.format(sql, ' AND '.join(where), 'ORDER BY datetime(sent_at) ASC')
-        return sql, params
+        sql = '{} WHERE {} {}'.format(sql, ' AND '.join(where), 'GROUP BY sent_at ORDER BY datetime(sent_at) DESC LIMIT 10')
+        return 'SELECT * FROM ('+sql+') ORDER BY datetime(sent_at) ASC', params
     else:
         return "", ""
 
@@ -133,4 +141,93 @@ def format_msg(msg):
     """
     Format a SQL row to a nice IRC-like message
     """
-    return u'<{}/{}> {}'.format(msg['nick'], msg['channel'], msg['message'])
+    MESSAGE_TPL = "[{sent_at}] <{nick}/{channel}> {message}"
+    ACTION_TPL = "[{sent_at}] * {nick}/{channel} {message}"
+    NICK_TPL = "[{sent_at}] *** {nick} is now known as {message}"
+    JOIN_TPL = "[{sent_at}] *** {nick} has joined {channel}"
+    PART_TPL = "[{sent_at}] *** {nick} has left {channel} ({message})"
+    QUIT_TPL = "[{sent_at}] *** {nick} has quit IRC ({message})"
+
+    intent = msg['intent']
+    msg['sent_at'] = msg['sent_at'].split(".")[0].split(" ")[1]
+    if (intent == 'PRIVMSG'):
+        return MESSAGE_TPL.format(**msg)
+    elif (intent == 'ACTION'):
+        return ACTION_TPL.format(**msg)
+    elif (intent == 'NICK'):
+        return NICK_TPL.format(**msg)
+    elif (intent == 'JOIN'):
+        return JOIN_TPL.format(**msg)
+    elif (intent == 'PART'):
+        return PART_TPL.format(**msg)
+    elif (intent == 'QUIT'):
+        return QUIT_TPL.format(**msg)
+
+    return u'<{nick}/{channel}> {message}'.format(**msg)
+
+@rule('.*')
+@unblockable
+def log_message(bot, message):
+    "Log every message in a channel"
+    # if this is a private message and we're not logging those, return early
+    if message.sender.is_nick():
+        return
+
+    intent = 'PRIVMSG'
+    if 'intent' in message.tags:
+        intent = message.tags['intent']
+
+    # Insert new text into table
+    execute('INSERT INTO logquery (channel, nick, ident, host, message, intent, sent_at) VALUES (?,?,?,?,?,?,?)',
+        (message.sender, message.nick, message.user, message.host, message.match.string, intent, datetime.utcnow()))
+
+    # Ensure no more than x amount of messages exist for the current channel
+    #execute('DELETE FROM logquery WHERE channel=? AND id NOT IN (SELECT id FROM logquery WHERE channel=? ORDER BY datetime(sent_at) DESC LIMIT 500)',
+    #    (message.sender, message.sender))
+
+@rule('.*')
+@event("JOIN")
+@unblockable
+def log_join(bot, message):
+    execute('INSERT INTO logquery (channel, nick, ident, host, message, intent, sent_at) VALUES (?,?,?,?,?,?,?)',
+        (message.sender, message.nick, message.user, message.host, message.match.string, 'JOIN', datetime.utcnow()))
+
+
+@rule('.*')
+@event("PART")
+@unblockable
+def log_part(bot, message):
+    execute('INSERT INTO logquery (channel, nick, ident, host, message, intent, sent_at) VALUES (?,?,?,?,?,?,?)',
+        (message.sender, message.nick, message.user, message.host, message.match.string, 'PART', datetime.utcnow()))
+
+
+@rule('.*')
+@event("QUIT")
+@unblockable
+@thread(False)
+@priority('high')
+def log_quit(bot, message):
+    time = datetime.utcnow()
+    # make a copy of bot.privileges that we can safely iterate over
+    privcopy = list(bot.privileges.items())
+    # write logline to *all* channels that the user was present in
+    for channel, privileges in privcopy:
+        if message.nick in privileges:
+            execute('INSERT INTO logquery (channel, nick, ident, host, message, intent, sent_at) VALUES (?,?,?,?,?,?,?)',
+                (channel, message.nick, message.user, message.host, message.match.string, 'QUIT', time))
+
+
+@rule('.*')
+@event("NICK")
+@unblockable
+def log_nick_change(bot, message):
+    time = datetime.utcnow()
+    old_nick = message.nick
+    new_nick = message.sender
+    # make a copy of bot.privileges that we can safely iterate over
+    privcopy = list(bot.privileges.items())
+    # write logline to *all* channels that the user is present in
+    for channel, privileges in privcopy:
+        if old_nick in privileges or new_nick in privileges:
+            execute('INSERT INTO logquery (channel, nick, ident, host, message, intent, sent_at) VALUES (?,?,?,?,?,?,?)',
+                (channel, old_nick, message.user, message.host, new_nick, 'NICK', time))
