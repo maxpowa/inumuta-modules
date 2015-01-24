@@ -102,7 +102,7 @@ def findandreplace(bot, trigger):
         return
 
     rest = [trigger.group(2), trigger.group(3)]
-    find = rest[0]
+    find = rest[0].replace('\\\\', '\\')
     replace = rest[1]
     me = False  # /me command
     flags = (trigger.group(4) or '')
