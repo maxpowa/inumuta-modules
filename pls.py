@@ -9,7 +9,7 @@ import re
 import time
 import datetime
 from willie.tools import get_timezone, format_time
-from willie.tools import Nick, WillieMemory
+from willie.tools import Identifier, WillieMemory
 from willie.module import rule, priority, commands, interval
 
 def setup(bot):
@@ -31,29 +31,29 @@ def collectpls(bot, trigger):
     # Add a count for the channel and nick, if there isn't already one
     if trigger.sender not in bot.memory['pls_count']:
         bot.memory['pls_count'][trigger.sender] = WillieMemory()
-    if Nick(trigger.nick) not in bot.memory['pls_count'][trigger.sender]:
-        bot.memory['pls_count'][trigger.sender][Nick(trigger.nick)] = 0
+    if Identifier(trigger.nick) not in bot.memory['pls_count'][trigger.sender]:
+        bot.memory['pls_count'][trigger.sender][Identifier(trigger.nick)] = 0
 
     # Count them
-    count = bot.memory['pls_count'][trigger.sender][Nick(trigger.nick)]
+    count = bot.memory['pls_count'][trigger.sender][Identifier(trigger.nick)]
     count += 1
-    bot.memory['pls_count'][trigger.sender][Nick(trigger.nick)] = count
+    bot.memory['pls_count'][trigger.sender][Identifier(trigger.nick)] = count
 
 @commands('plscount')
 def format_count(bot, trigger):
     if trigger.is_privmsg:
         return
 
-    user = Nick(trigger.group(2) or trigger.nick)
+    user = Identifier(trigger.group(2) or trigger.nick)
     
-    user = Nick(user.strip())
+    user = Identifier(user.strip())
     
     count = get_count(bot, user, trigger.sender)
     since = bot.memory['pls_count_time']
     
     timezone = get_timezone(bot.db, bot.config, None, trigger.nick)
     if not timezone:
-        timezone = 'UTC'
+        timezone = 'UTC' 
     time = format_time(bot.db, bot.config, timezone, trigger.nick, trigger.sender, datetime.datetime.fromtimestamp(since))
     
     bot.say('{} has said pls in {} {} time(s) since {}'.format(user, trigger.sender, count, time))
@@ -67,7 +67,7 @@ def get_count(bot, user, chan):
     # only do something if there is conversation to work with
     if chan not in chan_count:
         return 0
-    if Nick(user) not in chan_count[chan]:
+    if Identifier(user) not in chan_count[chan]:
         return 0
         
-    return chan_count[chan][Nick(user)]
+    return chan_count[chan][Identifier(user)]
