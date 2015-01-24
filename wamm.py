@@ -11,6 +11,9 @@ import time
 
 current_milli_time = lambda: int(round(time.time() * 1000))
 
+def setup(bot):
+    
+
 @module.commands('wammspeak','ts3','ts')
 def wammspeak(bot, trigger):
     text = trigger.group(2)
@@ -31,32 +34,27 @@ def mirkocraft(bot, trigger):
 def asie(bot, trigger):
     bot.say('pls http://puu.sh/bGfyj/488b072f12.png')
 
-last_message_id = None
-last_message = None
-    
-@module.rule('(.*)')
-def listen_to_wamm(bot, trigger):
-    global last_message
-    if trigger.sender.lower() != '#wamm' or trigger.nick.lower() != 'Teh_Colt':
+@module.commands('under')
+def underwhere(bot, trigger):
+    if trigger.group(2) == None:
         return
-        
-    last_message = (trigger.nick, trigger.group(1), current_milli_time())
-    
-@module.interval(30*60)
-def tweet_last_message(bot):
-    global last_message_id
-    if last_message:
-        if last_message_id != last_message[2]:
-            last_message_id = last_message[2]
-            
-            auth = tweepy.OAuthHandler(bot.config.twitter.consumer_key, bot.config.twitter.consumer_secret)
-            auth.set_access_token(bot.config.twitter.access_token, bot.config.twitter.access_token_secret)
-            api = tweepy.API(auth)
+    if trigger.group(2).strip() == 'where':
+        bot.say('Under here: https://www.youtube.com/watch?v=_ak4rincQ5Y')
 
-            extra_len = 140 - (len(last_message[0])+11)
-            update = '"'+last_message[1][:extra_len]+'" - '+last_message[0]+' #WAMM'
-            
-            if len(update) <= 140:
-                api.update_status(update)
+@module.commands('colt', 'cookie')
+def colt(bot, trigger):
+    """
+    .cookie [target] - Apparently you get a cookie
+    """
+    if trigger.group(3):
+        bot.say('Hey, ' + trigger.group(3).strip() + '! You! You got a cookie from ' + trigger.nick + '!')
+
+@module.commands('nocookie', 'nocolt')
+def nocolt(bot, trigger):
+    """
+    .nocookie [target] - Apparently you don't get a cookie
+    """
+    if trigger.group(3):
+        bot.say('Hey, ' + trigger.group(3).strip() + '! You don\'t get a cookie!')
     
     

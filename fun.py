@@ -14,16 +14,34 @@ import random
 import re
 from random import randint, choice
 
-@module.commands('cwd')
-def cwd(bot, trigger):
-    bot.say(os.getcwd())
-
-@module.commands('under')
-def underwhere(bot, trigger):
-    if trigger.group(2) == None:
+@module.commands('encode')
+def encode(bot, trigger):
+    encoding = trigger.group(3)
+    text = trigger.group(2)
+    if not encoding or not text:
+        bot.say('encode usage: .encode <encoding> <string>')
         return
-    if trigger.group(2).strip() == 'where':
-        bot.say('Under here: https://www.youtube.com/watch?v=_ak4rincQ5Y')
+    
+    text = text.replace(encoding, '', 1).strip()
+    try:
+        bot.say(text.encode(encoding, 'strict'))
+    except Exception as e:
+        bot.say('[Encode] {}'.format(e.message))
+        
+@module.commands('decode')
+def decode(bot, trigger):
+    encoding = trigger.group(3)
+    text = trigger.group(2)
+    if not encoding or not text:
+        bot.say('decode usage: .decode <encoding> <string>')
+        return
+    
+    text = text.replace(encoding, '', 1).strip()
+    try:
+        bot.say(text.decode(encoding, 'strict'))
+    except Exception as e:
+        bot.say('[Decode] {}'.format(e.message))
+    
 
 @module.commands('rainbow')
 def rainbow(bot, trigger):
@@ -117,22 +135,6 @@ def swirl(bot, trigger):
     else:
         bot.say(swirl_text('swirly text'))
 
-@module.commands('colt', 'cookie')
-def colt(bot, trigger):
-    """
-    .cookie [target] - Apparently you get a cookie
-    """
-    if trigger.group(3):
-        bot.say('Hey, ' + trigger.group(3).strip() + '! You! You got a cookie from ' + trigger.nick + '!')
-
-@module.commands('nocookie', 'nocolt')
-def nocolt(bot, trigger):
-    """
-    .nocookie [target] - Apparently you don't get a cookie
-    """
-    if trigger.group(3):
-        bot.say('Hey, ' + trigger.group(3).strip() + '! You don\'t get a cookie!')
-
 @module.commands('hold')
 def hold(bot, trigger):
     """
@@ -221,20 +223,19 @@ def zalgo_cmd(bot, trigger):
     """
     .zalgo [text] - Zalgo-izes text. Will zalgo the word 'zalgo' if no text is given.
     """
+    text = ''.join(map(mungle, 'zalgo'.decode('utf8'))).encode('utf8')
     if trigger.group(2):
         try:
-            bot.say(''.join(map(mungle, trigger.group(2).decode('utf8'))).encode('utf8'))
+            text = ''.join(map(mungle, trigger.group(2).decode('utf8'))).encode('utf8')
         except UnicodeEncodeError:
-            bot.say(''.join(map(mungle, trigger.group(2).encode('ascii','ignore'))).encode('utf8'))
-    else:
-        bot.say(''.join(map(mungle, 'zalgo'.decode('utf8'))).encode('utf8'))
-
-@module.commands('pirate')
-def pirate_cmd(bot, trigger):
-    """
-    .pirate [yarr english] - Speak like a pirate matey!
-    """
-    bot.say(pirate(trigger.group(2).strip()))
+            text = ''.join(map(mungle, trigger.group(2).encode('ascii','ignore'))).encode('utf8')
+            
+    #This is a hacky fix, but it works. See https://gist.github.com/grawity/3257896 for why it's needed
+    remainder = 496 - len(bot.nick + bot.user + 'irc.everythingisawesome.us' + trigger.sender)
+    if len(text) > remainder:
+        text = text[:remainder]
+    
+    bot.say(text)
 
 @module.commands('flip')
 def flip(bot, trigger):
@@ -270,18 +271,6 @@ def flip_text(text):
         comb_map = dict(zip(abc_chars, flip_chars))
         #return str(comb_map)
         return replace_all(text.lower()[::-1], comb_map)
-
-#
-# PIRATE CONVERTER
-#
-
-import subprocess 
-
-def pirate(english):
-    translater = subprocess.Popen('pirate', stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-    translater.stdin.write(english.encode("utf8")+"\n")
-    piratese, _ = translater.communicate()
-    return piratese.strip()
 
 #
 # ZALGO CONVERTER
