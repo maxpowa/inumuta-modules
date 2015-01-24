@@ -13,8 +13,6 @@ from willie.module import commands, rule, NOLIMIT, interval
 from willie.formatting import bold, color
 from willie.tools import get_timezone, format_time
 
-from util import timing
-
 import operator
 from collections import deque
 
