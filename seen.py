@@ -29,14 +29,16 @@ def seen(bot, trigger):
         channel = seen_dict[nick]['channel']
         message = seen_dict[nick]['message']
 
-        tz = get_timezone(bot.db, bot.config, None, trigger.nick,
-                          trigger.sender)
+        tz = get_timezone(bot.db, bot.config, None, trigger.nick, trigger.sender)
         saw = datetime.datetime.utcfromtimestamp(timestamp)
-        timestamp = format_time(bot.db, bot.config, tz, trigger.nick,
-                                trigger.sender, saw)
+        timestamp = format_time(bot.db, bot.config, tz, trigger.nick, trigger.sender, saw)
 
-        msg = "I last saw %s at %s on %s, saying %s" % (nick, timestamp, channel, message)
-        bot.say(str(trigger.nick) + ': ' + msg)
+        msg = "I last saw {} at {}".format(nick, timestamp)
+        if Identifier(channel) == trigger.sender:
+            msg = msg + " in here, saying " + message
+        else:
+            msg += " in another channel."
+        bot.reply(msg)
     else:
         bot.say("Sorry, I haven't seen %s around." % nick)
 
