@@ -6,10 +6,10 @@ Adapted for use with Willie from https://github.com/infinitylabs/uguubot/blob/ma
 Licensed under the Eiffel Forum License 2 (It's GPL compatible!).
 """
 from willie.module import commands, rule
+from willie import web
 from bs4 import BeautifulSoup
 import random
 import re
-import booruhelper
 
 gelbooru_cache = []
 lastsearch = ''
@@ -76,4 +76,4 @@ def gelbooru_url(bot, trigger):
     bot.say(u'\x02[Gelbooru]\x02 Score: \x02{}\x02 | Rating: {} | Tags: {}'.format(score, rating, tags.strip()))
     
 def get_soup(url):
-    return BeautifulSoup(booruhelper.get(url), 'lxml')
+    return BeautifulSoup(web.get(url), 'lxml')
