@@ -26,10 +26,13 @@ def check_alias(bot, trigger):
         bot.reply('Fetching NickServ info... I will get back to you in a PM')
         
     elif (trigger.group(3).lower() == 'list'):
-        alias = Identifier(trigger.nick)
-        nick_id = bot.db.get_nick_id(alias, False)
-        nicks = bot.db.execute('SELECT DISTINCT canonical FROM nicknames WHERE nick_id = ?',[nick_id]).fetchall()
-        bot.say('{}, your aliases are: {}'.format(trigger.nick, ' '.join([nick[0] for nick in nicks])))
+        try:
+            alias = Identifier(trigger.nick)
+            nick_id = bot.db.get_nick_id(alias, False)
+            nicks = bot.db.execute('SELECT DISTINCT canonical FROM nicknames WHERE nick_id = ?',[nick_id]).fetchall()
+            bot.say('{}, your aliases are: {}'.format(trigger.nick, ' '.join([nick[0] for nick in nicks])))
+        except:
+            bot.say('Something went wrong, perhaps you haven\'t aliased any nicks?')
     
 @rule('^Information on (.+) \(account (.+)\):$')
 @event("NOTICE")
@@ -49,6 +52,10 @@ def receive_info(bot, trigger):
         except ValueError as e:
             if nick in force:
                 bot.db.merge_nick_groups(account, nick)
+                first_id = bot.db.get_nick_id(Identifier(account))
+                second_id = bot.db.get_nick_id(Identifier(nick))
+                bot.db.execute('UPDATE nicknames SET nick_id = ? WHERE nick_id = ?',
+                     [first_id, second_id])
                 bot.msg(nick, 'Merged {0} and {1}. If conflicting values were found'
                     ' between accounts, values from {0} were used.'.format(account, nick))
                 del force[nick]
