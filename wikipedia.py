@@ -12,9 +12,6 @@ from willie.module import NOLIMIT, commands, example, rule
 import json
 import re
 
-REDIRECT = re.compile(r'^REDIRECT (.*)')
-
-
 def setup(bot):
     regex = re.compile('([a-z]+).(wikipedia.org/wiki/)([^ ]+)')
     if not bot.memory.contains('url_callbacks'):
@@ -58,7 +55,7 @@ def say_snippet(bot, server, query, show_url=True):
     page_name = query.replace('_', ' ')
     query = query.replace(' ', '_')
     snippet = mw_snippet(server, query)
-    msg = '[WIKIPEDIA] {} | "{}"'.format(page_name, snippet)
+    msg = '[Wikipedia] {} | "{}"'.format(page_name, snippet)
     if show_url:
         msg = msg + ' | https://{}/wiki/{}'.format(server, query)
     bot.say(msg)
