@@ -195,6 +195,14 @@ def hail_hydra(bot, trigger):
          bot.say('/o/ /o/ HAIL '+trigger.group(2).upper() + ' \\o\\ \\o\\')
     else:
          bot.say('HAIL HYDRA')
+         
+@module.commands('salute')
+def salute(bot, trigger):
+    """
+    .salute <party> - Salutes party of choice, will not do anything unless given party to salute
+    """
+    if trigger.group(2):
+         bot.say('o7 o7 SALUTE '+trigger.group(2).upper() + ' o7 o7')
 
 @module.commands('rollover')
 def rollover(bot, trigger):
