@@ -192,13 +192,19 @@ def log_join(bot, message):
     execute('INSERT INTO logquery (channel, nick, ident, host, message, intent, sent_at) VALUES (?,?,?,?,?,?,?)',
         (message.sender, message.nick, message.user, message.host, message.match.string, 'JOIN', datetime.utcnow()))
 
-
 @rule('.*')
 @event("PART")
 @unblockable
 def log_part(bot, message):
     execute('INSERT INTO logquery (channel, nick, ident, host, message, intent, sent_at) VALUES (?,?,?,?,?,?,?)',
         (message.sender, message.nick, message.user, message.host, message.match.string, 'PART', datetime.utcnow()))
+        
+@rule('.*')
+@event("MODE")
+@unblockable
+def log_mode(bot, message):
+    execute('INSERT INTO logquery (channel, nick, ident, host, message, intent, sent_at) VALUES (?,?,?,?,?,?,?)',
+        (message.sender, message.nick, message.user, message.host, ' '.join(message.args[1:]), 'MODE', datetime.utcnow()))
 
 
 @rule('.*')
