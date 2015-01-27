@@ -57,8 +57,10 @@ def mcstats(bot, trigger):
 def mcpaid(bot, trigger):
     """
     .mcpaid <username> - Checks if <username> has a premium Minecraft account.
-    """  
-    users = trigger.group(2).strip()
+    """ 
+    users = trigger.nick;
+    if (trigger.group(2)):
+        users = trigger.group(2).strip()
     for user in users.split():
         has_paid(bot, user)
 
