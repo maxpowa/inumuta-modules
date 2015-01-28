@@ -234,9 +234,9 @@ def zalgo_cmd(bot, trigger):
     text = ''.join(map(mungle, 'zalgo'.decode('utf8'))).encode('utf8')
     if trigger.group(2):
         try:
-            text = ''.join(map(mungle, trigger.group(2).decode('utf8'))).encode('utf8')
+            text = ''.join(map(mungle, trigger.group(2).decode('utf8'))).encode('utf8','ignore')
         except UnicodeEncodeError:
-            text = ''.join(map(mungle, trigger.group(2).encode('ascii','ignore'))).encode('utf8')
+            text = ''.join(map(mungle, trigger.group(2).encode('ascii','ignore'))).encode('utf8','ignore')
             
     #This is a hacky fix, but it works. See https://gist.github.com/grawity/3257896 for why it's needed
     remainder = 496 - len(bot.nick + bot.user + 'irc.everythingisawesome.us' + trigger.sender)
