@@ -6,7 +6,7 @@ Copyright 2015 Max Gurela
 Licensed under the Eiffel Forum License 2.
 """
 
-from willie.module import commands, rule, unblockable, event, thread, priority
+from willie.module import commands, rule, unblockable, event, thread, priority, OP
 from datetime import datetime, date
 import sqlite3
 import re
@@ -67,6 +67,24 @@ def setup(bot):
     filename = path
     _create()
 
+@commands('disable-log')
+def do_not_log(bot, trigger):
+    if bot.privileges[trigger.sender][trigger.nick] < OP:
+        return
+    
+    if not trigger.group(2):
+        bot.reply('disable-log usage: .disable-log <true|false>')
+        return
+        
+    if (trigger.group(2).strip().lower() == 'true'):
+        bot.db.set_channel_value(trigger.sender, 'disable-log', True)
+        execute('DELETE FROM logquery WHERE channel=?;', (trigger.sender,))
+        bot.say('No longer logging '+trigger.sender)
+    else:
+        bot.db.set_channel_value(trigger.sender, 'disable-log', False)
+        execute('DELETE FROM logquery WHERE channel=?;', (trigger.sender,))
+        bot.say('Logging '+trigger.sender)
+    
 @commands('logquery')
 def logquery(bot, trigger):
     base_query = None
@@ -170,7 +188,7 @@ def format_msg(msg):
 def log_message(bot, message):
     "Log every message in a channel"
     # if this is a private message and we're not logging those, return early
-    if message.sender.is_nick():
+    if message.sender.is_nick() or bot.db.get_channel_value(message.sender, 'disable-log'):
         return
 
     intent = 'PRIVMSG'
@@ -189,6 +207,9 @@ def log_message(bot, message):
 @event("JOIN")
 @unblockable
 def log_join(bot, message):
+    if message.sender.is_nick() or bot.db.get_channel_value(message.sender, 'disable-log'):
+        return
+        
     execute('INSERT INTO logquery (channel, nick, ident, host, message, intent, sent_at) VALUES (?,?,?,?,?,?,?)',
         (message.sender, message.nick, message.user, message.host, message.match.string, 'JOIN', datetime.utcnow()))
 
@@ -196,6 +217,9 @@ def log_join(bot, message):
 @event("PART")
 @unblockable
 def log_part(bot, message):
+    if message.sender.is_nick() or bot.db.get_channel_value(message.sender, 'disable-log'):
+        return
+        
     execute('INSERT INTO logquery (channel, nick, ident, host, message, intent, sent_at) VALUES (?,?,?,?,?,?,?)',
         (message.sender, message.nick, message.user, message.host, message.match.string, 'PART', datetime.utcnow()))
         
@@ -203,6 +227,9 @@ def log_part(bot, message):
 @event("MODE")
 @unblockable
 def log_mode(bot, message):
+    if message.sender.is_nick() or bot.db.get_channel_value(message.sender, 'disable-log'):
+        return
+        
     execute('INSERT INTO logquery (channel, nick, ident, host, message, intent, sent_at) VALUES (?,?,?,?,?,?,?)',
         (message.sender, message.nick, message.user, message.host, ' '.join(message.args[1:]), 'MODE', datetime.utcnow()))
 
@@ -213,6 +240,9 @@ def log_mode(bot, message):
 @thread(False)
 @priority('high')
 def log_quit(bot, message):
+    if message.sender.is_nick() or bot.db.get_channel_value(message.sender, 'disable-log'):
+        return
+        
     time = datetime.utcnow()
     # make a copy of bot.privileges that we can safely iterate over
     privcopy = list(bot.privileges.items())
