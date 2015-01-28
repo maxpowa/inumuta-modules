@@ -8,14 +8,16 @@ Rule list compiled by the internet and formatted by @meew0
 Licensed under the Eiffel Forum License 2.
 """
 
-from willie.module import commands, HALFOP
+from willie.module import commands, example, HALFOP
 
 @commands('rule')
+@example('.rule 57')
 def show_rule(bot, trigger):
     """
-    It's the rules of the internet.
+    .rule <id> - The Internet has no rules. No Exceptions.
     """
     if not trigger.group(2):
+        bot.say('.rule <id> - The Internet has no rules. No Exceptions.')
         return
         
     rule = trigger.group(2).strip()
@@ -31,7 +33,7 @@ def show_rule(bot, trigger):
         bot.say(u'Rule {0} is a lie.'.format(rule))
     
 
-# The whole fucking list, this right here is horrifying.
+# The whole fucking list. Having this this way is horrifying. Might get around to replacing it sometime.
 rules = {u'/d/': u'WASH MY EYES OUT',
 u'\u2642': u'You are being watched by hoMoses.',
 u'-': u'All rules after this line either use letters or special characters as rule numbers, or a single digit. no exceptions.',
