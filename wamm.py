@@ -11,9 +11,6 @@ import time
 
 current_milli_time = lambda: int(round(time.time() * 1000))
 
-def setup(bot):
-    
-
 @module.commands('wammspeak','ts3','ts')
 def wammspeak(bot, trigger):
     text = trigger.group(2)
@@ -56,5 +53,60 @@ def nocolt(bot, trigger):
     """
     if trigger.group(3):
         bot.say('Hey, ' + trigger.group(3).strip() + '! You don\'t get a cookie!')
+        
+last_message_id = None
+last_message = None
+    
+@module.commands('opt-in')
+def opt_in(bot, trigger):
+    """
+    .opt-in <true|false> - Opt in to your messages being tweeted by @TinyInumuta
+    """
+    if not trigger.group(2):
+        bot.say('.opt-in <true|false> - Opt in to your messages being tweeted by @TinyInumuta')
+        return
+    
+    if trigger.group(2).strip().lower() == 'true':
+        bot.db.set_nick_value(trigger.nick, 'opt-in', True)
+        bot.say('Your messages may occasionally be tweeted by @TinyInumuta now.')
+    else:
+        bot.db.set_nick_value(trigger.nick, 'opt-in', False)
+        bot.say('Your messages will not be tweeted by @TinyInumuta.')
+    
+@module.rule('([^\.].*)')
+def listen(bot, trigger):
+    global last_message
+    if trigger.sender.is_nick() or not bot.db.get_nick_value(trigger.nick, 'opt-in'):
+        return
+        
+    intent = 'PRIVMSG'
+    if 'intent' in trigger.tags:
+        intent = trigger.tags['intent']   
+     
+    last_message = (trigger.nick, trigger.group(1), trigger.sender, current_milli_time(), intent)
+    
+@module.interval(3600*4) #Every 4 hours, tweet the last message sent
+def tweet_last_message(bot):
+    global last_message_id
+    if last_message:
+        if last_message_id != last_message[3]:
+            last_message_id = last_message[3]
+            
+            auth = tweepy.OAuthHandler(bot.config.twitter.consumer_key, bot.config.twitter.consumer_secret)
+            auth.set_access_token(bot.config.twitter.access_token, bot.config.twitter.access_token_secret)
+            api = tweepy.API(auth)
+
+            padding = 6;
+            tmpl = '"{0}" - {1} {2}'
+            if last_message[4] == 'ACTION':
+                padding = 4;
+                tmpl = '* {1} {0} {2}'
+            padding += len(last_message[2])
+            
+            extra_len = 140 - (len(last_message[0])+padding)
+            update = tmpl.format(last_message[1][:extra_len],last_message[0],last_message[2])
+            
+            if len(update) <= 140:
+                api.update_status(update)
     
     
