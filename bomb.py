@@ -87,4 +87,7 @@ def explode(bot, trigger):
     target = trigger.group(2)
     kmsg = 'Oh, come on, ' + target + '! You could\'ve at least picked one! Now you\'re dead. Guts, all over the place. You see that? This is gonna take forever to clean up...'
     bot.write(['KICK', trigger.sender, target], kmsg)
-    bombs.pop(target.lower())
+    try:
+        bombs.pop(target.lower())
+    except:
+        pass
