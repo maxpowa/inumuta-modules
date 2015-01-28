@@ -6,6 +6,7 @@ Licensed under the Eiffel Forum License 2.
 """
 
 from willie import module
+import random
 import tweepy
 import time
 
@@ -54,6 +55,16 @@ def nocolt(bot, trigger):
     if trigger.group(3):
         bot.say('Hey, ' + trigger.group(3).strip() + '! You don\'t get a cookie!')
         
+@module.commands('yuuki')
+def yuuki(bot, trigger):
+    """
+    .yuuki [target] - Do you want to get stabbed <name>? Because I don't mind doing so.
+    """
+    phrases = ['Do you want to get stabbed {}? Because I don\'t mind doing so.',
+               'I don\'t mind killing you right now, {}']
+    if trigger.group(3):
+        bot.say(random.choice(phrases).format(trigger.group(3).strip()))
+       
 last_message_id = None
 last_message = None
     
