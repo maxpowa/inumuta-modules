@@ -10,8 +10,28 @@ from mcstatus import MinecraftServer
 from willie.module import commands
 from willie import web
 from willie.formatting import color,bold
+import uuid
+import time
 import json
 import re
+
+@commands('uuid')
+def get_uuid(bot, trigger):
+    """
+    .uuid [username] [timestamp] - Get a minecraft username's UUID. You may specify a timestamp, though UNIX format is the only supported format.
+    """
+    username = trigger.group(3)
+    if not username:
+        username = trigger.nick
+    timestamp = trigger.group(4)
+    if not timestamp:
+        timestamp = str(int(time.time()))
+    raw = web.get('https://api.mojang.com/users/profiles/minecraft/{0}?at={1}'.format(username, timestamp))
+    if raw == '':
+        bot.say('{0} does not exist'.format(username))
+        return
+    response = json.loads(raw)
+    bot.say('{0}\'s UUID: {1}'.format(response['name'], str(uuid.UUID(response['id']))))
 
 @commands('status','ping')
 def status(bot, trigger):
