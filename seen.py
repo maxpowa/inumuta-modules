@@ -17,7 +17,9 @@ from willie.module import commands, rule, priority
 
 @commands('seen')
 def seen(bot, trigger):
-    """Reports when and where the user was last seen."""
+    """
+    Reports when and where the user was last seen.
+    """
     if not trigger.group(2):
         bot.say(".seen <nick> - Reports when <nick> was last seen.")
         return
