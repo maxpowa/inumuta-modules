@@ -23,6 +23,10 @@ def encode(bot, trigger):
         return
     
     text = text.replace(encoding, '', 1).strip()
+    
+    if (encoding.lower() == 'binary'):
+        bot.say(''.join('{:08b}'.format(ord(c)) for c in text))
+        return
     try:
         bot.say(text.encode(encoding, 'strict'))
     except Exception as e:
@@ -37,6 +41,13 @@ def decode(bot, trigger):
         return
     
     text = text.replace(encoding, '', 1).strip()
+    
+    if (encoding.lower() == 'binary'):
+        if (set(text) == set([u'1',u'0'])):
+            bot.say(''.join(chr(int(text[i:i+8], 2)) for i in xrange(0, len(text), 8)))
+            return
+        else:
+            bot.say('[Decode] Invalid binary string')
     try:
         bot.say(text.decode(encoding, 'strict'))
     except Exception as e:
@@ -134,7 +145,7 @@ def swirl(bot, trigger):
         bot.say(swirl_text(trigger.group(2).strip()))
     else:
         bot.say(swirl_text('swirly text'))
-
+        
 @module.commands('hold')
 def hold(bot, trigger):
     """
