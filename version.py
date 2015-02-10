@@ -20,17 +20,19 @@ def owner(bot, trigger):
     bot.say('I am owned by '+bot.config.core.owner+'.')
 
 @willie.module.rule('\x01VERSION\x01')
+@willie.module.commands('version')
 @willie.module.rate(20)
 def ctcp_version(bot, trigger):
     bot.write(('NOTICE', trigger.nick),
-              '\x01VERSION Inumuta - Based on Willie %s\x01' % willie.__version__)
+              '\x01VERSION Inumuta %s\x01' % willie.__version__)
 
 
+@willie.module.commands('source')
 @willie.module.rule('\x01SOURCE\x01')
 @willie.module.rate(20)
 def ctcp_source(bot, trigger):
     bot.write(('NOTICE', trigger.nick),
-              '\x01SOURCE https://github.com/maxpowa/inumuta-modules/\x01')
+              '\x01SOURCE https://github.com/maxpowa/Inumuta/\x01')
 
 
 @willie.module.rule('\x01PING\s(.*)\x01')
