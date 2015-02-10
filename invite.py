@@ -53,10 +53,12 @@ def invite_join_chan(bot, trigger):
 @commands('part')
 @priority('low')
 def part_chanop(bot, trigger):
-    if bot.privileges[trigger.sender][trigger.nick] < OP:
+    if trigger.admin:
+        bot.db.set_channel_value(trigger.sender, 'autojoin', False)
         return
         
-    bot.msg('#Inumuta', str(trigger.args))
+    if bot.privileges[trigger.sender][trigger.nick] < OP:
+        return
 
     bot.part(trigger.sender, 'Part requested by {}'.format(trigger.nick))
     bot.db.set_channel_value(trigger.sender, 'autojoin', False)
