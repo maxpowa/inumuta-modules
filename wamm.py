@@ -96,7 +96,7 @@ def listen(bot, trigger):
      
     last_message = (trigger.nick, trigger.group(1), trigger.sender, current_milli_time(), intent)
     
-@module.interval(3600*4) #Every 4 hours, tweet the last message sent
+@module.interval(3600*2) #Every 2 hours, tweet the last message sent
 def tweet_last_message(bot):
     global last_message_id
     if last_message:
