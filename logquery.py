@@ -109,15 +109,26 @@ def lq_utils(bot, trigger):
 def query_log(bot, query):
     matches = []
 
-    c = execute(*construct_query(query[1]))
-    matches = c.fetchall()
+    selector = '*'
+    limit=10
+    if query[0] == 'count':
+        limit=0
+        selector = 'COUNT(*)'
+    
+    sql, params = construct_query(query[1], limit)
+    try:
+        c = execute('SELECT '+selector+' FROM ('+sql+') ORDER BY datetime(sent_at) ASC', params)
+        matches = c.fetchall()
+    except:
+        bot.say('[logquery] Invalid query, try .logquery help for usage')
+        return
 
     if len(matches) == 0:                                                                   # No results, let the user know
         bot.say('[logquery] No results, try .logquery help for usage')
         return
 
     if query[0] == 'count':                                                                 # Show the count
-        bot.say(str(len(matches)))
+        bot.say(str(matches[0]['COUNT(*)']))
     elif query[0] == 'first':                                                               # Show the first value in the list
         bot.say(format_msg(matches[0]))
     elif query[0] == 'last':                                                                # Show the last value in the list
@@ -131,11 +142,15 @@ def query_log(bot, query):
             for match in matches[-5:]:
                 bot.say(format_msg(match))
 
-def construct_query(query):
+def construct_query(query, limit=10):
     sql = "SELECT * FROM logquery"
     where = []
     params = {}
-
+    if (limit > 0):
+        limit = 'LIMIT '+str(limit)
+    else:
+        limit = ''
+    
     for part in query.split('and'):
         # MUST match this regex, otherwise is not going to be used in the query
         adv_query = re.findall(r'(nick|ident|host|message|channel|intent) =~ \'(.+?)\'', part, re.I)
@@ -150,8 +165,8 @@ def construct_query(query):
         where.append(' OR '.join(current))
 
     if where:
-        sql = '{} WHERE {} {}'.format(sql, ' AND '.join(where), 'GROUP BY sent_at ORDER BY datetime(sent_at) DESC LIMIT 10')
-        return 'SELECT * FROM ('+sql+') ORDER BY datetime(sent_at) ASC', params
+        sql = '{} WHERE {} {}'.format(sql, ' AND '.join(where), 'GROUP BY sent_at ORDER BY datetime(sent_at) DESC '+limit)
+        return sql, params
     else:
         return "", ""
 
@@ -222,6 +237,16 @@ def log_part(bot, message):
         
     execute('INSERT INTO logquery (channel, nick, ident, host, message, intent, sent_at) VALUES (?,?,?,?,?,?,?)',
         (message.sender, message.nick, message.user, message.host, message.match.string, 'PART', datetime.utcnow()))
+        
+@rule('.*')
+@event("KICK")
+@unblockable
+def log_part(bot, message):
+    if message.sender.is_nick() or bot.db.get_channel_value(message.sender, 'disable-log'):
+        return
+        
+    execute('INSERT INTO logquery (channel, nick, ident, host, message, intent, sent_at) VALUES (?,?,?,?,?,?,?)',
+        (message.sender, message.nick, message.user, message.host, message.match.string, 'KICK', datetime.utcnow()))
         
 @rule('.*')
 @event("MODE")
