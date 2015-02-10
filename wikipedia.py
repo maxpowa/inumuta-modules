@@ -11,6 +11,7 @@ from willie import web, tools
 from willie.module import NOLIMIT, commands, example, rule
 import json
 import re
+from urlparse import unquote
 
 def setup(bot):
     regex = re.compile('([a-z]+).(wikipedia.org/wiki/)([^ ]+)')
@@ -87,7 +88,7 @@ def mw_info(bot, trigger, found_match=None):
     server.
     """
     match = found_match or trigger
-    say_snippet(bot, match.group(1), match.group(2), show_url=False)
+    say_snippet(bot, match.group(1), unquote(match.group(2)), show_url=False)
 
 
 @commands('w', 'wiki', 'wik')
