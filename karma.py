@@ -43,6 +43,20 @@ def demote_karma(bot, trigger):
     
     bot.db.set_nick_value(trigger.group(1), 'karma', current_karma)
     bot.say(trigger.group(1)+' == '+str(current_karma))
+    
+@rate(10)
+@rule(r'^([\S]+?)\=\=$')
+def show_karma(bot, trigger):
+    """
+    Update karma status for specify IRC user if get '--' message.
+    """
+    current_karma = bot.db.get_nick_value(trigger.group(1), 'karma')
+    if not current_karma:
+        current_karma = 0
+    else:
+        current_karma = int(current_karma)
+    
+    bot.say(trigger.group(1)+' == '+str(current_karma))
 
 @commands('karma')
 def karma(bot, trigger):
