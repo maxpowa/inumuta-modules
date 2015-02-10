@@ -5,7 +5,7 @@ Licensed under the Eiffel Forum License 2.
 
 http://willie.dfbta.net
 """
-from willie.module import commands, HALFOP
+from willie.module import commands, unblockable, HALFOP
 from random import choice, randint
 from re import search
 import sched
@@ -57,6 +57,7 @@ def start(bot, trigger):
 
 
 @commands('cutwire')
+@unblockable
 def cutwire(bot, trigger):
     """
     Tells willie to cut a wire when you've been bombed.
