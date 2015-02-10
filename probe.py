@@ -12,7 +12,7 @@ import socket
 def probe_ip_port(ip, port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
-        s.connect((ip, int(port)), 5)
+        s.connect((ip, int(port)))
         s.shutdown(2)
         return True
     except:
