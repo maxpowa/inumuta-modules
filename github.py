@@ -110,9 +110,13 @@ def get_data(bot, trigger, URL):
     max = sum([pair[1] for pair in langData])
     
     data['language'] = ''
-    for (key,val) in langData:
+    for (key,val) in langData[:3]:
         data['language'] = data['language'] + color(str("{0:.1f}".format(float(val) / max * 100)) + '% ' + key, langColors[0]) + ' '
         langColors.rotate()
+    
+    if len(langData) > 3:
+        remainder = sum([pair[1] for pair in langData[3:]])
+        data['language'] = data['language'] + color(str("{0:.1f}".format(float(remainder) / max * 100)) + '% Other', langColors[0]) + ' '
         
     timezone = get_timezone(bot.db, bot.config, None, trigger.nick)
     if not timezone:
@@ -172,7 +176,9 @@ def fmt_response(bot, trigger, URL, from_regex=False):
     
     if not data:
         return
-        
+    
+    #bot.say(str(data))
+
     response = [
         bold('[Github]'),
         ' ', 
@@ -187,6 +193,14 @@ def fmt_response(bot, trigger, URL, from_regex=False):
     response.extend([
         ' | Last Push: ',
         str(data['pushed_at']),
+        ' | Stargazers: ',
+        str(data['stargazers_count']),
+        ' | Watchers: ',
+        str(data['watchers_count']),
+        ' | Forks: ',
+        str(data['forks_count']),
+        ' | Network: ',
+        str(data['network_count']),
         ' | Open Issues: ',
         str(data['open_issues'])
     ])
@@ -194,4 +208,4 @@ def fmt_response(bot, trigger, URL, from_regex=False):
     if not from_regex:
         response.extend([' | ', data['html_url']])
         
-    bot.write(('PRIVMSG', trigger.sender), ''.join(response))
+    bot.say(''.join(response))

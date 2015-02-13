@@ -42,9 +42,10 @@ def nickometer(bot, trigger):
     .nickometer [nick] - Rate how lame a nick is using proprietary algorithms
     """
     score = 0L
-    nick = trigger.group(3)
+    nick = trigger.group(2)
     if not nick:
         nick = trigger.nick
+    nick = nick.strip()
     originalNick = nick
 
     specialCost = [('69', 500),

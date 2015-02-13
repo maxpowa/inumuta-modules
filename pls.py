@@ -59,7 +59,7 @@ def format_count(bot, trigger):
     bot.say('{} has said pls in {} {} time(s) since {}'.format(user, trigger.sender, count, time))
     
 @interval(3600 * 24)
-def reset(bot, trigger):
+def reset(bot):
     setup(bot)
     
 def get_count(bot, user, chan):

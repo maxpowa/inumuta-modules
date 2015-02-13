@@ -12,12 +12,18 @@ def setup(bot):
     """
     Auto-join invited channels
     """
-    cursor = bot.db.execute('SELECT DISTINCT channel FROM channel_values')
+    try:
+        cursor = bot.db.execute('SELECT DISTINCT channel FROM channel_values')
+    except:
+        return
     for channel in cursor.fetchall():
-        channel = str(channel[0])
-        if bot.db.get_channel_value(channel, 'autojoin'):
-            print('[invite] Joining '+channel)
-            bot.join(channel)
+        try:
+            channel = str(channel[0])
+            if bot.db.get_channel_value(channel, 'autojoin'):
+                print('[invite] Joining '+channel)
+                bot.join(channel)
+        except:
+            pass
 
 @event('INVITE')
 @rule('.*')
