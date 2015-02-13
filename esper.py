@@ -56,16 +56,16 @@ def receive_info(bot, trigger):
                 second_id = bot.db.get_nick_id(Identifier(nick))
                 bot.db.execute('UPDATE nicknames SET nick_id = ? WHERE nick_id = ?',
                      [first_id, second_id])
-                bot.msg(nick, 'Merged {0} and {1}. If conflicting values were found'
+                bot.msg(nick, 'Merged {0} and {1}. If conflicting values were found' \
                     ' between accounts, values from {0} were used.'.format(account, nick))
                 del force[nick]
             else:
                 extra = ''
                 if nick.lower() != account.lower():
-                    extra = 'If you wish to merge data'
-                    ' from {0} to {1}, you may do so by using `.alias merge`. Please note that doing so'
+                    extra = 'If you wish to merge data' \
+                    ' from {0} to {1}, you may do so by using `.alias merge`. Please note that doing so' \
                     ' will overwrite conflicting values with those found in {0}. '.format(account, nick)
-                bot.msg(nick, 'Sorry, I was unable to alias your nick'
+                bot.msg(nick, 'Sorry, I was unable to alias your nick' \
                     ' to your account -- it might have already been aliased. {1}({0})'.format(e.message, extra))
                 return
     
