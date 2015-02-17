@@ -22,7 +22,7 @@ def horrible(bot, trigger):
     latest = False
     query = trigger.group(2)
     if not query:
-	latest = True
+        latest = True
 
     url = 'http://horriblesubs.info/lib/search.php?value={}'
     if latest:
@@ -43,3 +43,4 @@ def horrible(bot, trigger):
                 resolutions.append(res.find('a', {'href':'#'}).text)
             bot.say('Latest: {} | Resolutions: {} | Download: {} ({})'.format(episode, ', '.join(resolutions), links[-1], resolutions[-1]))
             return
+    bot.say('[Horrible] No results found')
