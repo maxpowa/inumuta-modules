@@ -32,6 +32,10 @@ def mirkocraft(bot, trigger):
 def asie(bot, trigger):
     bot.say('pls http://puu.sh/bGfyj/488b072f12.png')
 
+@module.commands('docker')
+def docker(bot, trigger):
+    bot.say('http://i.imgur.com/syIGxF0.png')
+
 @module.commands('under')
 def underwhere(bot, trigger):
     if trigger.group(2) == None:
