@@ -41,7 +41,7 @@ def ctcp_source(bot, trigger):
 @willie.module.rate(10)
 def ctcp_ping(bot, trigger):
     if 'intent' in trigger.tags and trigger.tags['intent'] == 'PING':
-        bot.notice('\x01PING {}\x01'.format(trigger.group()), 
+        bot.notice('\x01PING {}\x01'.format(trigger.group()),
                    recipient=trigger.nick)
 
 
