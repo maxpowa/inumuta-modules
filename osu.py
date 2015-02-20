@@ -7,7 +7,7 @@ Licensed under the Eiffel Forum License 2.
 
 Uses the osu!api, docs: https://github.com/peppy/osu-api/wiki
 """
-
+from __future__ import unicode_literals
 from willie.module import commands,rule
 from willie.formatting import color
 import willie.web as web

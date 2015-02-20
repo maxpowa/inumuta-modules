@@ -5,6 +5,7 @@ Licensed under the Eiffel Forum License 2.
 
 http://willie.dfbta.net
 """
+from __future__ import unicode_literals
 from willie.module import commands, unblockable, HALFOP
 from random import choice, randint
 from re import search

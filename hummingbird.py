@@ -5,7 +5,7 @@ Copyright 2015 Max Gurela
 
 Licensed under the Eiffel Forum License 2.
 """
-
+from __future__ import unicode_literals
 from willie.module import commands,rule,example
 from willie.formatting import color
 from willie import web

@@ -6,7 +6,7 @@ Copyright 2014 Max Gurela
 
 Licensed under the Eiffel Forum License 2.
 """
- 
+from __future__ import unicode_literals 
 import urllib2
 import random
 import json

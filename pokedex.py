@@ -5,7 +5,7 @@ Copyright 2014 Max Gurela
 
 Licensed under the Eiffel Forum License 2.
 """
-
+from __future__ import unicode_literals
 from willie import web
 from willie.module import commands, rule, thread, example
 from util import timing
@@ -18,7 +18,7 @@ user_agent = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:17.0) Gecko/17.0' \
 
 @thread(True)
 @commands('dex','pokedex',u'pok\u00e9dex')
-@example('.pokedex Charmander', '8')
+@example('.pokedex Charmander', u'[Pok\u00E9dex] #004 Charmander | Fire | Blaze | Generation 1 | \u215E male, \u215B female | Egg: Monster/Dragon')
 def pokedex(bot, trigger):
     """
     .pokedex <query> - Search for a Pokemon and much, much more. See '.pokedex manual' for more information

@@ -7,7 +7,7 @@ Adapted for willie from https://github.com/infinitylabs/uguubot/blob/master/disa
 
 Licensed under the Eiffel Forum License 2.
 """
-
+from __future__ import unicode_literals
 from willie.module import commands
 import re
 import random

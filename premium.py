@@ -1,5 +1,5 @@
 #!/usr/local/bin/python2.7
-
+from __future__ import unicode_literals
 import urllib, urllib2
 from willie.module import commands, rule
 from bs4 import BeautifulSoup

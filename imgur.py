@@ -6,7 +6,7 @@ Copyright © 2014, iceTwy, <icetwy@icetwy.re>
 
 Licensed under the Eiffel Forum License 2.
 """
-
+from __future__ import unicode_literals
 import json
 import re
 import os.path

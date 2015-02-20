@@ -6,7 +6,7 @@ Licensed under the Eiffel Forum License 2.
 
 http://justfen.com
 """
-
+from __future__ import unicode_literals
 import re
 from willie import web
 from willie.module import commands, example, VOICE

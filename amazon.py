@@ -5,7 +5,7 @@ https://github.com/infinitylabs/uguubot/blob/master/plugins/amazon.py
 
 Licensed under the Eiffel Forum License 2.
 """
-
+from __future__ import unicode_literals
 from willie import web
 from willie.module import commands,rule
 from lxml import html

@@ -7,7 +7,7 @@ Adapted from supybot https://github.com/Elwell/supybot/blob/master/plugins/Nicko
 
 Licensed under the Eiffel Forum License 2.
 """
-
+from __future__ import unicode_literals
 from willie.module import commands
 import re
 import math

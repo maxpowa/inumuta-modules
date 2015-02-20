@@ -5,7 +5,7 @@ Copyright 2014 Max Gurela
 
 Licensed under the Eiffel Forum License 2.
 """
-
+from __future__ import unicode_literals
 from mcstatus import MinecraftServer
 from willie.module import commands
 from willie import web

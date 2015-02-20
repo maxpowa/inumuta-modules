@@ -7,7 +7,7 @@ Rule list compiled by the internet and formatted by @meew0
 
 Licensed under the Eiffel Forum License 2.
 """
-
+from __future__ import unicode_literals
 from willie.module import commands, example, HALFOP
 
 @commands('rule')

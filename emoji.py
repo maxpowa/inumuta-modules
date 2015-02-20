@@ -7,7 +7,7 @@ Emoji list adapted from https://github.com/carpedm20/emoji/blob/master/emoji/cod
 
 Licensed under the Eiffel Forum License 2.
 """
-
+from __future__ import unicode_literals
 from willie.module import commands, example
 
 @commands('e','emoji')

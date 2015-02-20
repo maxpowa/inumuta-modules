@@ -7,7 +7,7 @@ https://github.com/yiangos/python-text-to-brainfuck/blob/master/BFGenerator.py
 
 Licensed under the Eiffel Forum License 2.
 """
-
+from __future__ import unicode_literals
 from willie.module import commands,thread
 from io import StringIO as StringIO
 import re

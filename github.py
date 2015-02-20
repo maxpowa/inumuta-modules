@@ -7,7 +7,7 @@ Licensed under the Eiffel Forum License 2.
 
 http://willie.dftba.net/
 """
-
+from __future__ import unicode_literals
 from willie import web, tools
 from willie.module import commands, rule, NOLIMIT, interval
 from willie.formatting import bold, color

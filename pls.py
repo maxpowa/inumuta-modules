@@ -4,7 +4,7 @@ pls.py - Count pls
 
 Licensed under the Eiffel Forum License 2.
 """
-
+from __future__ import unicode_literals
 import re
 import time
 import datetime
