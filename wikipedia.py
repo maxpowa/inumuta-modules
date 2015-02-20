@@ -11,7 +11,15 @@ from willie import web, tools
 from willie.module import NOLIMIT, commands, example, rule
 import json
 import re
-from urlparse import unquote
+
+import sys
+if sys.version_info.major < 3:
+    from urlparse import unquote
+else:
+    from urllib.parse import unquote
+
+REDIRECT = re.compile(r'^REDIRECT (.*)')
+
 
 def setup(bot):
     regex = re.compile('([a-z]+).(wikipedia.org/wiki/)([^ ]+)')
@@ -56,7 +64,7 @@ def say_snippet(bot, server, query, show_url=True):
     page_name = query.replace('_', ' ')
     query = query.replace(' ', '_')
     snippet = mw_snippet(server, query)
-    msg = '[Wikipedia] {} | "{}"'.format(page_name, snippet)
+    msg = '[WIKIPEDIA] {} | "{}"'.format(page_name, snippet)
     if show_url:
         msg = msg + ' | https://{}/wiki/{}'.format(server, query)
     bot.say(msg)
