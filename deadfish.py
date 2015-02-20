@@ -27,7 +27,7 @@ def deadfish(bot, trigger):
 
     output = []
     for c in inp:
-        if memory == 256 or memory < 0:
+        if memory == 256 or memory < 0 or memory > 9223372036859223372036854775807: #Synthetic max limit
             memory = 0  # Overflow
         if c == u'i':
             memory += 1  # Increment
