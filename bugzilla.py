@@ -13,7 +13,6 @@ import re
 from willie import web, tools
 from willie.module import rule
 
-
 regex = None
 
 

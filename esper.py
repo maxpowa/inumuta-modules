@@ -10,6 +10,7 @@ from willie.tools import Identifier
 
 force = {}
 
+
 @commands('alias')
 def check_alias(bot, trigger):
     if not trigger.group(3):
@@ -19,31 +20,32 @@ def check_alias(bot, trigger):
     if (trigger.group(3).lower() == 'add'):
         bot.write(['PRIVMSG', 'NickServ', ':info', trigger.nick])
         bot.reply('Fetching NickServ info... I will get back to you in a PM')
-        
+
     elif (trigger.group(3).lower() == 'merge'):
         force[trigger.nick] = True
         bot.write(['PRIVMSG', 'NickServ', ':info', trigger.nick])
         bot.reply('Fetching NickServ info... I will get back to you in a PM')
-        
+
     elif (trigger.group(3).lower() == 'list'):
         try:
             alias = Identifier(trigger.nick)
             nick_id = bot.db.get_nick_id(alias, False)
-            nicks = bot.db.execute('SELECT DISTINCT canonical FROM nicknames WHERE nick_id = ?',[nick_id]).fetchall()
+            nicks = bot.db.execute('SELECT DISTINCT canonical FROM nicknames WHERE nick_id = ?', [nick_id]).fetchall()
             bot.say('{}, your aliases are: {}'.format(trigger.nick, ' '.join([nick[0] for nick in nicks])))
         except:
             bot.say('Something went wrong, perhaps you haven\'t aliased any nicks?')
-    
+
+
 @rule('^Information on (.+) \(account (.+)\):$')
 @event("NOTICE")
 @unblockable
 def receive_info(bot, trigger):
     if trigger.sender != 'NickServ':
         return
-    
+
     account = Identifier(trigger.group(2))
     nick = Identifier(trigger.group(1))
-    
+
     try:
         bot.db.alias_nick(account, nick)
     except ValueError as e:
@@ -68,5 +70,5 @@ def receive_info(bot, trigger):
                 bot.msg(nick, 'Sorry, I was unable to alias your nick' \
                     ' to your account -- it might have already been aliased. {1}({0})'.format(e.message, extra))
                 return
-    
-    bot.msg(nick, 'Successfully aliased '+nick+' to account '+account)
+
+    bot.msg(nick, 'Successfully aliased ' + nick + ' to account ' + account)

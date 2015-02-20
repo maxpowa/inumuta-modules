@@ -12,7 +12,7 @@ import random
 
 finder = re.compile(r'.*<h1>(.+?)<\/h1>.*')
 
-phrases = [ "%people% launched a DoS attack on the website of %thing%",
+phrases = ["%people% launched a DoS attack on the website of %thing%",
     "%site% urges everyone to stop using %thing%",
     "After a %enormous% amount of requests, %pack% removes %thing%",
     "After a %enormous% amount of requests, %pack% adds %thing%",
@@ -108,7 +108,7 @@ phrases = [ "%people% launched a DoS attack on the website of %thing%",
     "%people% tweaks balance in %thing% too much, annoying %people%",
     "%people% %says% %people% is worse than %people%",
     "%people% %says% %thing% is %worse% than %thing%",
-    "%people% bans %people% from %site%" ]
+    "%people% bans %people% from %site%"]
 
 parts = {
   "ac1": [
@@ -538,9 +538,11 @@ parts = {
 
 token = re.compile(r'%(.+?)%')
 
+
 def setup(bot):
     parts['thing'] = [(thing[:1] + u'\u200B' + thing[1:]) for thing in parts['thing']]
     parts['people'] = [(person[:1] + u'\u200B' + person[1:]) for person in parts['people']]
+
 
 def replace_tokens(input, used=[]):
     result = token.search(input)
@@ -551,8 +553,9 @@ def replace_tokens(input, used=[]):
     while (repl in used):
         repl = random.choice(parts[obj])
     used.append(repl)
-    input = input.replace('%'+obj+'%', repl, 1)
+    input = input.replace('%' + obj + '%', repl, 1)
     return replace_tokens(input, used)
+
 
 @commands('drama')
 def drama(bot, trigger):

@@ -14,7 +14,6 @@ import re
 from willie import web
 from willie.module import commands, example, NOLIMIT
 
-
 # The Canadian central bank has better exchange rate data than the Fed, the
 # Bank of England, or the European Central Bank. Who knew?
 base_url = 'http://www.bankofcanada.ca/stats/assets/rates_rss/noon/en_{}.xml'

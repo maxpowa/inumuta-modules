@@ -12,6 +12,7 @@ from bs4 import BeautifulSoup
 import re
 import json
 
+
 @commands('shindan')
 def shindan(bot, trigger):
     """
@@ -20,17 +21,17 @@ def shindan(bot, trigger):
     if not trigger.group(3) or not trigger.group(3).isdigit() or int(trigger.group(3).strip()) < 2000:
         bot.say(u'You must specify a shindanmaker ID (Waifu id: 215100 | T\u0081eh_Colt\'s Drama Gen id: 490953)')
         return
-    
-    name = trigger.nick    
+
+    name = trigger.nick
     if (trigger.group(4)):
         name = trigger.group(4)
     data = web.urlencode({'u': name, 'from': ''}).encode('ascii')
-    url = follow_redirects('http://en.shindanmaker.com/'+trigger.group(3).strip())
+    url = follow_redirects('http://en.shindanmaker.com/' + trigger.group(3).strip())
     try:
         soup = get_soup(web.post(url, data))
         shindan = soup.find(class_='result')
         if shindan is None:
-            bot.say('The shindanmaker ID %s does not exist!' % (trigger.group(3).strip(),))
+            bot.say('The shindanmaker ID %s does not exist!' % (trigger.group(3).strip(), ))
         else:
             if 'en' in url:
                 bot.say(shindan.text.strip())
@@ -41,6 +42,7 @@ def shindan(bot, trigger):
                 bot.say('%s (Translated from %s)' % (msg, in_lang))
     except Exception as e:
         bot.say('418 I\'m a teapot')
+
 
 def follow_redirects(url):
     """
@@ -54,6 +56,7 @@ def follow_redirects(url):
     except:
         return None
     return url
-        
+
+
 def get_soup(raw):
     return BeautifulSoup(raw, 'lxml')

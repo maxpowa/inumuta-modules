@@ -14,15 +14,18 @@ import os
 
 filename = 'logquery.db'
 
+
 def dict_factory(cursor, row):
     d = {}
-    for idx,col in enumerate(cursor.description):
+    for idx, col in enumerate(cursor.description):
         d[col[0]] = row[idx]
     return d
+
 
 def connect():
     """Return a raw database connection object."""
     return sqlite3.connect(filename)
+
 
 def _create():
     """Create the basic database structure."""
@@ -45,6 +48,7 @@ def _create():
         sent_at TIMESTAMP
         )''')
 
+
 def execute(*args, **kwargs):
     """Execute an arbitrary SQL query against the database.
 
@@ -54,6 +58,7 @@ def execute(*args, **kwargs):
         conn.row_factory = dict_factory
         cur = conn.cursor()
         return cur.execute(*args, **kwargs)
+
 
 def setup(bot):
     path = bot.config.logquery.filename
@@ -67,24 +72,26 @@ def setup(bot):
     filename = path
     _create()
 
+
 @commands('disable-log')
 def do_not_log(bot, trigger):
     if bot.privileges[trigger.sender][trigger.nick] < OP:
         return
-    
+
     if not trigger.group(2):
         bot.reply('disable-log usage: .disable-log <true|false>')
         return
-        
+
     if (trigger.group(2).strip().lower() == 'true'):
         bot.db.set_channel_value(trigger.sender, 'disable-log', True)
-        execute('DELETE FROM logquery WHERE channel=?;', (trigger.sender,))
-        bot.say('No longer logging '+trigger.sender)
+        execute('DELETE FROM logquery WHERE channel=?;', (trigger.sender, ))
+        bot.say('No longer logging ' + trigger.sender)
     else:
         bot.db.set_channel_value(trigger.sender, 'disable-log', False)
-        execute('DELETE FROM logquery WHERE channel=?;', (trigger.sender,))
-        bot.say('Logging '+trigger.sender)
-    
+        execute('DELETE FROM logquery WHERE channel=?;', (trigger.sender, ))
+        bot.say('Logging ' + trigger.sender)
+
+
 @commands('logquery')
 def logquery(bot, trigger):
     base_query = None
@@ -97,6 +104,7 @@ def logquery(bot, trigger):
 
     query_log(bot, base_query[0])    # Grab the first tuple match and set that as the base query
 
+
 @commands('logquery-util')
 def lq_utils(bot, trigger):
     if not trigger.admin:           # If you aren't a bot admin, get outta this command!
@@ -106,18 +114,19 @@ def lq_utils(bot, trigger):
         bot.say('Cleared DB!')
         return
 
+
 def query_log(bot, query):
     matches = []
 
     selector = '*'
-    limit=10
+    limit = 10
     if query[0] == 'count':
-        limit=0
+        limit = 0
         selector = 'COUNT(*)'
-    
+
     sql, params = construct_query(query[1], limit)
     try:
-        c = execute('SELECT '+selector+' FROM ('+sql+') ORDER BY datetime(sent_at) ASC', params)
+        c = execute('SELECT ' + selector + ' FROM (' + sql + ') ORDER BY datetime(sent_at) ASC', params)
         matches = c.fetchall()
     except:
         bot.say('[logquery] Invalid query, try .logquery help for usage')
@@ -142,15 +151,16 @@ def query_log(bot, query):
             for match in matches[-5:]:
                 bot.say(format_msg(match))
 
+
 def construct_query(query, limit=10):
     sql = "SELECT * FROM logquery"
     where = []
     params = {}
     if (limit > 0):
-        limit = 'LIMIT '+str(limit)
+        limit = 'LIMIT ' + str(limit)
     else:
         limit = ''
-    
+
     for part in query.split('and'):
         # MUST match this regex, otherwise is not going to be used in the query
         adv_query = re.findall(r'(nick|ident|host|message|channel|intent) =~ \'(.+?)\'', part, re.I)
@@ -159,16 +169,17 @@ def construct_query(query, limit=10):
             if match is not None:
                 key = match[0]
                 while key in params:
-                    key = key+"_"
-                current.append(match[0]+" GLOB :"+key)
+                    key = key + "_"
+                current.append(match[0] + " GLOB :" + key)
                 params[key] = match[1]
         where.append(' OR '.join(current))
 
     if where:
-        sql = '{} WHERE {} {}'.format(sql, ' AND '.join(where), 'GROUP BY sent_at ORDER BY datetime(sent_at) DESC '+limit)
+        sql = '{} WHERE {} {}'.format(sql, ' AND '.join(where), 'GROUP BY sent_at ORDER BY datetime(sent_at) DESC ' + limit)
         return sql, params
     else:
         return "", ""
+
 
 def format_msg(msg):
     """
@@ -198,6 +209,7 @@ def format_msg(msg):
 
     return u'<{nick}/{channel}> {message}'.format(**msg)
 
+
 @rule('.*')
 @unblockable
 def log_message(bot, message):
@@ -224,9 +236,10 @@ def log_message(bot, message):
 def log_join(bot, message):
     if message.sender.is_nick() or bot.db.get_channel_value(message.sender, 'disable-log'):
         return
-        
+
     execute('INSERT INTO logquery (channel, nick, ident, host, message, intent, sent_at) VALUES (?,?,?,?,?,?,?)',
         (message.sender, message.nick, message.user, message.host, message.match.string, 'JOIN', datetime.utcnow()))
+
 
 @rule('.*')
 @event("PART")
@@ -234,27 +247,29 @@ def log_join(bot, message):
 def log_part(bot, message):
     if message.sender.is_nick() or bot.db.get_channel_value(message.sender, 'disable-log'):
         return
-        
+
     execute('INSERT INTO logquery (channel, nick, ident, host, message, intent, sent_at) VALUES (?,?,?,?,?,?,?)',
         (message.sender, message.nick, message.user, message.host, message.match.string, 'PART', datetime.utcnow()))
-        
+
+
 @rule('.*')
 @event("KICK")
 @unblockable
 def log_part(bot, message):
     if message.sender.is_nick() or bot.db.get_channel_value(message.sender, 'disable-log'):
         return
-        
+
     execute('INSERT INTO logquery (channel, nick, ident, host, message, intent, sent_at) VALUES (?,?,?,?,?,?,?)',
         (message.sender, message.nick, message.user, message.host, message.match.string, 'KICK', datetime.utcnow()))
-        
+
+
 @rule('.*')
 @event("MODE")
 @unblockable
 def log_mode(bot, message):
     if message.sender.is_nick() or bot.db.get_channel_value(message.sender, 'disable-log'):
         return
-        
+
     execute('INSERT INTO logquery (channel, nick, ident, host, message, intent, sent_at) VALUES (?,?,?,?,?,?,?)',
         (message.sender, message.nick, message.user, message.host, ' '.join(message.args[1:]), 'MODE', datetime.utcnow()))
 
@@ -267,7 +282,7 @@ def log_mode(bot, message):
 def log_quit(bot, message):
     if message.sender.is_nick() or bot.db.get_channel_value(message.sender, 'disable-log'):
         return
-        
+
     time = datetime.utcnow()
     # make a copy of bot.privileges that we can safely iterate over
     privcopy = list(bot.privileges.items())

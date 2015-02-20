@@ -7,6 +7,7 @@ Licensed under the Eiffel Forum License 2.
 from __future__ import unicode_literals
 from willie.module import commands, rule
 
+
 @commands('hakasie')
 def hakasie(bot, trigger):
     """
@@ -18,11 +19,13 @@ def hakasie(bot, trigger):
     else:
         bot.reply('https://www.youtube.com/embed/5MJQhe6XdWg?autoplay=1')
 
+
 @rule('(HAKASE|hakase){3,}')
 @commands('hakase')
 def nano(bot, trigger):
     bot.reply('NANONANONANONANONANONANO')
-    
+
+
 @rule('(NANO|nano){3,}')
 @commands('nano')
 def hakase(bot, trigger):

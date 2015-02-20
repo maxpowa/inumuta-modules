@@ -10,22 +10,25 @@ from willie.module import commands, thread
 import willie.web as web
 import json
 
+
 def search(title):
     response = '[{}]'
     if is_integer(title.strip()):
-        response = web.get('https://mal-api.test.ramblingahoge.net/anime/'+web.quote(title), verify_ssl=False)
-        return json.loads('['+response+']')
+        response = web.get('https://mal-api.test.ramblingahoge.net/anime/' + web.quote(title), verify_ssl=False)
+        return json.loads('[' + response + ']')
     else:
-        response = web.get('https://mal-api.test.ramblingahoge.net/anime/search?q='+web.quote(title), verify_ssl=False)
+        response = web.get('https://mal-api.test.ramblingahoge.net/anime/search?q=' + web.quote(title), verify_ssl=False)
         return json.loads(response)
 
+
 def is_integer(s):
-    try: 
+    try:
         int(s)
         return True
     except ValueError:
         return False
-    
+
+
 @thread(True)
 @commands('mal', 'myanimelist')
 def mal(bot, trigger):
@@ -33,16 +36,16 @@ def mal(bot, trigger):
     .mal [-s|-a] <show|id> - Search for information about an anime
     -s displays synopsis
     -a lists all search results (if more than one), result formatting: "Title (score|episode count) [id]"
-    """ 
+    """
     synopsis = False
     list_results = False
     query = trigger.group(2)
     if trigger.group(3).strip() == '-s':
         synopsis = True
-        query = trigger.group(2).replace('-s','',1)
+        query = trigger.group(2).replace('-s', '', 1)
     elif trigger.group(3).strip() == '-a':
         list_results = True
-        query = trigger.group(2).replace('-a','',1)
+        query = trigger.group(2).replace('-a', '', 1)
     shows = search(query.strip())
     if len(shows) > 1 and list_results:
         out_list = ['[MAL] Found ', str(len(shows)), ' series matching your search term \'', query.strip(), '\': ']

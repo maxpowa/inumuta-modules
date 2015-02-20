@@ -29,19 +29,19 @@ def start(bot, trigger):
 
     if trigger.sender.is_nick():
         return
-        
+
     if bot.privileges[trigger.sender][trigger.nick] < HALFOP:
         bot.say('Sorry, you need to be at least a halfop to request my saboteur services.')
         return
-        
+
     if bot.privileges[trigger.sender][bot.nick] < HALFOP:
         bot.say('Well this is awkward... I seem to have left my bombs at home.')
         return
-        
+
     if trigger.group(2).strip() == bot.nick:
         bot.say('I\'m not gonna put a bomb in my own pants!')
         return
-        
+
     global bombs
     global sch
     target = trigger.group(2).split(' ')[0]

@@ -9,6 +9,7 @@ from __future__ import unicode_literals
 from willie.module import commands
 import random
 
+
 @commands('slogan')
 def slogan(bot, trigger):
     """
@@ -17,9 +18,9 @@ def slogan(bot, trigger):
     text = trigger.group(2)
     if not text:
         text = 'Ostriches'
-    
+
     text.strip()
-    
+
     bot.say(random.choice(allSlogans).replace('<text>', text))
 
 allSlogans = ['<text> - you gotta want it baby.',

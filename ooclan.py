@@ -8,6 +8,7 @@ from __future__ import unicode_literals
 from willie.module import rule, rate
 import random
 
+
 @rate(600)
 @rule('^([^\<].+) (?:went up in flames|burned to death|tried to swim in lava|suffocated in a wall|drowned|starved to death|was pricked to death|hit the ground too hard|fell out of the world|died|blew up|was killed by magic|was slain by (.+)|was shot by (.+)|was fireballed by (.+)|was pummeled by (.+)|was killed by (.+))$')
 def death_event(bot, trigger):

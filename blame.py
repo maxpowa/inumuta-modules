@@ -8,6 +8,7 @@ Licensed under the Eiffel Forum License 2.
 from __future__ import unicode_literals
 from willie.module import rule
 
+
 @rule('#blame$nickname')
 def blame(bot, trigger):
     bot.action('dies a little inside')

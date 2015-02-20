@@ -75,7 +75,7 @@ class DicePouch:
         if self.dropped:
             dropped = self.dropped.items()
             dfaces = ("+".join([str(face)] * times) for face, times in dropped)
-            dropped_str = "[+%s]" % ("+".join(dfaces),)
+            dropped_str = "[+%s]" % ("+".join(dfaces), )
 
         plus_str = ""
         if self.addition:
@@ -93,7 +93,7 @@ class DicePouch:
         if self.dropped:
             dropped = self.dropped.items()
             dfaces = ("%dx%d" % (times, face) for face, times in dropped)
-            dropped_str = "[+%s]" % ("+".join(dfaces),)
+            dropped_str = "[+%s]" % ("+".join(dfaces), )
 
         plus_str = ""
         if self.addition:
@@ -192,7 +192,7 @@ def roll(bot, trigger):
         return
 
     def _get_eval_str(dice):
-        return "(%d)" % (dice.get_sum(),)
+        return "(%d)" % (dice.get_sum(), )
 
     def _get_pretty_str(dice):
         if dice.num <= 10:

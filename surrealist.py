@@ -9,6 +9,7 @@ from willie import web
 from willie.module import commands, rule
 from bs4 import BeautifulSoup
 
+
 @commands('compliment')
 def compliment(bot, trigger):
     """
@@ -20,6 +21,7 @@ def compliment(bot, trigger):
         bot.reply(compliment.text.strip())
     else:
         bot.say(trigger.group(2).strip() + ', ' + compliment.text.strip())
+
 
 def get_soup(url):
     return BeautifulSoup(web.get(url), 'lxml')

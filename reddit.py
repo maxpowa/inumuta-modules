@@ -65,7 +65,7 @@ def rpost_info(bot, trigger, match=None):
         point_color = colors.RED
 
     percent = color(unicode(s.upvote_ratio * 100) + '%', point_color)
-    
+
     h = HTMLParser.HTMLParser()
     message = message.format(
         title=h.unescape(s.title), link=link, nsfw=nsfw, points=s.score, percent=percent,

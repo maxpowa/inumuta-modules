@@ -8,7 +8,8 @@ Licensed under the Eiffel Forum License 2.
 from __future__ import unicode_literals
 from willie.module import commands
 
-@commands('df','deadfish')
+
+@commands('df', 'deadfish')
 def deadfish(bot, trigger):
     if not trigger.group(2):
         return bot.say('[Deadfish] \'i\' increments, \'d\' decrements, \'o\' outputs, \'s\' squares, \'r\' resets. Prefix with -s to convert outputs to char representations.')
@@ -27,17 +28,17 @@ def deadfish(bot, trigger):
     output = []
     for c in inp:
         if memory == 256 or memory < 0:
-            memory = 0 #Overflow
+            memory = 0  # Overflow
         if c == u'i':
-            memory += 1 #Increment
+            memory += 1  # Increment
         if c == u'd':
-            memory -= 1 #Decrement
+            memory -= 1  # Decrement
         if c == u'r':
-            memory = 0 # Inline reset (very handy)
+            memory = 0  # Inline reset (very handy)
         if c == u'o':
-            output.append(memory) #Output
+            output.append(memory)  # Output
         if c == u's':
-            memory *= memory #Square
+            memory *= memory  # Square
 
     outputstr = u' '.join(str(x) for x in output)
     if charoutput:

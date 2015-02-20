@@ -136,7 +136,7 @@ ingverbs = [
     'calibrating'
 ]
 
-phrases = [ 
+phrases = [
     'If we {verb} the {noun}, we can get to the {abbreviation} {noun} through the {adjective} {abbreviation} {noun}!',
     'We need to {verb} the {adjective} {abbreviation} {noun}!',
     'Try to {verb} the {abbreviation} {noun}, maybe it will {verb} the {adjective} {noun}!',
@@ -147,8 +147,10 @@ phrases = [
     'I\'ll {verb} the {adjective} {abbreviation} {noun}, that should {verb} the {abbreviation} {noun}!'
 ]
 
+
 def sentence_cap(s):
     return s[0].upper() + s[1:]
+
 
 def build_phrase(phrase):
     if '{' in phrase:
@@ -164,6 +166,7 @@ def build_phrase(phrase):
     else:
         return sentence_cap(phrase)
 
+
 @commands('hack')
 def hack(bot, trigger):
     """
@@ -171,6 +174,6 @@ def hack(bot, trigger):
     """
     phrase = random.choice(phrases)
     if trigger.group(3):
-        bot.say(trigger.group(3).strip()  + ', ' + build_phrase(phrase))
+        bot.say(trigger.group(3).strip() + ', ' + build_phrase(phrase))
     else:
         bot.say(build_phrase(phrase))

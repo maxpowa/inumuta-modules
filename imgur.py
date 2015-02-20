@@ -16,6 +16,7 @@ from willie.config import ConfigurationError
 from willie import web, tools
 from willie.module import rule
 
+
 class ImgurClient(object):
     def __init__(self, client_id):
         """
@@ -44,6 +45,7 @@ class ImgurClient(object):
         api_request_path = '{0}/{1}'.format(resource, id)
         return self.request(api_request_path)
 
+
 def configure(config):
     """
     The client ID can be obtained by registering your bot at
@@ -56,6 +58,7 @@ def configure(config):
 
     if config.option('Configure Imgur? (You will need to register at https://api.imgur.com/oauth2/addclient)', False):
         config.interactive.add('imgur', 'client_id', 'Client ID')
+
 
 def setup(bot):
     """
@@ -74,6 +77,7 @@ def setup(bot):
         bot.memory['url_callbacks'] = tools.WillieMemory()
     bot.memory['url_callbacks'][imgur_regex] = imgur
 
+
 def album(link_id, bot):
     """
     Handles information retrieval for non-gallery albums.
@@ -90,6 +94,7 @@ def album(link_id, bot):
                                            str(album['views'])))
     except:
         return
+
 
 def gallery(link_id, bot):
     """
@@ -122,6 +127,7 @@ def gallery(link_id, bot):
     except:
         return
 
+
 def user(username, bot):
     """
     Handles information retrieval for user accounts.
@@ -143,6 +149,7 @@ def user(username, bot):
                                                str(gallery_profile['total_gallery_likes'])))
     except:
         return
+
 
 def image(link_id, bot):
     """
@@ -166,6 +173,7 @@ def image(link_id, bot):
             return bot.say('[imgur] [{0} - {1} views]'.format(title, str(img['views'])))
     except:
         return
+
 
 @rule('.*(?:i\.)?imgur\.com/(.*)(?: .+)?.*')
 def imgur(bot, trigger):
@@ -211,7 +219,7 @@ def imgur(bot, trigger):
     They can link to non-gallery images, so we do not request gallery data,
     but simply image data."""
     if urlparse(trigger).netloc == 'i.imgur.com':
-        image_id = os.path.splitext(os.path.basename(urlparse(trigger).path))[0] # get the ID from the img
+        image_id = os.path.splitext(os.path.basename(urlparse(trigger).path))[0]  # get the ID from the img
         return image(image_id, bot)
 
     """Handle imgur.com/* links."""
@@ -225,7 +233,7 @@ def imgur(bot, trigger):
 
     #Separate the URL path into an ordered list of the form ['gallery', 'id']
     resource_path_parts = filter(None, resource_path.split('/'))[-2:]
-    
+
     #bot.reply(str(resource_path_parts))
 
     #Handle a simple link to imgur.com: no ID is given, meaning that the length of the above list is null
@@ -251,4 +259,3 @@ def imgur(bot, trigger):
     #Handle a link to an album: imgur.com/a/id
     if resource_path_parts[0] == 'a':
         return album(resource_path_parts[1], bot)
-

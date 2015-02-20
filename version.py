@@ -15,9 +15,11 @@ import re
 from os import path
 import json
 
+
 @willie.module.commands('owner')
 def owner(bot, trigger):
-    bot.say('I am owned by '+bot.config.core.owner+'.')
+    bot.say('I am owned by ' + bot.config.core.owner + '.')
+
 
 @willie.module.rule('\x01VERSION\x01')
 @willie.module.commands('version')

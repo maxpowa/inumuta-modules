@@ -20,7 +20,7 @@ def potato(bot, trigger):
     """
     .potato [nick] - Makes [nick] a tasty little potato.
     """
-    
+
     user = trigger.group(3)
     if not user:
         user = trigger.nick

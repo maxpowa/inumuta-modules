@@ -48,7 +48,7 @@ def dumpReminders(fn, data, lock):
         f = open(fn, 'w')
         for tellee in iterkeys(data):
             for remindon in data[tellee]:
-                line = '\t'.join((tellee,) + remindon)
+                line = '\t'.join((tellee, ) + remindon)
                 try:
                     to_write = line + '\n'
                     if sys.version_info.major < 3:

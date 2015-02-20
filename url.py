@@ -16,7 +16,6 @@ import sys
 from willie import web, tools
 from willie.module import commands, rule, example
 
-
 url_finder = None
 exclusion_char = '!'
 # These are used to clean up the title tag before actually parsing it. Not the

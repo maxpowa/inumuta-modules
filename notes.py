@@ -19,6 +19,7 @@ from willie.module import commands
 
 maximum = 4
 
+
 def load_notes(fn, lock):
     lock.acquire()
     try:
@@ -82,11 +83,11 @@ def setup(self):
 def note(bot, trigger):
     """ Give someone a message the next time they're seen """
     teller = trigger.nick
-    
+
     if not os.path.exists(bot.note_filename):
         bot.say('Notes database does not exist D:')
         return
-        
+
     if not trigger.group(2):
         bot.say('Usage: .note <add|show|del> [arg] - Add personal notes. Will always be returned via notice [your secret is safe with me ;)]')
         return
@@ -108,8 +109,9 @@ def note(bot, trigger):
         show_notes(bot, teller)
     elif trigger.group(3).lower() == 'del':
         remove_note(bot, trigger)
-        
+
     dump_notes(bot.note_filename, bot.memory['notes'], bot.memory['note_lock'])
+
 
 def remove_note(bot, trigger):
     if trigger.group(4).isdigit():
@@ -117,10 +119,11 @@ def remove_note(bot, trigger):
         del bot.memory['notes'][trigger.nick][int(trigger.group(4))]
     else:
         bot.notice("Invalid index, please ensure that note index exists", recipient=trigger.nick)
-    
+
+
 def get_notes(bot, key):
     lines = []
-    
+
     bot.memory['note_lock'].acquire()
     try:
         for msg in bot.memory['notes'][key]:
@@ -128,7 +131,8 @@ def get_notes(bot, key):
     finally:
         bot.memory['note_lock'].release()
     return lines
-    
+
+
 def show_notes(bot, user):
     notes = []
     remkeys = list(reversed(sorted(bot.memory['notes'].keys())))

@@ -8,6 +8,7 @@ Licensed under the Eiffel Forum License 2.
 from __future__ import unicode_literals
 from willie.module import rate, rule, commands
 
+
 @rate(10)
 @rule(r'^([\S]+?)\+\+$')
 def promote_karma(bot, trigger):
@@ -22,9 +23,10 @@ def promote_karma(bot, trigger):
     else:
         current_karma = int(current_karma)
     current_karma += 1
-    
+
     bot.db.set_nick_value(trigger.group(1), 'karma', current_karma)
-    bot.say(trigger.group(1)+' == '+str(current_karma))
+    bot.say(trigger.group(1) + ' == ' + str(current_karma))
+
 
 @rate(10)
 @rule(r'^([\S]+?)\-\-$')
@@ -40,10 +42,11 @@ def demote_karma(bot, trigger):
     else:
         current_karma = int(current_karma)
     current_karma -= 1
-    
+
     bot.db.set_nick_value(trigger.group(1), 'karma', current_karma)
-    bot.say(trigger.group(1)+' == '+str(current_karma))
-    
+    bot.say(trigger.group(1) + ' == ' + str(current_karma))
+
+
 @rate(10)
 @rule(r'^([\S]+?)\=\=$')
 def show_karma(bot, trigger):
@@ -55,8 +58,9 @@ def show_karma(bot, trigger):
         current_karma = 0
     else:
         current_karma = int(current_karma)
-    
-    bot.say(trigger.group(1)+' == '+str(current_karma))
+
+    bot.say(trigger.group(1) + ' == ' + str(current_karma))
+
 
 @commands('karma')
 def karma(bot, trigger):
@@ -65,7 +69,7 @@ def karma(bot, trigger):
     nick = trigger.nick
     if trigger.group(2):
         nick = trigger.group(2).strip().split()[0]
-        
+
     karma = bot.db.get_nick_value(nick, 'karma')
     if not karma:
         karma = '0'

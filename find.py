@@ -59,55 +59,55 @@ def collectlines(bot, trigger):
 #slash is ignored, you can escape slashes with backslashes, and if you want to
 #search for an actual backslash followed by an actual slash, you're shit out of
 #luck because this is the fucking regex of death as it is.
-@rule(r"""^			# start of the message
-(?:(\S+)[:,]\s+)? 	# CAPTURE Identifier
-(?:					# BEGIN first sed expression
-  s/				#   sed replacement expression delimiter
-  (					#   BEGIN needle component
-    (?:				#     BEGIN single needle character
-      [^\\/]		#       anything that isn't a slash or backslash...
-      |\\.			#       ...or any backslash escape
-    )*				#     END single needle character, zero or more
-  )					#   END needle component
-  /					#   slash between needle and replacement
-  (					#   BEGIN replacement component
-    (?:				#     BEGIN single replacement character
-      [^\\/]|\\.	#       escape or non-slash-backslash, as above
-    )*				#     END single replacement character, zero or more
-  )					#   END replacement component
-  (?:/				#   slash between replacement and flags
-  (					#   BEGIN flags component
-    (?:				#     BEGIN single flag
-      [^ ]+			#       any sequence of non-whitespace chars
-    )*				#     END single flag, zero or more
-  ))?				#   END flags component
-)					# END first sed expression
-$					# end of the message
+@rule(r"""^            # start of the message
+(?:(\S+)[:,]\s+)?     # CAPTURE Identifier
+(?:                    # BEGIN first sed expression
+  s/                #   sed replacement expression delimiter
+  (                    #   BEGIN needle component
+    (?:                #     BEGIN single needle character
+      [^\\/]        #       anything that isn't a slash or backslash...
+      |\\.            #       ...or any backslash escape
+    )*                #     END single needle character, zero or more
+  )                    #   END needle component
+  /                    #   slash between needle and replacement
+  (                    #   BEGIN replacement component
+    (?:                #     BEGIN single replacement character
+      [^\\/]|\\.    #       escape or non-slash-backslash, as above
+    )*                #     END single replacement character, zero or more
+  )                    #   END replacement component
+  (?:/                #   slash between replacement and flags
+  (                    #   BEGIN flags component
+    (?:                #     BEGIN single flag
+      [^ ]+            #       any sequence of non-whitespace chars
+    )*                #     END single flag, zero or more
+  ))?                #   END flags component
+)                    # END first sed expression
+$                    # end of the message
           """)
-@rule(r"""^			# start of the message
-(?:(\S+)[:,]\s+)? 	# CAPTURE Identifier
-(?:					# BEGIN first sed expression
-  s\|				#   sed replacement expression delimiter
-  (					#   BEGIN needle component
-    (?:				#     BEGIN single needle character
-      [^\\\|]		#       anything that isn't a slash or backslash...
-      |\\.			#       ...or any backslash escape
-    )*				#     END single needle character, zero or more
-  )					#   END needle component
-  \|					#   slash between needle and replacement
-  (					#   BEGIN replacement component
-    (?:				#     BEGIN single replacement character
-      [^\\\|]|\\.	#       escape or non-slash-backslash, as above
-    )*				#     END single replacement character, zero or more
-  )					#   END replacement component
-  (?:\|				#   slash between replacement and flags
-  (					#   BEGIN flags component
-    (?:				#     BEGIN single flag
-      [^ ]+			#       any sequence of non-whitespace chars
-    )*				#     END single flag, zero or more
-  ))?				#   END flags component
-)					# END first sed expression
-$					# end of the message
+@rule(r"""^            # start of the message
+(?:(\S+)[:,]\s+)?     # CAPTURE Identifier
+(?:                    # BEGIN first sed expression
+  s\|                #   sed replacement expression delimiter
+  (                    #   BEGIN needle component
+    (?:                #     BEGIN single needle character
+      [^\\\|]        #       anything that isn't a slash or backslash...
+      |\\.            #       ...or any backslash escape
+    )*                #     END single needle character, zero or more
+  )                    #   END needle component
+  \|                    #   slash between needle and replacement
+  (                    #   BEGIN replacement component
+    (?:                #     BEGIN single replacement character
+      [^\\\|]|\\.    #       escape or non-slash-backslash, as above
+    )*                #     END single replacement character, zero or more
+  )                    #   END replacement component
+  (?:\|                #   slash between replacement and flags
+  (                    #   BEGIN flags component
+    (?:                #     BEGIN single flag
+      [^ ]+            #       any sequence of non-whitespace chars
+    )*                #     END single flag, zero or more
+  ))?                #   END flags component
+)                    # END first sed expression
+$                    # end of the message
           """)
 @priority('high')
 @thread(True)

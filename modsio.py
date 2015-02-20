@@ -12,9 +12,11 @@ from willie.formatting import color
 
 import json
 
+
 def get_prefix():
-    prefix = color('[','grey')+'mods'+color('.io','red')+color(']','grey')
+    prefix = color('[', 'grey') + 'mods' + color('.io', 'red') + color(']', 'grey')
     return prefix
+
 
 def get_info(number=None):
     if number:
@@ -24,6 +26,7 @@ def get_info(number=None):
     data = web.get(url)
     data = json.loads(data)
     return data
+
 
 @rule('.*https?://mods\.io/mods/(\d+).*')
 def get_page_info(bot, trigger):

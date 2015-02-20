@@ -75,7 +75,7 @@ def setup(bot):
                 dump_database(bot.rfn, bot.rdb)
             time.sleep(2.5)
 
-    targs = (bot,)
+    targs = (bot, )
     t = threading.Thread(target=monitor, args=targs)
     t.start()
 

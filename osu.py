@@ -8,11 +8,12 @@ Licensed under the Eiffel Forum License 2.
 Uses the osu!api, docs: https://github.com/peppy/osu-api/wiki
 """
 from __future__ import unicode_literals
-from willie.module import commands,rule
+from willie.module import commands, rule
 from willie.formatting import color
 import willie.web as web
 import json
 import types
+
 
 def configure(config):
     """
@@ -29,9 +30,11 @@ def configure(config):
 
 apikey = ''
 
+
 def setup(willie):
     if not willie.config.osu.api_key:
         raise ConfigurationError('Could not configure the osu! module. Is the API key configured properly?')
+
 
 @rule('.*osu\.ppy\.sh/(u)/(\w+).*')
 @commands('osu')
@@ -41,13 +44,13 @@ def osu_user(bot, trigger):
     """
     data = '?k=%s&u=%s' % (bot.config.osu.api_key, str(trigger.group(2)))
     #bot.say(url)
-    raw = web.get('https://osu.ppy.sh/api/get_user'+data)
+    raw = web.get('https://osu.ppy.sh/api/get_user' + data)
     response = json.loads(raw)
     if not response:
-        bot.say('['+color('osu!', u'13')+'] '+'Invalid user')
+        bot.say('[' + color('osu!', u'13') + '] ' + 'Invalid user')
         return
     if not response[0]:
-        bot.say('['+color('osu!', u'13')+'] '+'Invalid user')
+        bot.say('[' + color('osu!', u'13') + '] ' + 'Invalid user')
         return
     user = response[0]
     level = 0
@@ -75,21 +78,22 @@ def osu_user(bot, trigger):
         '%'
     ]
     bot.say(''.join(output))
-    
+
+
 @rule('.*osu\.ppy\.sh/(s|b)/(\d+).*')
 def osu_beatmap(bot, trigger):
     data = '?k=%s&%s=%s' % (bot.config.osu.api_key, str(trigger.group(1)), str(trigger.group(2)))
     #bot.say(url)
-    raw = web.get('https://osu.ppy.sh/api/get_beatmaps'+data)
+    raw = web.get('https://osu.ppy.sh/api/get_beatmaps' + data)
     topscore = None
     if trigger.group(1) == 'b':
-        rawscore = web.get('https://osu.ppy.sh/api/get_scores'+data)
+        rawscore = web.get('https://osu.ppy.sh/api/get_scores' + data)
         topscore = json.loads(rawscore)[0]
     response = json.loads(raw)
     if not response[0]:
-        bot.say('['+color('osu!', u'13')+'] '+' Invalid link')
+        bot.say('[' + color('osu!', u'13') + '] ' + ' Invalid link')
         return
-    beatmap = response[0];
+    beatmap = response[0]
     m, s = divmod(int(beatmap['total_length']), 60)
     output = [
         '[', color('osu!', u'13'), '] ',
@@ -109,5 +113,5 @@ def osu_beatmap(bot, trigger):
         ' BPM'
     ]
     if topscore:
-        output += (' | High Score: '+topscore['score']+' ('+topscore['rank']+') - '+topscore['username'])
+        output += (' | High Score: ' + topscore['score'] + ' (' + topscore['rank'] + ') - ' + topscore['username'])
     bot.say(''.join(output))

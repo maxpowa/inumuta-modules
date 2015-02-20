@@ -10,6 +10,7 @@ Licensed under the Eiffel Forum License 2.
 from __future__ import unicode_literals
 from willie.module import commands, example, HALFOP
 
+
 @commands('rule')
 @example('.rule 57')
 def show_rule(bot, trigger):
@@ -19,19 +20,18 @@ def show_rule(bot, trigger):
     if not trigger.group(2):
         bot.say('.rule <id> - The Internet has no rules. No Exceptions.')
         return
-        
+
     rule = trigger.group(2).strip()
-        
+
     if not trigger.sender.is_nick() and bot.privileges[trigger.sender][bot.nick] >= HALFOP:
         if rule == "WAMM" or rule == "asie":
             bot.write(['KICK', trigger.sender, trigger.nick, 'The kick is the rule'])
             return
-    
+
     if rule.strip() in rules:
-        bot.say(u'Rule {0}: "{1}"'.format(rule,rules[rule]))
+        bot.say(u'Rule {0}: "{1}"'.format(rule, rules[rule]))
     else:
         bot.say(u'Rule {0} is a lie.'.format(rule))
-    
 
 # The whole fucking list. Having this this way is horrifying. Might get around to replacing it sometime.
 rules = {u'/d/': u'WASH MY EYES OUT',

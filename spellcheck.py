@@ -41,9 +41,9 @@ def spellcheck(bot, trigger):
         msg = word + " is not spelled correctly. Maybe you want one of these spellings:"
         sugWords = []
         for suggested_word in dictionary.suggest(word):
-                sugWords.append(suggested_word)
+            sugWords.append(suggested_word)
         for suggested_word in dictionary_uk.suggest(word):
-                sugWords.append(suggested_word)
+            sugWords.append(suggested_word)
         for suggested_word in sorted(set(sugWords)):  # removes duplicates
             msg = msg + " '" + suggested_word + "',"
         bot.say(msg)

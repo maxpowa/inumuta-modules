@@ -30,4 +30,3 @@ def fucking_weather(bot, trigger):
     else:
         bot.reply("I CAN'T GET THE FUCKING WEATHER.")
         return bot.NOLIMIT
-

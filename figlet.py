@@ -7,9 +7,10 @@ Licensed under the Eiffel Forum License 2.
 from __future__ import unicode_literals
 from willie.module import commands, rate, thread, NOLIMIT
 from optparse import OptionParser
-from pyfiglet import Figlet,FontNotFound
+from pyfiglet import Figlet, FontNotFound
 
 DEFAULT_FONT = 'standard'
+
 
 @rate(30)
 @thread(True)
@@ -22,7 +23,7 @@ def create_figlet(bot, trigger):
         bot.say('You must provide text')
         return NOLIMIT
     trigger_args = trigger.group(2).split()
-    parser = OptionParser(add_help_option=False, 
+    parser = OptionParser(add_help_option=False,
                       usage='%prog [options] [text..]', prog='.figlet',
                       epilog='WARNING: .figlet is rate limited to 30 seconds in channels, but go nuts in PM.')
     parser.add_option('-h', '--help', action='store_true', default=False,
@@ -92,6 +93,6 @@ def create_figlet(bot, trigger):
 
     for line in (r.encode('UTF-8')).splitlines():
         bot.say(line)
- 
+
     if trigger.is_privmsg:
         return NOLIMIT

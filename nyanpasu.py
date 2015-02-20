@@ -7,6 +7,7 @@ Licensed under the Eiffel Forum License 2.
 from __future__ import unicode_literals
 from willie.module import commands
 
+
 @commands('nyanpasu', 'nyanpass')
 def drama(bot, trigger):
     bot.say('Nyanpasu~~ http://nyanpass.com/nyanpass.mp3')

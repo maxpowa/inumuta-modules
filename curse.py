@@ -8,13 +8,15 @@ Licensed under the Eiffel Forum License 2.
 from __future__ import unicode_literals
 from willie import web
 from willie.module import rule
-from willie.formatting import (color,bold)
+from willie.formatting import (color, bold)
 
 import json
 
+
 def get_prefix():
-    prefix = color('[','grey')+bold(color('Curse','yellow'))+color(']','grey')
+    prefix = color('[', 'grey') + bold(color('Curse', 'yellow')) + color(']', 'grey')
     return prefix
+
 
 def get_info(number=None):
     if number:
@@ -24,6 +26,7 @@ def get_info(number=None):
     data = web.get(url)
     data = json.loads(data)
     return data
+
 
 @rule('.*https?://(?:minecraft\.curseforge|www\.curse|curse)\.com/(?:mc-mods|mc-mods/minecraft)/(\d+).*')
 def get_page_info(bot, trigger):

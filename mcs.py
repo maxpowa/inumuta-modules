@@ -9,11 +9,12 @@ from __future__ import unicode_literals
 from mcstatus import MinecraftServer
 from willie.module import commands
 from willie import web
-from willie.formatting import color,bold
+from willie.formatting import color, bold
 import uuid
 import time
 import json
 import re
+
 
 @commands('uuid')
 def get_uuid(bot, trigger):
@@ -33,7 +34,8 @@ def get_uuid(bot, trigger):
     response = json.loads(raw)
     bot.say('{0}\'s UUID: {1}'.format(response['name'], str(uuid.UUID(response['id']))))
 
-@commands('status','ping')
+
+@commands('status', 'ping')
 def status(bot, trigger):
     """
     .status <server> - Grabs information about a minecraft server!
@@ -42,20 +44,21 @@ def status(bot, trigger):
         server = MinecraftServer.lookup(trigger.group(3).strip())
     except Exception:
         bot.say(u'[MCS] Unable to find a Minecraft server running at \'{}\''.format(trigger.group(3).strip()))
-        
+
     try:
         status = server.status()
         desc = ' '.join(re.sub(u'\u00A7.', '', status.description).split())
         bot.say(u'[MCS] {0} | {1} players | {2} ms | {3}'.format(trigger.group(3).strip(), status.players.online, status.latency, desc))
     except Exception as e:
         try:
-            raw = web.get('http://minespy.net/api/serverping/'+str(server.host)+':'+str(server.port))
+            raw = web.get('http://minespy.net/api/serverping/' + str(server.host) + ':' + str(server.port))
             status = json.loads(raw)
             bot.say(u'[MCS] {0} | {1} players | {2} ms | {3}'.format(trigger.group(3).strip(), str(status['online']), str(status['latency']), str(status['strippedmotd'])))
         except Exception as e:
             bot.say(u'[MCS] Unable to fetch info from \'{}\' ({})'.format(trigger.group(3).strip(), e))
 
-@commands('mcstatus','mcs')
+
+@commands('mcstatus', 'mcs')
 def mcstats(bot, trigger):
     """
     .mcstatus - Check the status of Mojang's servers
@@ -64,7 +67,7 @@ def mcstats(bot, trigger):
         raw = web.get('https://status.mojang.com/check')
 
         response = json.loads(raw.replace("}", "").replace("{", "").replace("]", "}").replace("[", "{"))
-        
+
         out = []
         # use a loop so we don't have to update it if they add more servers
         for server, status in response.items():
@@ -73,16 +76,18 @@ def mcstats(bot, trigger):
     except Exception as e:
         bot.say('[MCS] Mojang server status check is currently offline. ({})'.format(e))
 
-@commands('mcpaid','haspaid')
+
+@commands('mcpaid', 'haspaid')
 def mcpaid(bot, trigger):
     """
     .mcpaid <username> - Checks if <username> has a premium Minecraft account.
-    """ 
-    users = trigger.nick;
+    """
+    users = trigger.nick
     if (trigger.group(2)):
         users = trigger.group(2).strip()
     for user in users.split():
         has_paid(bot, user)
+
 
 def has_paid(bot, user):
     status = web.get('https://www.minecraft.net/haspaid.jsp?user={}'.format(user))

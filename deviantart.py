@@ -8,13 +8,15 @@ Licensed under the Eiffel Forum License 2.
 from __future__ import unicode_literals
 from willie import web
 from willie.module import rule
-from willie.formatting import color,bold
+from willie.formatting import color, bold
 
 import json
 
+
 def get_prefix():
-    prefix = color('[','grey')+'deviant'+bold('art')+color(']','grey')
+    prefix = color('[', 'grey') + 'deviant' + bold('art') + color(']', 'grey')
     return prefix
+
 
 def get_info(url=None):
     if url:
@@ -24,6 +26,7 @@ def get_info(url=None):
     data = web.get(api_url)
     data = json.loads(data)
     return data
+
 
 @rule('.*https?://((?:.+\.)?deviantart\.com/.*).*')
 def get_page_info(bot, trigger):

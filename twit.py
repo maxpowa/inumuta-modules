@@ -20,6 +20,7 @@ import HTMLParser
 if sys.version_info.major < 3:
     str = unicode
 
+
 def configure(config):
     """
     These values are all found by signing up your bot at
@@ -58,9 +59,11 @@ def format_thousands(integer):
     """Returns string of integer, with thousands separated by ','"""
     return re.sub(r'(\d{3})(?=\d)', r'\1,', str(integer)[::-1])[::-1]
 
+
 def tweet_url(status):
     """Returns a URL to Twitter for the given status object"""
     return 'https://twitter.com/' + status.user.screen_name + '/status/' + status.id_str
+
 
 @rule('.*twitter.com\/(\S*)\/status\/([\d]+).*')
 def gettweet(willie, trigger, found_match=None):
@@ -91,9 +94,10 @@ def gettweet(willie, trigger, found_match=None):
             willie.say('[Twitter] ' + twituser + ": " + h.unescape(str(status.text).replace('\n', ' ')))
     except:
         willie.reply("You have input an invalid user.")
-gettweet.commands = ['twit','twitter']
+gettweet.commands = ['twit', 'twitter']
 gettweet.priority = 'medium'
 gettweet.example = '.twit aplusk [tweetNum] or .twit 381982018927853568'
+
 
 def f_info(willie, trigger):
     """Show information about the given Twitter account"""
@@ -118,9 +122,10 @@ def f_info(willie, trigger):
         willie.reply("@" + str(twituser) + ": " + str(name) + ". " + "ID: " + str(id) + ". Friend Count: " + friendcount + ". Followers: " + followers + ". Favourites: " + str(favourites) + ". Location: " + str(location) + ". Description: " + str(description))
     except:
         willie.reply("You have input an invalid user.")
-f_info.commands = ['twitinfo','twitter-info','twituser']
+f_info.commands = ['twitinfo', 'twitter-info', 'twituser']
 f_info.priority = 'medium'
 f_info.example = '.twitinfo aplsuk'
+
 
 def f_update(willie, trigger):
     """Tweet with Willie's account. Admin-only."""
@@ -141,6 +146,7 @@ def f_update(willie, trigger):
 f_update.commands = ['tweet']
 f_update.priority = 'medium'
 f_update.example = '.tweet Hello World!'
+
 
 def f_reply(willie, trigger):
     auth = tweepy.OAuthHandler(willie.config.twitter.consumer_key, willie.config.twitter.consumer_secret)
@@ -167,4 +173,3 @@ f_reply.example = '.reply 892379487 I like that idea!'
 
 if __name__ == '__main__':
     print __doc__.strip()
-
