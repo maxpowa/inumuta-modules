@@ -33,7 +33,7 @@ def ctcp_version(bot, trigger):
 @willie.module.rule('\x01SOURCE\x01')
 @willie.module.rate(20)
 def ctcp_source(bot, trigger):
-    bot.notice('\x01SOURCE https://github.com/maxpowa/Inumuta/\x01'
+    bot.notice('\x01SOURCE https://github.com/maxpowa/Inumuta/\x01',
                recipient=trigger.nick)
 
 
