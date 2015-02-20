@@ -50,7 +50,6 @@ def player_me_feed(bot, trigger):
     bot.say(u'[Player.me] {}: {} via {}'.format(response['user']['username'], u' '.join(response['data']['post_raw'].split()), response['source']))
 
 
-@timing
 def handle_input(bot, trigger_args, trigger):
 
     parser = OptionParser(add_help_option=False,
