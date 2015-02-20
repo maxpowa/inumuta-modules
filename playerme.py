@@ -51,7 +51,6 @@ def player_me_feed(bot, trigger):
 
 
 def handle_input(bot, trigger_args, trigger):
-
     parser = OptionParser(add_help_option=False,
                       usage='%prog [options] [user]', prog='.player',
                       epilog='Since there is no easy way to discern whether a page is a group or a user simply from the url, a warning may appear when attempting to parse group urls. Simply use \'.player -g <groupname>\' for details on the group.')
@@ -85,7 +84,6 @@ def handle_input(bot, trigger_args, trigger):
     format_user(bot, opts, args)
 
 
-@timing
 def format_user(bot, opts, args):
     query = u' '.join(args)
 
