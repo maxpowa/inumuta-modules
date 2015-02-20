@@ -285,10 +285,8 @@ def flip(bot, trigger):
     """
     bot.say(flip_text(trigger.group(2).strip()))
 
-#
-# TEXT SWIRL-IFIER
-#
 
+# TEXT SWIRL-IFIER
 def swirl_text(text):
     if not text:
         return None
@@ -299,10 +297,8 @@ def swirl_text(text):
         #return str(comb_map)
         return replace_all(text.lower(), comb_map)
 
-#
-# TEXT FLIPPER
-#
 
+# TEXT FLIPPER
 def flip_text(text):
     if not text:
         return None
@@ -322,10 +318,8 @@ unoise = u''.join(map(unichr, xrange(0x300, 0x36F)))
 def mungle(char, intensity=10):
     return char + u''.join(random.sample(unoise, intensity))
 
-#
-# SMALLCAPS CONVERTER
-#
 
+# SMALLCAPS CONVERTER
 def smallcaps(text):
     if not text:
         return None
