@@ -1,3 +1,4 @@
+# coding=utf8
 """
 shindan.py - Be fucking annoying, all the time!
 Copyright 2014 Max Gurela

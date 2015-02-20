@@ -1,3 +1,4 @@
+# coding=utf8
 """
 urbandictionary.py - Query urbandictionary
 Copyright 2014 Max Gurela

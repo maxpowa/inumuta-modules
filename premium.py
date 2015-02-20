@@ -1,4 +1,4 @@
-#!/usr/local/bin/python2.7
+# coding=utf8
 from __future__ import unicode_literals
 import urllib
 import urllib2

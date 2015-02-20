@@ -1,3 +1,4 @@
+# coding=utf8
 """
 consult.py - Consult Inumuta about anything
 Copyright 2014, Max Gurela http://everythingisawesome.us

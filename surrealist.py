@@ -1,3 +1,4 @@
+# coding=utf8
 """
 surrealist.py - Collection of surrealism-related commands.
 Copyright 2014 Max Gurela

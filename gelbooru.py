@@ -1,3 +1,4 @@
+# coding=utf8
 """
 gelbooru.py - People on IRC will love your leggings fetish!
 Copyright 2014 Max Gurela

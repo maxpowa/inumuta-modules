@@ -9,9 +9,6 @@ from __future__ import unicode_literals
 from willie.module import commands, rule, example
 from willie.formatting import color
 import willie.web as web
-
-from util import timing
-
 from optparse import OptionParser
 import json
 

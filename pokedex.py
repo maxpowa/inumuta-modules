@@ -1,4 +1,4 @@
-#coding:utf8
+# coding=utf8
 """
 pokedex.py - Get your Pokemon fix!
 Copyright 2014 Max Gurela
@@ -8,7 +8,6 @@ Licensed under the Eiffel Forum License 2.
 from __future__ import unicode_literals
 from willie import web
 from willie.module import commands, rule, thread, example
-from util import timing
 from bs4 import BeautifulSoup
 import re
 import urllib2

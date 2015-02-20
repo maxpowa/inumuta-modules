@@ -1,3 +1,4 @@
+# coding=utf8
 """
 nyanpasu.py - nyanpasu~~
 Copyright 2014 Max Gurela

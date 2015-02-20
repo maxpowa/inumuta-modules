@@ -1,6 +1,6 @@
 # coding=utf8
 """
-reddit-info.py - Willie Reddit module
+reddit.py - Willie Reddit module
 Author: Edward Powell, embolalia.net
 About: http://willie.dftba.net
 
@@ -64,7 +64,7 @@ def rpost_info(bot, trigger, match=None):
     else:
         point_color = colors.RED
 
-    percent = color(unicode(s.upvote_ratio * 100) + '%', point_color)
+    percent = color(str(s.upvote_ratio * 100) + u'%', point_color)
 
     h = HTMLParser.HTMLParser()
     message = message.format(

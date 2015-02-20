@@ -1,3 +1,4 @@
+# coding=utf8
 """
 bomb.py - Simple Willie bomb prank game
 Copyright 2012, Edward Powell http://embolalia.net

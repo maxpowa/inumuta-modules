@@ -1,3 +1,4 @@
+# coding=utf8
 """
 fuckingweather.py - Willie module for The Fucking Weather
 Copyright 2013 Michael Yanovich

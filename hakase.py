@@ -1,3 +1,4 @@
+# coding=utf8
 """
 hakase.py - HAKASEHAKASEHAKASEHAKASE
 Copyright 2014, Max Gurela http://everythingisawesome.us

@@ -1,3 +1,4 @@
+# coding=utf8
 """
 fun.py - Just a collection of random commands
 Copyright 2014 Max Gurela

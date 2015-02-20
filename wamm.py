@@ -1,3 +1,4 @@
+# coding=utf8
 """
 wamm.py - #WAMM4LYFE
 Copyright 2014 Max Gurela
@@ -43,7 +44,7 @@ def docker(bot, trigger):
 
 @module.commands('under')
 def underwhere(bot, trigger):
-    if trigger.group(2) == None:
+    if not trigger.group(2):
         return
     if trigger.group(2).strip() == 'where':
         bot.say('Under here: https://www.youtube.com/watch?v=_ak4rincQ5Y')

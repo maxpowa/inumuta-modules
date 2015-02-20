@@ -1,3 +1,4 @@
+# coding=utf8
 """
 twitter.py - Willie Twitter Module
 Copyright 2014 Max Gurela

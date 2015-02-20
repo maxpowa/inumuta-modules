@@ -1,4 +1,4 @@
-# -*- coding: utf8 -*-
+# coding=utf8
 """
 imgur.py - Willie imgur Information Module
 Copyright 2014, Max Gurela
@@ -112,7 +112,7 @@ def gallery(link_id, bot):
                                                              str(gallery['views']), \
                                                              str(gallery['ups']), \
                                                              str(gallery['downs'])))
-        if gallery['animated'] == True:
+        if gallery['animated'] is True:
             return bot.say('[imgur] [{0} - {1} views ' \
                            '({2}+ and {3}-)]'.format(gallery['title'], \
                                                              str(gallery['views']), \

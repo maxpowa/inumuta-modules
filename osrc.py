@@ -1,4 +1,3 @@
-#!/usr/local/bin/python2.7
 # coding=utf8
 """
 osrc.py - A module for displaying users open source report card, https://osrc.dfm.io/

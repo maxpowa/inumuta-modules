@@ -33,18 +33,16 @@ def ctcp_version(bot, trigger):
 @willie.module.rule('\x01SOURCE\x01')
 @willie.module.rate(20)
 def ctcp_source(bot, trigger):
-    bot.write(('NOTICE', trigger.nick),
-              '\x01SOURCE https://github.com/maxpowa/Inumuta/\x01')
+    bot.notice('\x01SOURCE https://github.com/maxpowa/Inumuta/\x01'
+               recipient=trigger.nick)
 
 
-@willie.module.rule('\x01PING\s(.*)\x01')
+@willie.module.rule('.*')
 @willie.module.rate(10)
 def ctcp_ping(bot, trigger):
-    text = trigger.group()
-    text = text.replace("PING ", "")
-    text = text.replace("\x01", "")
-    bot.write(('NOTICE', trigger.nick),
-              '\x01PING {0}\x01'.format(text))
+    if 'intent' in trigger.tags and trigger.tags['intent'] == 'PING':
+        bot.notice('\x01PING {}\x01'.format(trigger.group()), 
+                   recipient=trigger.nick)
 
 
 @willie.module.rule('\x01TIME\x01')

@@ -110,7 +110,7 @@ def nickometer(bot, trigger):
     # Punish leetspeak
     leetspeak_weights = (5, 5, 2, 5, 2, 3, 1, 2, 2, 2)
     for i in range(len(leetspeak_weights)):
-        hits = re.findall(`i`, nick)
+        hits = re.findall(repr(i), nick)
         if (hits and len(hits) > 0):
             score += leetspeak_weights[i] * len(hits) * 30
 
@@ -162,6 +162,6 @@ def nickometer(bot, trigger):
                  (1 - 1 / (1 + score / 5.0)) / 2
 
     # if it's above 99.9%, show as many digits as is interesting
-    score_string = re.sub('(99\\.9*\\d|\\.\\d).*', '\\1', `percentage`)
+    score_string = re.sub('(99\\.9*\\d|\\.\\d).*', '\\1', repr(percentage))
 
     bot.say('[nickometer] %s was found to be %s%% lame.' % (originalNick, score_string))

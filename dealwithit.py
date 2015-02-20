@@ -1,3 +1,4 @@
+# coding=utf8
 """
 dealwithit.py - Just deal with it.
 Copyright 2014, Max Gurela http://everythingisawesome.us
