@@ -6,7 +6,9 @@ from willie import web
 import tungsten
 import json
 
+
 output_ids = ['DecimalApproximation', 'Result', 'ExactResult']
+
 
 @commands('wa', 'wolfram')
 def wa_query(bot, trigger):
