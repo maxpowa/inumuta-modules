@@ -61,6 +61,7 @@ def execute(*args, **kwargs):
 
 
 def setup(bot):
+    global filename
     path = bot.config.logquery.filename
     config_dir, config_file = os.path.split(bot.config.filename)
     config_name, _ = os.path.splitext(config_file)
