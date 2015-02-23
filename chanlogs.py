@@ -72,7 +72,8 @@ def get_fpath(bot, trigger, channel=None):
     basedir = os.path.expanduser(bot.config.chanlogs.dir)
     channel = channel or trigger.sender
     channel = channel.lstrip("#")
-    channel = BAD_CHARS.sub('__')
+    channel = BAD_CHARS.sub('__', channel)
+    channel = willie.tools.Identifier.lower(channel)
 
     dt = get_datetime(bot)
     if bot.config.chanlogs.by_day:
