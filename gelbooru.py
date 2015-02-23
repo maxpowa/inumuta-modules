@@ -25,9 +25,9 @@ def refresh_cache(bot, inp):
     if inp == '':
         search = 'rating:safe'
     else:
-        search = inp.replace(' ', '+').replace('explicit', 'rating:explicit').replace('nsfw', 'rating:explicit').replace('safe', 'rating:safe').replace('sfw', 'rating:safe')
+        search = inp.replace('explicit', 'rating:explicit').replace('nsfw', 'rating:explicit').replace('safe', 'rating:safe').replace('sfw', 'rating:safe')
     if not 'rating:' in search:
-        search += '+rating:safe'
+        search += ' rating:safe'
     soup = get_soup('http://gelbooru.com/index.php?page=dapi&s=post&q=index&limit=10&tags={}'.format(search))
     posts = soup.find_all('post')
 
@@ -56,16 +56,16 @@ def gelbooru(bot, trigger):
     lastsearch = search
 
     if len(gelbooru_cache) == 0:
-        bot.say('No results for tag \'' + trigger.group(2).strip() + '\'')
+        bot.say('No results for search \'' + trigger.group(2).strip() + '\'')
         return
 
     id, score, url, rating, tags = gelbooru_cache.pop()
 
-    if rating is 'e':
+    if u'e' in rating:
         rating = "\x02\x034NSFW\x03\x02"
-    elif rating is 'q':
+    elif u'q' in rating:
         rating = "\x02\x037Questionable\x03\x02"
-    elif rating is 's':
+    elif u's' in rating:
         rating = "\x02\x033Safe\x03\x02"
 
     bot.say(u'\x02[Gelbooru]\x02 Score: \x02{}\x02 | Rating: {} | http://gelbooru.com/index.php?page=post&s=view&id={} | Tags: {}'.format(score, rating, id, tags.strip()))
@@ -78,11 +78,11 @@ def gelbooru_url(bot, trigger):
 
     id, score, url, rating, tags = (posts[0].get('id'), posts[0].get('score'), posts[0].get('file_url'), posts[0].get('rating'), posts[0].get('tags'))
 
-    if rating is 'e':
+    if u'e' in rating:
         rating = "\x02\x034NSFW\x03\x02"
-    elif rating is 'q':
+    elif u'q' in rating:
         rating = "\x02\x037Questionable\x03\x02"
-    elif rating is 's':
+    elif u's' in rating:
         rating = "\x02\x033Safe\x03\x02"
 
     bot.say(u'\x02[Gelbooru]\x02 Score: \x02{}\x02 | Rating: {} | Tags: {}'.format(score, rating, tags.strip()))
