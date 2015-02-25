@@ -8,13 +8,20 @@ Licensed under the Eiffel Forum License 2 (It's GPL compatible!).
 """
 from __future__ import unicode_literals
 from willie.module import commands, rule
-from willie import web
+from willie import tools,web
 from bs4 import BeautifulSoup
 import random
 import re
 
 safebooru_cache = []
 lastsearch = ''
+
+
+def setup(willie):
+    regex = re.compile('safebooru.org.*\?id\=([-_a-zA-Z0-9]+)')
+    if not willie.memory.contains('url_callbacks'):
+        willie.memory['url_callbacks'] = tools.WillieMemory()
+    willie.memory['url_callbacks'][regex] = safebooru_url
 
 
 def refresh_cache(inp):

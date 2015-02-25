@@ -10,6 +10,14 @@ from willie.module import commands, rule
 import willie.web as web
 import urllib
 import json
+import re
+
+
+def setup(willie):
+    regex = re.compile('jpv\.everythingisawesome\.us/song/\?genre=(.+)&song=(.+)')
+    if not willie.memory.contains('url_callbacks'):
+        willie.memory['url_callbacks'] = tools.WillieMemory()
+    willie.memory['url_callbacks'][regex] = jpv_info
 
 
 @rule('https?://jpv\.everythingisawesome\.us/song/\?genre=(.+)&song=(.+)')

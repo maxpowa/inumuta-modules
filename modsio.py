@@ -11,6 +11,14 @@ from willie.module import rule
 from willie.formatting import color
 
 import json
+import re
+
+
+def setup(willie):
+    regex = re.compile('mods\.io/mods/(\d+)')
+    if not willie.memory.contains('url_callbacks'):
+        willie.memory['url_callbacks'] = tools.WillieMemory()
+    willie.memory['url_callbacks'][regex] = get_page_info
 
 
 def get_prefix():
