@@ -10,7 +10,7 @@ Uses the osu!api, docs: https://github.com/peppy/osu-api/wiki
 from __future__ import unicode_literals
 from willie.module import commands, rule
 from willie.formatting import color
-from willie import tools,web
+from willie import tools, web
 import json
 import types
 import re

@@ -8,7 +8,7 @@ Licensed under the Eiffel Forum License 2.
 from __future__ import unicode_literals
 from willie.module import commands, rule, example
 from willie.formatting import color
-from willie import tools,web
+from willie import tools, web
 from optparse import OptionParser
 import json
 import re

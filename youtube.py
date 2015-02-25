@@ -14,7 +14,7 @@ from __future__ import unicode_literals, division
 
 from willie import web, tools
 from willie.module import rule, commands, example
-from willie.formatting import color,colors
+from willie.formatting import color, colors
 import json
 import re
 import sys
@@ -38,7 +38,7 @@ def shutdown(bot):
 
 def ytget(bot, trigger, uri):
     bytes = web.get(uri)
-    try:    
+    try:
         result = json.loads(bytes)
     except ValueError:
         return 'err'
@@ -181,8 +181,8 @@ def ytinfo(bot, trigger, found_match=None):
                   ' | Duration: ' + video_info['length'] + \
                   ' | Views: ' + video_info['views'] + \
                   ' | Comments: ' + video_info['comments'] + \
-                  ' | ' + color(video_info['likes'] + '+',colors.GREEN) + \
-                  ' | ' + color(video_info['dislikes'] + '-',colors.RED)
+                  ' | ' + color(video_info['likes'] + '+', colors.GREEN) + \
+                  ' | ' + color(video_info['dislikes'] + '-', colors.RED)
     except:
         return
 

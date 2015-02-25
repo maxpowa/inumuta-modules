@@ -101,6 +101,7 @@ gettweet.commands = ['twit', 'twitter']
 gettweet.priority = 'medium'
 gettweet.example = '.twit aplusk [tweetNum] or .twit 381982018927853568'
 
+
 @rule(r'(.*)twitter.com\/([^\/]+)(?:\s.*)?$')
 def f_info(willie, trigger):
     """Show information about the given Twitter account"""

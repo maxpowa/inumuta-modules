@@ -6,7 +6,6 @@ from willie import web
 import tungsten
 import json
 
-
 output_ids = ['DecimalApproximation', 'Result', 'ExactResult']
 
 

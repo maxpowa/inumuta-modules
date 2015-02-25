@@ -57,7 +57,7 @@ def decode(bot, trigger):
         bot.say('[Decode] {}'.format(e.message))
 
 
-def rotate(l,n):
+def rotate(l, n):
     return l[n:] + l[:n]
 
 
@@ -66,7 +66,7 @@ def rainbow(bot, trigger):
     text = trigger.group(2)
     if not text:
         text = 'rainbow'
-    rainbow = [4,7,8,3,12,2,6]
+    rainbow = [4, 7, 8, 3, 12, 2, 6]
     out = ''
     for c in text:
         out += color(c, rainbow[0])
@@ -284,7 +284,7 @@ def flip(bot, trigger):
     """
     .flip [text] - Flips text upside down
     """
-    bot.say(u'(\u256f\u00b0\u25a1\u00b0\uff09\u256f\ufe35 '+flip_text(trigger.group(2).strip()))
+    bot.say(u'(\u256f\u00b0\u25a1\u00b0\uff09\u256f\ufe35 ' + flip_text(trigger.group(2).strip()))
 
 
 # TEXT SWIRL-IFIER
