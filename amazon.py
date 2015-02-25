@@ -6,11 +6,18 @@ https://github.com/infinitylabs/uguubot/blob/master/plugins/amazon.py
 Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
-from willie import web
+from willie import tools,web
 from willie.module import commands, rule
 from lxml import html
 import json
 import re
+
+
+def setup(willie):    
+    regex = re.compile('((www\.)?amazon\.com/[^ ]+)')
+    if not willie.memory.contains('url_callbacks'):
+        willie.memory['url_callbacks'] = tools.WillieMemory()
+    willie.memory['url_callbacks'][regex] = amazon_url
 
 
 @rule(r'(https?:\/\/(www\.)?amazon\.com/[^ ]+)')

@@ -33,6 +33,13 @@ ignored_sites = [
 sites_query = ' site:xkcd.com -site:' + ' -site:'.join(ignored_sites)
 
 
+def setup(willie):
+    regex = re.compile('xkcd\.com/(\d+)')
+    if not willie.memory.contains('url_callbacks'):
+        willie.memory['url_callbacks'] = tools.WillieMemory()
+    willie.memory['url_callbacks'][regex] = get_page_info
+
+
 def get_info(number=None):
     if number:
         url = 'http://xkcd.com/{}/info.0.json'.format(number)

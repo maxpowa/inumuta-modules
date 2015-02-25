@@ -14,6 +14,7 @@ from __future__ import unicode_literals, division
 
 from willie import web, tools
 from willie.module import rule, commands, example
+from willie.formatting import color,colors
 import json
 import re
 import sys
@@ -37,7 +38,10 @@ def shutdown(bot):
 
 def ytget(bot, trigger, uri):
     bytes = web.get(uri)
-    result = json.loads(bytes)
+    try:    
+        result = json.loads(bytes)
+    except ValueError:
+        return 'err'
     try:
         if 'feed' in result:
             video_entry = result['feed']['entry'][0]
@@ -169,14 +173,18 @@ def ytinfo(bot, trigger, found_match=None):
         return
 
     #combine variables and print
-    message = '[YouTube] Title: ' + video_info['title'] + \
-              ' | Uploader: ' + video_info['uploader'] + \
-              ' | Uploaded: ' + video_info['uploaded'] + \
-              ' | Duration: ' + video_info['length'] + \
-              ' | Views: ' + video_info['views'] + \
-              ' | Comments: ' + video_info['comments'] + \
-              ' | Likes: ' + video_info['likes'] + \
-              ' | Dislikes: ' + video_info['dislikes']
+    try:
+        message = '[You' + color('Tube', colors.WHITE, colors.RED) + ']' + \
+                  ' Title: ' + video_info['title'] + \
+                  ' | Uploader: ' + video_info['uploader'] + \
+                  ' | Uploaded: ' + video_info['uploaded'] + \
+                  ' | Duration: ' + video_info['length'] + \
+                  ' | Views: ' + video_info['views'] + \
+                  ' | Comments: ' + video_info['comments'] + \
+                  ' | ' + color(video_info['likes'] + '+',colors.GREEN) + \
+                  ' | ' + color(video_info['dislikes'] + '-',colors.RED)
+    except:
+        return
 
     bot.say(HTMLParser().unescape(message))
 

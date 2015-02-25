@@ -51,9 +51,11 @@ def setup(willie):
         raise ConfigurationError('Could not authenticate with Twitter. Are the'
                                  ' API keys configured properly?')
     regex = re.compile('twitter.com\/(\S*)\/status\/([\d]+)')
+    user_regex = re.compile('twitter.com\/([^\/]+)$')
     if not willie.memory.contains('url_callbacks'):
         willie.memory['url_callbacks'] = tools.WillieMemory()
     willie.memory['url_callbacks'][regex] = gettweet
+    willie.memory['url_callbacks'][user_regex] = f_info
 
 
 def format_thousands(integer):
@@ -99,7 +101,7 @@ gettweet.commands = ['twit', 'twitter']
 gettweet.priority = 'medium'
 gettweet.example = '.twit aplusk [tweetNum] or .twit 381982018927853568'
 
-
+@rule(r'(.*)twitter.com\/([^\/]+)(?:\s.*)?$')
 def f_info(willie, trigger):
     """Show information about the given Twitter account"""
     try:

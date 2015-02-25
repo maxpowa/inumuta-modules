@@ -48,6 +48,14 @@ def configure(config):
         config.interactive_add('github', 'secret', 'github secret')
 
 
+def setup(willie):
+    repo_url = re.compile('github\.com/([^ /]+?)/([^ /]+)/?(?!\S)')
+    if not willie.memory.contains('url_callbacks'):
+        willie.memory['url_callbacks'] = tools.WillieMemory()
+    willie.memory['url_callbacks'][regex] = issue_info
+    willie.memory['url_callbacks'][repo_url] = data_url
+
+
 def fetch_api_endpoint(bot, url):
     oauth = ''
     if bot.config.github.client_id and bot.config.github.secret:

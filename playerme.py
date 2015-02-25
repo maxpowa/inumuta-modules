@@ -8,9 +8,19 @@ Licensed under the Eiffel Forum License 2.
 from __future__ import unicode_literals
 from willie.module import commands, rule, example
 from willie.formatting import color
-import willie.web as web
+from willie import tools,web
 from optparse import OptionParser
 import json
+import re
+
+
+def setup(willie):
+    user_regex = re.compile(r'player\.me\/(\w+)')
+    feed_regex = re.compile(r'player\.me/feed/(\d+)')
+    if not willie.memory.contains('url_callbacks'):
+        willie.memory['url_callbacks'] = tools.WillieMemory()
+    willie.memory['url_callbacks'][user_regex] = player_me_regex
+    willie.memory['url_callbacks'][feed_regex] = player_me_feed
 
 
 @commands('player')

@@ -6,11 +6,19 @@ Copyright 2014 Max Gurela
 Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
-from willie import web
+from willie import tools,web
 from willie.module import rule
 from willie.formatting import color, bold
 
 import json
+import re
+
+
+def setup(willie):
+    regex = re.compile('((?:.+\.)?deviantart\.com/.*)')
+    if not willie.memory.contains('url_callbacks'):
+        willie.memory['url_callbacks'] = tools.WillieMemory()
+    willie.memory['url_callbacks'][regex] = get_page_info
 
 
 def get_prefix():
