@@ -231,6 +231,7 @@ def log_message(bot, message):
     #execute('DELETE FROM logquery WHERE channel=? AND id NOT IN (SELECT id FROM logquery WHERE channel=? ORDER BY datetime(sent_at) DESC LIMIT 500)',
     #    (message.sender, message.sender))
 
+
 @rule('.*')
 @event("JOIN")
 @unblockable

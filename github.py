@@ -103,6 +103,7 @@ def issue_info(bot, trigger, match=None):
 
     #bot.say(str(data))
 
+
 def get_data(bot, trigger, URL):
     try:
         raw = fetch_api_endpoint(bot, URL)
@@ -185,6 +186,7 @@ def github_repo(bot, trigger, match=None):
     fmt_response(bot, trigger, URL)
 
     #bot.say(''.join(response))
+
 
 def from_utc(utcTime, fmt="%Y-%m-%dT%H:%M:%SZ"):
     """
