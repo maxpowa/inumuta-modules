@@ -9,9 +9,11 @@ Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
 from willie.module import commands, thread
+from willie import web
 from io import StringIO as StringIO
 import re
 import random
+import json
 
 BUFFER_SIZE = 5000
 MAX_STEPS = 1000000
@@ -45,9 +47,14 @@ def fuckbrain(bot, trigger):
         bot.say('Way to go, you broke it. I hope you\'re happy.')
 
 
+def hastebin_it(text):
+    raw = web.post('http://hastebin.com/documents', text)
+    return u'http://hastebin.com/raw/'+json.loads(raw)['key']
+
+
 def fb(inp):
     bfg = BFGenerator()
-    return bfg.text_to_brainfuck(inp)
+    return hastebin_it(bfg.text_to_brainfuck(inp))
 
 
 def bf(inp):

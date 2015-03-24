@@ -100,7 +100,7 @@ def logquery(bot, trigger):
         base_query = re.findall(r'(first|last|count|show) where (.*)', trigger.group(2), re.I)  # The base command syntax. This /must/ match in order to query anything
 
     if not base_query:               # Return when invalid base command syntax used
-        bot.say('[logquery] Usage: .logquery <first|last|count|show> where <nick|ident|host|message|channel|intent> =~ \'<regex>\' [<and|or> <nick|ident|host|message|channel|intent> =~ \'<regex>\']+')
+        bot.say('[logquery] Usage: .logquery <first|last|count|show> where <nick|ident|host|message|channel|intent> =~ \'<glob>\' [<and|or> <nick|ident|host|message|channel|intent> =~ \'<glob>\']+')
         return
 
     query_log(bot, base_query[0])    # Grab the first tuple match and set that as the base query
@@ -121,7 +121,7 @@ def query_log(bot, query):
 
     selector = '*'
     limit = 10
-    if query[0] == 'count':
+    if query[0].lower() == 'count':
         limit = 0
         selector = 'COUNT(*)'
 
@@ -129,19 +129,19 @@ def query_log(bot, query):
     try:
         c = execute('SELECT ' + selector + ' FROM (' + sql + ') ORDER BY datetime(sent_at) ASC', params)
         matches = c.fetchall()
-    except:
-        bot.say('[logquery] Invalid query, try .logquery help for usage')
+    except Exception as e:
+        bot.say('[logquery] Invalid query, try .logquery help for usage ('+e.message+')')
         return
 
     if len(matches) == 0:                                                                   # No results, let the user know
         bot.say('[logquery] No results, try .logquery help for usage')
         return
 
-    if query[0] == 'count':                                                                 # Show the count
+    if query[0].lower() == 'count':                                                                 # Show the count
         bot.say(str(matches[0]['COUNT(*)']))
-    elif query[0] == 'first':                                                               # Show the first value in the list
+    elif query[0].lower() == 'first':                                                               # Show the first value in the list
         bot.say(format_msg(matches[0]))
-    elif query[0] == 'last':                                                                # Show the last value in the list
+    elif query[0].lower() == 'last':                                                                # Show the last value in the list
         bot.say(format_msg(matches[-1]))
     else:
         if len(matches) <= 5:                                                               # If it's less than 5 results, just dump 'em to chat
@@ -164,15 +164,18 @@ def construct_query(query, limit=10):
 
     for part in query.split('and'):
         # MUST match this regex, otherwise is not going to be used in the query
-        adv_query = re.findall(r'(nick|ident|host|message|channel|intent) =~ \'(.+?)\'', part, re.I)
+        adv_query = re.findall(r'(nick|ident|host|message|channel|intent) (=|\!)~ \'(.+?)\'', part, re.I)
         current = []
         for match in adv_query:
             if match is not None:
                 key = match[0]
                 while key in params:
                     key = key + "_"
-                current.append(match[0] + " GLOB :" + key)
-                params[key] = match[1]
+                inverse = ''
+                if match[1] == '!':
+                    inverse = ' NOT'
+                current.append(match[0] + inverse + " GLOB :" + key)
+                params[key] = match[2]
         where.append(' OR '.join(current))
 
     if where:

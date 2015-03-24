@@ -13,7 +13,8 @@ import random
 
 finder = re.compile(r'.*<h1>(.+?)<\/h1>.*')
 
-phrases = ["%people% launched a DoS attack on the website of %thing%",
+phrases = ["%people% implements a system into %thing% that %action%",
+    "%people% launched a DoS attack on the website of %thing%",
     "%site% urges everyone to stop using %thing%",
     "After a %enormous% amount of requests, %pack% removes %thing%",
     "After a %enormous% amount of requests, %pack% adds %thing%",
@@ -119,6 +120,12 @@ parts = {
     "cause drama about",
     "complain about",
     "kick"
+  ],
+  "action": [
+    "enables %badsoft%",
+    "%bans% %people%",
+    "auto-downloads %badsoft%",
+    "disables %code%"
   ],
   "activates": [
     "activates",
@@ -369,6 +376,7 @@ parts = {
     "meew0",
     "Glassmaker",
     "sk89q",
+    "Kubuxu"
   ],
   "price": [
     "$200",
@@ -406,6 +414,7 @@ parts = {
     "Twitch"
   ],
   "thing": [
+    "NOVA",
     "ForgeCraft",
     "Simply Jetpacks",
     "RedPower 2",

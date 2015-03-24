@@ -114,21 +114,6 @@ def reverse(bot, trigger):
         bot.say('Usage: .spoiler <where> <text>')
 
 
-@module.commands('kernel')
-def kernel(bot, trigger):
-    """
-    .kernel - Show the latest linux kernels
-    """
-    contents = web.get("https://www.kernel.org/finger_banner")
-    contents = re.sub(r'The latest(\s*)', '', contents)
-    contents = re.sub(r'version of the Linux kernel is:(\s*)', '- ', contents)
-    lines = contents.split("\n")
-
-    message = "Linux kernel versions: "
-    message += ", ".join(line for line in lines[:-1])
-    bot.say(message)
-
-
 @module.commands('rimshot')
 def rimshot(bot, trigger):
     """

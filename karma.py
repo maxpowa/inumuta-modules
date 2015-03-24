@@ -7,6 +7,7 @@ Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
 from willie.module import rate, rule, commands
+from willie.tools import Identifier
 
 
 @rate(10)
@@ -15,7 +16,7 @@ def promote_karma(bot, trigger):
     """
     Update karma status for specify IRC user if get '++' message.
     """
-    if (trigger.group(1).strip().lower() == trigger.nick.lower()):
+    if (bot.db.get_nick_id(Identifier(trigger.group(1))) == bot.db.get_nick_id(Identifier(trigger.nick))):
         return bot.say('You may not give yourself karma!')
     current_karma = bot.db.get_nick_value(trigger.group(1), 'karma')
     if not current_karma:
@@ -34,7 +35,7 @@ def demote_karma(bot, trigger):
     """
     Update karma status for specify IRC user if get '--' message.
     """
-    if (trigger.group(1).strip().lower() == trigger.nick.lower()):
+    if (bot.db.get_nick_id(Identifier(trigger.group(1))) == bot.db.get_nick_id(Identifier(trigger.nick))):
         return bot.say('You may not reduce your own karma!')
     current_karma = bot.db.get_nick_value(trigger.group(1), 'karma')
     if not current_karma:
