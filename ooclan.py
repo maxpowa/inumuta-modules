@@ -18,6 +18,10 @@ def death_event(bot, trigger):
     else:
         opts = [
             'https://www.youtube.com/watch?v=5es0NNtSNCU',
-            'http://i.imgur.com/FqLvsiE.jpg'
+            'http://i.imgur.com/FqLvsiE.jpg',
+            'http://i.imgur.com/SZvrB78.gif',
+            'http://gfycat.com/InfatuatedNiceGelding',
+            'http://i.imgur.com/Upji2hK.gif',
+            'http://i.imgur.com/ltyA1iY.gif'
         ]
         bot.say('gg ' + trigger.group(1).strip()[:1] + u'\u0081' + trigger.group(1).strip()[1:] + ', ' + random.choice(opts))
