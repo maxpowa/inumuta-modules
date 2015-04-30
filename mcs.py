@@ -35,7 +35,7 @@ def get_uuid(bot, trigger):
     bot.say('{0}\'s UUID: {1}'.format(response['name'], str(uuid.UUID(response['id']))))
 
 
-@commands('status', 'ping')
+@commands('status')
 def status(bot, trigger):
     """
     .status <server> - Grabs information about a minecraft server!
