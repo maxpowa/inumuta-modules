@@ -572,10 +572,10 @@ def drama(bot, trigger):
     headers = {
          'User-Agent': 'Mozilla/5.0 (X11; U; Linux i686) Gecko/20071127 Firefox/2.0.0.11'
     }
-    raw = web.get('http://asie.pl/drama.php?2', timeout=10, headers=headers)
+    raw = web.get('http://drama.thog92.eu/api/drama', timeout=10, headers=headers)
     #bot.say(raw)
     try:
-        words = finder.search(raw).group(1).split()
+        words = raw.split()
         out = []
         for word in words:
             out.append(word[:1] + u'\u0081' + word[1:])
