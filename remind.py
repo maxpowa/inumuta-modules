@@ -68,9 +68,9 @@ def setup(bot):
                 for oldtime in oldtimes:
                     for (channel, nick, message) in bot.rdb[oldtime]:
                         if message:
-                            bot.msg(channel, nick + ': ' + message)
+                            bot.msg(channel, '[Reminder] ' + nick + ': ' + message)
                         else:
-                            bot.msg(channel, nick + '!')
+                            bot.msg(channel, '[Reminder] ' + nick + '!')
                     del bot.rdb[oldtime]
                 dump_database(bot.rfn, bot.rdb)
             time.sleep(2.5)
@@ -169,6 +169,7 @@ def at(bot, trigger):
     if not second:
         second = '0'
 
+    timezone = 'UTC'
     if pytz:
         timezone = willie.tools.get_timezone(bot.db, bot.config, tz,
                                              trigger.nick, trigger.sender)
@@ -192,7 +193,7 @@ def at(bot, trigger):
 
     if duration < 0:
         duration += 86400
-    create_reminder(bot, trigger, duration, message, 'UTC')
+    create_reminder(bot, trigger, duration, message, timezone)
 
 
 def create_reminder(bot, trigger, duration, message, tz):
