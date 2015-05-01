@@ -6,10 +6,11 @@ Copyright 2014 Max Gurela
 Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
-from willie import module,web
+from willie import module, web
 from willie.formatting import color
 import json
 import re
+
 
 @module.commands('kernel')
 def kernel(bot, trigger):
@@ -22,7 +23,7 @@ def kernel(bot, trigger):
 
     regex = False
     if trigger.group(2):
-        regex = re.compile(r'^.*'+re.escape(trigger.group(2))+r'.*$', re.I)
+        regex = re.compile(r'^.*' + re.escape(trigger.group(2)) + r'.*$', re.I)
 
     for branch in parsed['releases']:
         if regex:

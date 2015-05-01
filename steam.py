@@ -4,10 +4,9 @@ steam.py - Show steam application prices/releases/etc
 
 Licensed under the Eiffel Forum License 2.
 """
-from willie import module,web
+from willie import module, web
 from bs4 import BeautifulSoup
 import re
-
 
 steam_re = r'(.*:)//(store.steampowered.com)(:[0-9]+)?(.*)'
 
@@ -30,7 +29,7 @@ def get_steam_info(url):
 
     # the page has a ton of returns and tabs
     rel_date = soup.find('span', {'class': 'date'}).text.strip()
-    tags = soup.find('div', {'class': 'glance_tags'}).text.strip().replace(u'Free to Play', '').replace(u'+','').split()
+    tags = soup.find('div', {'class': 'glance_tags'}).text.strip().replace(u'Free to Play', '').replace(u'+', '').split()
     genre = " - Genre: " + u', '.join(tags[:4])
     date = " - Release date: " + rel_date.replace(u"Release Date: ", u"")
     price = soup.find('div', {'class': 'game_purchase_price price'}).text.strip()

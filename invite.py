@@ -27,7 +27,7 @@ def setup(bot):
             pass
 
 
-@interval(60*30)
+@interval(60 * 30)
 def keep_joined(bot):
     setup(bot)
 

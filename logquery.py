@@ -130,7 +130,7 @@ def query_log(bot, query):
         c = execute('SELECT ' + selector + ' FROM (' + sql + ') ORDER BY datetime(sent_at) ASC', params)
         matches = c.fetchall()
     except Exception as e:
-        bot.say('[logquery] Invalid query, try .logquery help for usage ('+e.message+')')
+        bot.say('[logquery] Invalid query, try .logquery help for usage (' + e.message + ')')
         return
 
     if len(matches) == 0:                                                                   # No results, let the user know
@@ -233,7 +233,6 @@ def log_message(bot, message):
     # Ensure no more than x amount of messages exist for the current channel
     #execute('DELETE FROM logquery WHERE channel=? AND id NOT IN (SELECT id FROM logquery WHERE channel=? ORDER BY datetime(sent_at) DESC LIMIT 500)',
     #    (message.sender, message.sender))
-
 
 @rule('.*')
 @event("JOIN")

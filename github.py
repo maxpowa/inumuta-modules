@@ -10,7 +10,6 @@ Copyright 2014 Max Gurela
 
 """
 
-
 from __future__ import unicode_literals
 from willie import web, tools
 from willie.module import commands, rule, OP, NOLIMIT, example, interval
@@ -32,7 +31,6 @@ import datetime
 import bottle
 from threading import Thread
 
-
 '''
  _______           __         __
 |   |   |.-----.--|  |.--.--.|  |.-----.
@@ -41,13 +39,13 @@ from threading import Thread
 
 '''
 
-
 issueURL = (r'https?://(?:www\.)?github.com/'
              '([A-z0-9\-]+/[A-z0-9\-]+)/'
              '(?:issues|pull)/'
              '([\d]+)')
 regex = re.compile(issueURL)
 willie_instance = None
+
 
 def configure(config):
     """
@@ -84,7 +82,6 @@ def setup(willie):
 
 def shutdown(willie):
     shutdown_webhook(willie)
-
 
 '''
  _______ ______ _____        ______                    __
@@ -141,7 +138,6 @@ def issue_info(bot, trigger, match=None):
     bot.say(''.join(response))
 
     #bot.say(str(data))
-
 
 def get_data(bot, trigger, URL):
     try:
@@ -226,7 +222,6 @@ def github_repo(bot, trigger, match=None):
 
     #bot.say(''.join(response))
 
-
 def from_utc(utcTime, fmt="%Y-%m-%dT%H:%M:%SZ"):
     """
     Convert UTC time string to time.struct_time
@@ -272,7 +267,6 @@ def fmt_response(bot, trigger, URL, from_regex=False):
 
     bot.say(''.join(response))
 
-
 '''
  ________         __     __                 __
 |  |  |  |.-----.|  |--.|  |--.-----.-----.|  |--.-----.
@@ -288,8 +282,8 @@ def setup_webhook(willie):
     host = willie.config.github.webhook_host
     port = willie.config.github.webhook_port
 
-    base = StoppableWSGIRefServer(host=host,port=port)
-    server = Thread(target=bottle.run, kwargs={'server':base})
+    base = StoppableWSGIRefServer(host=host, port=port)
+    server = Thread(target=bottle.run, kwargs={'server': base})
     server.setDaemon(True)
     server.start()
     willie.memory['gh_webhook_server'] = base
@@ -323,7 +317,6 @@ def create_table(bot, c):
         )'''.format(primary_key))
 
 
-
 def shutdown_webhook(willie):
     global willie_instance
     willie_instance = None
@@ -341,7 +334,8 @@ class StoppableWSGIRefServer(bottle.ServerAdapter):
         from wsgiref.simple_server import make_server, WSGIRequestHandler
         if self.quiet:
             class QuietHandler(WSGIRequestHandler):
-                def log_request(*args, **kw): pass
+                def log_request(*args, **kw):
+                    pass
             self.options['handler_class'] = QuietHandler
         self.server = make_server(self.host, self.port, handler, **self.options)
         self.server.serve_forever()
@@ -355,11 +349,10 @@ def get_targets(repo):
     c = conn.cursor()
 
     #willie_instance.msg('#Inumuta', 'Checking db for '+repo)
-    c.execute('SELECT * FROM gh_hooks WHERE repo_name = ? AND enabled = 1', (repo.lower(),))
+    c.execute('SELECT * FROM gh_hooks WHERE repo_name = ? AND enabled = 1', (repo.lower(), ))
     result = c.fetchall()
     #willie_instance.msg('#Inumuta', 'Result: '+json.dumps(result))
     return result
-
 
 
 @bottle.get("/webhook")
@@ -383,7 +376,7 @@ def webhook():
                           fmt_repo(payload['repository']['name'], chan),
                           fmt_name(payload['sender']['login'], chan),
                           payload['zen']))
-        return '{"channels":'+json.dumps([chan[0] for chan in channels])+'}'
+        return '{"channels":' + json.dumps([chan[0] for chan in channels]) + '}'
 
     payload['event'] = event
 
@@ -420,14 +413,14 @@ def configure_repo_messages(bot, trigger):
     if not result:
         c.execute('''INSERT INTO gh_hooks (channel, repo_name, enabled) VALUES (?, ?, ?)''', (channel, repo_name, enabled))
         bot.say("Successfully enabled listening for {repo}'s events in {chan}.".format(chan=channel, repo=repo_name))
-        bot.say('Great! Now add http://xpw.us/webhook as a webhook for your repository and '+
+        bot.say('Great! Now add http://xpw.us/webhook as a webhook for your repository and ' +
                 'I\'ll send a message in here when I recieve the initial webhook ping!')
         bot.say('You can configure the colors that I use to display webhooks with .gh-hook-color')
     else:
         c.execute('''UPDATE gh_hooks SET enabled = ? WHERE channel = ? AND repo_name = ?''', (enabled, channel, repo_name))
-        bot.say("Successfully {state} the subscription to {repo}'s events".format(state='enabled' if enabled else 'disabled',repo=repo_name))
+        bot.say("Successfully {state} the subscription to {repo}'s events".format(state='enabled' if enabled else 'disabled', repo=repo_name))
         if enabled:
-            bot.say('Great! If you haven\'t already, add http://xpw.us/webhook as a webhook for your repository. '+
+            bot.say('Great! If you haven\'t already, add http://xpw.us/webhook as a webhook for your repository. ' +
                     'I\'ll send a message in here when I recieve the initial webhook ping!')
             bot.say('You can configure the colors that I use to display webhooks with .gh-hook-color')
     conn.commit()
@@ -471,17 +464,16 @@ def configure_repo_colors(bot, trigger):
         combined.append(repo_name)
         c.execute('''UPDATE gh_hooks SET repo_color = ?, name_color = ?, branch_color = ?, tag_color = ?,
                      hash_color = ?, url_color = ? WHERE channel = ? AND repo_name = ?''', combined)
-        conn.commit();
+        conn.commit()
         c.execute('SELECT * FROM gh_hooks WHERE channel = ? AND repo_name = ?', (channel, repo_name))
-        row = c.fetchone();
+        row = c.fetchone()
         bot.say("[{}] Example name: {} tag: {} commit: {} branch: {} url: {}".format(
                     fmt_repo(repo_name, row),
                     fmt_name(trigger.nick, row),
                     fmt_tag('tag', row),
                     fmt_hash('c0mm17', row),
                     fmt_branch('master', row),
-                    fmt_url('http://git.io/',row)))
-
+                    fmt_url('http://git.io/', row)))
 
 '''
  _______                             __   __   __
@@ -490,7 +482,6 @@ def configure_repo_colors(bot, trigger):
 |___|    |_____|__| |__|__|__|___._||____|____|__||__|__|___  |
                                                         |_____|
 '''
-
 
 current_row = None
 current_payload = None
@@ -605,7 +596,6 @@ def get_push_summary_url(payload=None):
         return payload['compare']
 
 
-
 def fmt_push_summary_message(payload=None, row=None):
     if not payload:
         payload = current_payload
@@ -653,7 +643,7 @@ def fmt_push_summary_message(payload=None, row=None):
 
 def fmt_commit_message(commit):
     short = commit['message'].split('\n', 2)[0]
-    short = short+'...' if short != commit['message'] else short
+    short = short + '...' if short != commit['message'] else short
 
     author = commit['author']['name']
     sha = commit['id']
@@ -668,7 +658,7 @@ def fmt_commit_comment_summary(payload=None, row=None):
         row = current_row
 
     short = payload['comment']['body'].split('\r\n', 2)[0]
-    short = short+'...' if short != payload['comment']['body'] else short
+    short = short + '...' if short != payload['comment']['body'] else short
     return '[{}] {} comment on commit {}: {}'.format(
                   fmt_repo(payload['repository']['name']),
                   fmt_name(payload['sender']['login']),
@@ -691,7 +681,7 @@ def fmt_issue_comment_summary_message(payload=None):
     if not payload:
         payload = current_payload
     short = payload['comment']['body'].split('\r\n', 2)[0]
-    short = short+'...' if short != payload['comment']['body'] else short
+    short = short + '...' if short != payload['comment']['body'] else short
     return '[{}] {} comment on issue #{}: {}'.format(
                   fmt_repo(payload['repository']['name']),
                   fmt_name(payload['sender']['login']),
@@ -720,8 +710,8 @@ def fmt_pull_request_review_comment_summary_message(payload=None):
     if not payload:
         payload = current_payload
     short = payload['comment']['body'].split('\r\n', 2)[0]
-    short = short+'...' if short != payload['comment']['body'] else short
-    sha1  = payload['comment']['commit_id']
+    short = short + '...' if short != payload['comment']['body'] else short
+    sha1 = payload['comment']['commit_id']
     return '[{}] {} comment on pull request #{} {}: {}'.format(
                   fmt_repo(payload['repository']['name']),
                   fmt_name(payload['sender']['login']),
@@ -743,7 +733,7 @@ def fmt_gollum_summary_message(payload=None):
                   fmt_name(payload['sender']['login']),
                   payload['pages'][0]['action'],
                   payload['pages'][0]['title'],
-                  ": "+summary if summary else '')
+                  ": " + summary if summary else '')
     elif len(payload['pages']) > 1:
         counts = {}
         for page in payload['pages']:
@@ -751,7 +741,7 @@ def fmt_gollum_summary_message(payload=None):
             counts[payload['pages']['action']] = counts.setdefault(payload['pages']['action'], 0) + 1
         actions = []
         for action, count in counts.iteritems():
-            actions.append(action+" "+count)
+            actions.append(action + " " + count)
 
         return '[{}] {} {} wiki pages'.format(
                   fmt_repo(payload['repository']['name']),
@@ -761,7 +751,6 @@ def fmt_gollum_summary_message(payload=None):
 
 def fmt_arr_to_sentence(array):
     return '{} and {}'.format(', '.join(array[:-1]), array[-1])
-
 
 
 def fmt_watch_message(payload=None):
@@ -774,7 +763,7 @@ def fmt_watch_message(payload=None):
 
 def shorten_url(url):
     try:
-        res, headers = web.post('http://git.io','url='+url, return_headers=True)
+        res, headers = web.post('http://git.io', 'url=' + url, return_headers=True)
         return headers['location']
     except:
         return url
@@ -787,24 +776,24 @@ def send_formatted_message(payload, row):
 
     messages = []
     if payload['event'] == 'push':
-        messages.append(fmt_push_summary_message()+" "+fmt_url(shorten_url(get_push_summary_url())))
+        messages.append(fmt_push_summary_message() + " " + fmt_url(shorten_url(get_push_summary_url())))
         for commit in get_distinct_commits():
             messages.append(fmt_commit_message(commit))
     elif payload['event'] == 'commit_comment':
-        messages.append(fmt_commit_comment_summary()+" "+fmt_url(shorten_url(payload['comment']['html_url'])))
+        messages.append(fmt_commit_comment_summary() + " " + fmt_url(shorten_url(payload['comment']['html_url'])))
     elif payload['event'] == 'pull_request':
         if re.match('(open|close)', payload['action']):
-            messages.append(fmt_pull_request_summary_message()+" "+fmt_url(shorten_url(payload['pull_request']['html_url'])))
+            messages.append(fmt_pull_request_summary_message() + " " + fmt_url(shorten_url(payload['pull_request']['html_url'])))
     elif payload['event'] == 'pull_request_review_comment':
-        messages.append(fmt_pull_request_review_comment_summary_message()+" "+fmt_url(shorten_url(payload['comment']['html_url'])))
+        messages.append(fmt_pull_request_review_comment_summary_message() + " " + fmt_url(shorten_url(payload['comment']['html_url'])))
     elif payload['event'] == 'issues':
         if re.match('(open|close)', payload['action']):
-            messages.append(fmt_issue_summary_message()+" "+fmt_url(shorten_url(payload['issue']['html_url'])))
+            messages.append(fmt_issue_summary_message() + " " + fmt_url(shorten_url(payload['issue']['html_url'])))
     elif payload['event'] == 'issue_comment':
-        messages.append(fmt_issue_comment_summary_message()+" "+fmt_url(shorten_url(payload['comment']['html_url'])))
+        messages.append(fmt_issue_comment_summary_message() + " " + fmt_url(shorten_url(payload['comment']['html_url'])))
     elif payload['event'] == 'gollum':
-        url = payload['pages'][0]['html_url'] if len(payload['pages']) else payload['repository']['url']+'/wiki'
-        messages.append(fmt_gollum_summary_message()+" "+fmt_url(shorten_url(url)))
+        url = payload['pages'][0]['html_url'] if len(payload['pages']) else payload['repository']['url'] + '/wiki'
+        messages.append(fmt_gollum_summary_message() + " " + fmt_url(shorten_url(url)))
     elif payload['event'] == 'watch':
         messages.append(fmt_watch_message())
 

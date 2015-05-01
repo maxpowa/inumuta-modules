@@ -7,6 +7,7 @@ from __future__ import unicode_literals
 from subprocess import Popen, PIPE
 from willie.module import commands
 
+
 @commands('ping')
 def ping(bot, trigger):
     """
@@ -16,4 +17,4 @@ def ping(bot, trigger):
     command.append(trigger.group(3))
     p = Popen(command, stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=False)
     output, error = p.communicate()
-    bot.say('[Ping] '+error)
+    bot.say('[Ping] ' + error)
