@@ -581,7 +581,7 @@ def fmt_push_summary_message(payload=None, row=None):
 
     else:
         num = len(get_distinct_commits())
-        message.append("pushed \002#{}\017 new commit{} to {}".format(num, 's' if num > 1 else '', fmt_branch(get_ref_name())))
+        message.append("pushed \002{}\017 new commit{} to {}".format(num, 's' if num > 1 else '', fmt_branch(get_ref_name())))
 
     return ' '.join(message)
 
