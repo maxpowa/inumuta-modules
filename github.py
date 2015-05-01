@@ -422,23 +422,23 @@ def configure_repo_messages(bot, trigger):
         bot.say("Successfully enabled listening for {repo}'s events in {chan}.".format(chan=channel, repo=repo_name))
         bot.say('Great! Now add http://xpw.us/webhook as a webhook for your repository and '+
                 'I\'ll send a message in here when I recieve the initial webhook ping!')
-        bot.say('You can configure the colors that I use to display webhooks with .gh-hook-conf')
+        bot.say('You can configure the colors that I use to display webhooks with .gh-hook-color')
     else:
         c.execute('''UPDATE gh_hooks SET enabled = ? WHERE channel = ? AND repo_name = ?''', (enabled, channel, repo_name))
         bot.say("Successfully {state} the subscription to {repo}'s events".format(state='enabled' if enabled else 'disabled',repo=repo_name))
         if enabled:
             bot.say('Great! If you haven\'t already, add http://xpw.us/webhook as a webhook for your repository. '+
                     'I\'ll send a message in here when I recieve the initial webhook ping!')
-            bot.say('You can configure the colors that I use to display webhooks with .gh-hook-conf')
+            bot.say('You can configure the colors that I use to display webhooks with .gh-hook-color')
     conn.commit()
     conn.close()
 
 
-@commands('gh-hook-conf')
-@example('.gh-hook-conf maxpowa/Inumuta 13 15 6 6 14 2')
+@commands('gh-hook-color')
+@example('.gh-hook-color maxpowa/Inumuta 13 15 6 6 14 2')
 def configure_repo_colors(bot, trigger):
     '''
-    .gh-hook-conf <repo> <repo color> <name color> <branch color> <tag color> <hash color> <url color> - Set custom colors for the webhook messages (Uses mIRC color indicies)
+    .gh-hook-color <repo> <repo color> <name color> <branch color> <tag color> <hash color> <url color> - Set custom colors for the webhook messages (Uses mIRC color indicies)
     '''
     allowed = bot.privileges[trigger.sender].get(trigger.nick, 0) >= OP
     if not allowed and not trigger.admin:
@@ -453,10 +453,10 @@ def configure_repo_colors(bot, trigger):
     try:
         colors = [int(c) % 16 for c in trigger.group(2).replace(trigger.group(3), '', 1).split()]
     except:
-        return bot.say('You must provide exactly 6 colors that are integers and are space separated. See ".help gh-hook-conf" for more information.')
+        return bot.say('You must provide exactly 6 colors that are integers and are space separated. See ".help gh-hook-color" for more information.')
 
     if len(colors) != 6:
-        return bot.say('You must provide exactly 6 colors! See ".help gh-hook-conf" for more information.')
+        return bot.say('You must provide exactly 6 colors! See ".help gh-hook-color" for more information.')
 
     conn = bot.db.connect()
     c = conn.cursor()
