@@ -1,32 +1,19 @@
 # coding=utf8
 """
 ping.py - Willie Ping Module
-Author: Sean B. Palmer, inamidst.com
-About: http://willie.dftba.net
 """
 from __future__ import unicode_literals
 
-import random
-from willie.module import rule, priority, thread
+from subprocess import Popen, PIPE
+from willie.module import commands
 
-
-@rule(r'(?i)(hi|hello|hey) $nickname[ \t]*$')
-def hello(bot, trigger):
-    if trigger.owner:
-        greeting = random.choice(('Fuck off,', 'Screw you,', 'Go away'))
-    else:
-        greeting = random.choice(('Hi', 'Hey', 'Hello'))
-    punctuation = random.choice(('', '!'))
-    bot.say(greeting + ' ' + trigger.nick + punctuation)
-
-
-@rule(r'(?i)(Fuck|Screw) you, $nickname[ \t]*$')
-def rude(bot, trigger):
-    bot.say('Watch your mouth, ' + trigger.nick + ', or I\'ll tell your mother!')
-
-
-@rule('$nickname!')
-@priority('high')
-@thread(False)
-def interjection(bot, trigger):
-    bot.say(trigger.nick + '!')
+@commands('ping')
+def ping(bot, trigger):
+    """
+    .ping <ip/hostname> - Ping an ip or hostname
+    """
+    command = ['fping', '-i', '10', '-t', '500', '-p', '20', '-c', '3']
+    command.append(trigger.group(3))
+    p = Popen(command, stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=False)
+    output, error = p.communicate()
+    bot.say('[Ping] '+error)
