@@ -436,7 +436,7 @@ def configure_repo_colors(bot, trigger):
         return bot.msg(trigger.sender, 'You must be a channel operator to use this command!')
 
     if not trigger.group(2):
-        return bot.say(configure_repo_messages.__doc__.strip())
+        return bot.say(configure_repo_colors.__doc__.strip())
 
     channel = trigger.sender.lower()
     repo_name = trigger.group(3).lower()
