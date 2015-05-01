@@ -137,7 +137,6 @@ def issue_info(bot, trigger, match=None):
     ]
     bot.say(''.join(response))
 
-    #bot.say(str(data))
 
 def get_data(bot, trigger, URL):
     try:
@@ -220,7 +219,6 @@ def github_repo(bot, trigger, match=None):
 
     fmt_response(bot, trigger, URL)
 
-    #bot.say(''.join(response))
 
 def from_utc(utcTime, fmt="%Y-%m-%dT%H:%M:%SZ"):
     """
@@ -468,12 +466,12 @@ def configure_repo_colors(bot, trigger):
         c.execute('SELECT * FROM gh_hooks WHERE channel = ? AND repo_name = ?', (channel, repo_name))
         row = c.fetchone()
         bot.say("[{}] Example name: {} tag: {} commit: {} branch: {} url: {}".format(
-                    fmt_repo(repo_name, row),
-                    fmt_name(trigger.nick, row),
-                    fmt_tag('tag', row),
-                    fmt_hash('c0mm17', row),
-                    fmt_branch('master', row),
-                    fmt_url('http://git.io/', row)))
+                fmt_repo(repo_name, row),
+                fmt_name(trigger.nick, row),
+                fmt_tag('tag', row),
+                fmt_hash('c0mm17', row),
+                fmt_branch('master', row),
+                fmt_url('http://git.io/', row)))
 
 '''
  _______                             __   __   __
@@ -526,7 +524,7 @@ def fmt_branch(s, row=None):
 def get_distinct_commits(payload=None):
     if not payload:
         payload = current_payload
-    if payload.has_key('distinct_commits'):
+    if 'distinct_commits' in payload:
         return payload['distinct_commits']
     commits = []
     for commit in payload['commits']:
@@ -539,7 +537,7 @@ def get_ref_name(payload=None):
     if not payload:
         payload = current_payload
 
-    if payload.has_key('ref_name'):
+    if 'ref_name' in payload:
         return payload['ref_name']
 
     payload['ref_name'] = re.sub(r'^refs/(heads|tags)/', '', payload['ref'])
@@ -555,7 +553,7 @@ def get_base_ref_name(payload=None):
 def get_pusher(payload=None):
     if not payload:
         payload = current_payload
-    return payload['pusher']['name'] if payload.has_key('pusher') else 'somebody'
+    return payload['pusher']['name'] if 'pusher' in payload else 'somebody'
 
 
 def get_repo_name(payload=None):
@@ -725,7 +723,7 @@ def fmt_gollum_summary_message(payload=None):
         payload = current_payload
     if len(payload['pages']) == 1:
         summary = None
-        if payload['pages'][0].has_key('summary'):
+        if 'summary' in payload['pages'][0]:
             summary = payload['pages'][0]['summary']
 
         return '[{}] {} {} wiki page {}{}'.format(
