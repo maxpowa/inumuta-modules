@@ -355,7 +355,7 @@ def get_targets(repo):
     c = conn.cursor()
 
     #willie_instance.msg('#Inumuta', 'Checking db for '+repo)
-    c.execute('SELECT * FROM gh_hooks WHERE repo_name = ? AND enabled = 1', (repo,))
+    c.execute('SELECT * FROM gh_hooks WHERE repo_name = ? AND enabled = 1', (repo.lower(),))
     result = c.fetchall()
     #willie_instance.msg('#Inumuta', 'Result: '+json.dumps(result))
     return result
@@ -408,8 +408,8 @@ def configure_repo_messages(bot, trigger):
     if not trigger.group(2):
         return bot.say(configure_repo_messages.__doc__.strip())
 
-    channel = trigger.sender
-    repo_name = trigger.group(3)
+    channel = trigger.sender.lower()
+    repo_name = trigger.group(3).lower()
     enabled = True if not trigger.group(4) or trigger.group(4).lower() == 'enable' else False
 
     conn = bot.db.connect()
@@ -447,11 +447,11 @@ def configure_repo_colors(bot, trigger):
     if not trigger.group(2):
         return bot.say(configure_repo_messages.__doc__.strip())
 
-    channel = trigger.sender
-    repo_name = trigger.group(3)
+    channel = trigger.sender.lower()
+    repo_name = trigger.group(3).lower()
     colors = []
     try:
-        colors = [int(c) % 16 for c in trigger.group(2).replace(repo_name, '', 1).split()]
+        colors = [int(c) % 16 for c in trigger.group(2).replace(trigger.group(3), '', 1).split()]
     except:
         return bot.say('You must provide exactly 6 colors that are integers and are space separated. See ".help gh-hook-conf" for more information.')
 
