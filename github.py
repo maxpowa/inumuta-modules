@@ -13,7 +13,7 @@ Copyright 2014 Max Gurela
 
 from __future__ import unicode_literals
 from willie import web, tools
-from willie.module import commands, rule, OP, NOLIMIT, require_privilege, interval
+from willie.module import commands, rule, OP, NOLIMIT, example, interval
 from willie.formatting import bold, color
 from willie.tools import get_timezone, format_time
 
@@ -370,13 +370,20 @@ def show_hook_info():
 @bottle.post("/webhook")
 def webhook():
     event = bottle.request.headers.get('X-GitHub-Event') or 'ping'
-    if event == 'ping':
-        return json.dumps({'msg':'pong'})
 
     try:
         payload = bottle.request.json
     except:
         return bottle.abort(400, 'Something went wrong!')
+
+    if event == 'ping':
+        channels = get_targets(payload['repository']['full_name'])
+        for chan in channels:
+            willie_instance.msg(chan[0], '[{}] {}: {} (Your webhook is now enabled)'.format(
+                          fmt_repo(payload['repository']['name'], chan),
+                          fmt_name(payload['sender']['login'], chan),
+                          payload['zen']))
+        return '{"channels":'+json.dumps([chan[0] for chan in channels])+'}'
 
     payload['event'] = event
 
@@ -389,16 +396,17 @@ def webhook():
 
 
 @commands('gh-hook')
+@example('.gh-hook maxpowa/Inumuta enable')
 def configure_repo_messages(bot, trigger):
     '''
     .gh-hook <repo> [enable|disable] - Enable/disable displaying webhooks from repo in current channel (You must be a channel OP)
-    You must also add http://xpw.us/webhook as a webhook on your github repo.
     '''
-    if not trigger.admin:
-        bot.say('Sorry, this feature isn\'t ready for your usage yet!')
+    allowed = bot.privileges[trigger.sender].get(trigger.nick, 0) >= OP
+    if not allowed and not trigger.admin:
+        return bot.msg(trigger.sender, 'You must be a channel operator to use this command!')
 
     if not trigger.group(2):
-        bot.say(configure_repo_messages.__doc__.strip())
+        return bot.say(configure_repo_messages.__doc__.strip())
 
     channel = trigger.sender
     repo_name = trigger.group(3)
@@ -411,12 +419,69 @@ def configure_repo_messages(bot, trigger):
     result = c.fetchone()
     if not result:
         c.execute('''INSERT INTO gh_hooks (channel, repo_name, enabled) VALUES (?, ?, ?)''', (channel, repo_name, enabled))
-        bot.reply("Successfully enabled listening for {repo}'s events in {chan}.".format(chan=channel, repo=repo_name))
+        bot.say("Successfully enabled listening for {repo}'s events in {chan}.".format(chan=channel, repo=repo_name))
+        bot.say('Great! Now add http://xpw.us/webhook as a webhook for your repository and '+
+                'I\'ll send a message in here when I recieve the initial webhook ping!')
+        bot.say('You can configure the colors that I use to display webhooks with .gh-hook-conf')
     else:
         c.execute('''UPDATE gh_hooks SET enabled = ? WHERE channel = ? AND repo_name = ?''', (enabled, channel, repo_name))
-        bot.reply("Successfully modified the subscription to {repo}'s events".format(repo=repo_name))
+        bot.say("Successfully {state} the subscription to {repo}'s events".format(state='enabled' if enabled else 'disabled',repo=repo_name))
+        if enabled:
+            bot.say('Great! If you haven\'t already, add http://xpw.us/webhook as a webhook for your repository. '+
+                    'I\'ll send a message in here when I recieve the initial webhook ping!')
+            bot.say('You can configure the colors that I use to display webhooks with .gh-hook-conf')
     conn.commit()
     conn.close()
+
+
+@commands('gh-hook-conf')
+@example('.gh-hook-conf maxpowa/Inumuta 13 15 6 6 14 2')
+def configure_repo_colors(bot, trigger):
+    '''
+    .gh-hook-conf <repo> <repo color> <name color> <branch color> <tag color> <hash color> <url color> - Set custom colors for the webhook messages (Uses mIRC color indicies)
+    '''
+    allowed = bot.privileges[trigger.sender].get(trigger.nick, 0) >= OP
+    if not allowed and not trigger.admin:
+        return bot.msg(trigger.sender, 'You must be a channel operator to use this command!')
+
+    if not trigger.group(2):
+        return bot.say(configure_repo_messages.__doc__.strip())
+
+    channel = trigger.sender
+    repo_name = trigger.group(3)
+    colors = []
+    try:
+        colors = [int(c) % 16 for c in trigger.group(2).replace(repo_name, '', 1).split()]
+    except:
+        return bot.say('You must provide exactly 6 colors that are integers and are space separated. See ".help gh-hook-conf" for more information.')
+
+    if len(colors) != 6:
+        return bot.say('You must provide exactly 6 colors! See ".help gh-hook-conf" for more information.')
+
+    conn = bot.db.connect()
+    c = conn.cursor()
+
+    c.execute('SELECT * FROM gh_hooks WHERE channel = ? AND repo_name = ?', (channel, repo_name))
+    result = c.fetchone()
+    if not result:
+        return bot.say('Please use ".gh-hook {} enable" before attempting to configure colors!'.format(repo_name))
+    else:
+        combined = colors
+        combined.append(channel)
+        combined.append(repo_name)
+        c.execute('''UPDATE gh_hooks SET repo_color = ?, name_color = ?, branch_color = ?, tag_color = ?,
+                     hash_color = ?, url_color = ? WHERE channel = ? AND repo_name = ?''', combined)
+        conn.commit();
+        c.execute('SELECT * FROM gh_hooks WHERE channel = ? AND repo_name = ?', (channel, repo_name))
+        row = c.fetchone();
+        bot.say("[{}] Example name: {} tag: {} commit: {} branch: {} url: {}".format(
+                    fmt_repo(repo_name, row),
+                    fmt_name(trigger.nick, row),
+                    fmt_tag('tag', row),
+                    fmt_hash('c0mm17', row),
+                    fmt_branch('master', row),
+                    fmt_url('http://git.io/',row)))
+
 
 '''
  _______                             __   __   __
