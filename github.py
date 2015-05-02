@@ -398,38 +398,38 @@ def handle_auth_response():
     data = {'client_id': willie_instance.config.github.client_id,
              'client_secret': willie_instance.config.github.secret,
              'code': code}
-    raw = web.post('https://github.com/login/oauth/access_token', data, headers={'Accept':'application/json'})
+    raw = web.post('https://github.com/login/oauth/access_token', data, headers={'Accept': 'application/json'})
     try:
         res = json.loads(raw)
-        
+
         if 'scope' not in res:
             raise ValueError('You\'ve already completed authorization on this repo')
         if 'write:repo_hook' not in res['scope']:
             raise ValueError('You didn\'t allow read/write on repo hooks!')
-        
+
         access_token = res['access_token']
-        
+
         data = {
-            "name": "web", 
-            "active": "true", 
-            "events": [ "*" ], 
+            "name": "web",
+            "active": "true",
+            "events": ["*"],
             "config": {
-                "url": "http://xpw.us/webhook", 
+                "url": "http://xpw.us/webhook",
                 "content_type": "json"
             }
         }
-        
+
         raw = web.post('https://api.github.com/repos/{}/hooks?access_token={}'.format(repo, access_token), json.dumps(data))
         res = json.loads(raw)
-        
+
         if 'ping_url' not in res:
             if 'errors' in res:
                 raise ValueError(', '.join([error['message'] for error in res['errors']]))
             else:
                 raise ValueError('Webhook creation failed, try again.')
-        
+
         raw, headers = web.get(res['ping_url'] + '?access_token={}'.format(access_token), return_headers=True)
-        
+
         title = 'Done!'
         header = 'Webhook setup complete!'
         body = 'That was simple, right?! You should be seeing a completion message in {} any second now'.format(channel)
@@ -460,7 +460,7 @@ def handle_auth_response():
   </body>
 </html>
     '''
-    
+
     return page.format(title=title, header=header, body=body, flair=flair)
 
 
@@ -479,16 +479,16 @@ def configure_repo_messages(bot, trigger):
 
     channel = trigger.sender.lower()
     repo_name = trigger.group(3).lower()
-    
+
     if not '/' in repo_name:
         return bot.say('Invalid repo formatting, see ".help gh-hook" for an example')
-    
+
     enabled = True if not trigger.group(4) or trigger.group(4).lower() == 'enable' else False
 
     auth_data = {
-        'client_id': bot.config.github.client_id, 
+        'client_id': bot.config.github.client_id,
         'scope': 'write:repo_hook',
-        'state': '{}:{}'.format(repo_name,channel)
+        'state': '{}:{}'.format(repo_name, channel)
         }
     auth_url = 'https://github.com/login/oauth/authorize?{}'.format(
             urllib.urlencode(auth_data))
