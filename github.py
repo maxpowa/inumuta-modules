@@ -488,10 +488,8 @@ def configure_repo_messages(bot, trigger):
     auth_data = {
         'client_id': bot.config.github.client_id,
         'scope': 'write:repo_hook',
-        'state': '{}:{}'.format(repo_name, channel)
-        }
-    auth_url = 'https://github.com/login/oauth/authorize?{}'.format(
-            urllib.urlencode(auth_data))
+        'state': '{}:{}'.format(repo_name, channel)}
+    auth_url = 'https://github.com/login/oauth/authorize?{}'.format(urllib.urlencode(auth_data))
 
     conn = bot.db.connect()
     c = conn.cursor()
