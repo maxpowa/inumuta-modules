@@ -22,7 +22,6 @@ def shindan(bot, trigger):
     if not trigger.group(3) or not trigger.group(3).isdigit() or int(trigger.group(3).strip()) < 2000:
         return bot.say(u'You must specify a shindanmaker ID (Waifu id: 215100 | T\u0081eh_Colt\'s Drama Gen id: 490953)')
 
-
     name = trigger.nick
     if (trigger.group(4)):
         name = trigger.group(4)
