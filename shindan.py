@@ -7,20 +7,21 @@ Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
 from willie import web
-from willie.module import commands
+from willie.module import commands, example
 from bs4 import BeautifulSoup
 import re
 import json
 
 
 @commands('shindan')
+@example('.shindan 215100 Inumuta', 'Inumuta is 100% Waifu Material.')
 def shindan(bot, trigger):
     """
     .shindan <id> [name] - Do the shindanmaker thing! Will automatically translate japanese shindans to english. (Waifu id: 215100 | Teh_Colt's Drama Gen id: 490953)
     """
     if not trigger.group(3) or not trigger.group(3).isdigit() or int(trigger.group(3).strip()) < 2000:
-        bot.say(u'You must specify a shindanmaker ID (Waifu id: 215100 | T\u0081eh_Colt\'s Drama Gen id: 490953)')
-        return
+        return bot.say(u'You must specify a shindanmaker ID (Waifu id: 215100 | T\u0081eh_Colt\'s Drama Gen id: 490953)')
+
 
     name = trigger.nick
     if (trigger.group(4)):
