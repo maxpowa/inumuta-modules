@@ -140,6 +140,7 @@ def issue_info(bot, trigger, match=None):
 
 
 def get_data(bot, trigger, URL):
+    URL = URL.split('#')[0]
     try:
         raw = fetch_api_endpoint(bot, URL)
         rawLang = fetch_api_endpoint(bot, URL + '/languages')

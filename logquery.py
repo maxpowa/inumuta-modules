@@ -3,6 +3,12 @@
 logquery.py - Simple log query module
 Copyright 2015 Max Gurela
 
+ _____                                            
+|     |_.-----.-----.-----.--.--.-----.----.--.--.
+|       |  _  |  _  |  _  |  |  |  -__|   _|  |  |
+|_______|_____|___  |__   |_____|_____|__| |___  |
+              |_____|  |__|                |_____|
+
 Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
@@ -13,6 +19,32 @@ import re
 import os
 
 filename = 'logquery.db'
+
+
+def setup(bot):
+    global filename
+    path = bot.config.logquery.filename
+    config_dir, config_file = os.path.split(bot.config.filename)
+    config_name, _ = os.path.splitext(config_file)
+    if path is None:
+        path = os.path.join(config_dir, 'logquery.db')
+    path = os.path.expanduser(path)
+    if not os.path.isabs(path):
+        path = os.path.normpath(os.path.join(config_dir, path))
+    filename = path
+    _create()
+
+
+def configure(config):
+    """
+    | [logquery]   | example                        | purpose                           |
+    | ------------ | ------------------------------ | --------------------------------- |
+    | filename     | ~/logquery.db                  | Log DB filename                   |
+    """
+
+    if config.option('Configure logquery module?', False):
+        config.interactive_add('logquery', 'filename', '~/logquery.db')
+    
 
 
 def dict_factory(cursor, row):
@@ -39,12 +71,12 @@ def _create():
 
     execute('''CREATE TABLE IF NOT EXISTS logquery (
         id INTEGER PRIMARY KEY,
-        channel TEXT,
-        nick TEXT,
-        ident TEXT,
-        host TEXT,
-        message TEXT,
-        intent TEXT,
+        channel TEXT COLLATE NOCASE,
+        nick TEXT COLLATE NOCASE,
+        ident TEXT COLLATE NOCASE,
+        host TEXT COLLATE NOCASE,
+        message TEXT COLLATE NOCASE,
+        intent TEXT COLLATE NOCASE,
         sent_at TIMESTAMP
         )''')
 
@@ -58,20 +90,6 @@ def execute(*args, **kwargs):
         conn.row_factory = dict_factory
         cur = conn.cursor()
         return cur.execute(*args, **kwargs)
-
-
-def setup(bot):
-    global filename
-    path = bot.config.logquery.filename
-    config_dir, config_file = os.path.split(bot.config.filename)
-    config_name, _ = os.path.splitext(config_file)
-    if path is None:
-        path = os.path.join(config_dir, 'logquery.db')
-    path = os.path.expanduser(path)
-    if not os.path.isabs(path):
-        path = os.path.normpath(os.path.join(config_dir, path))
-    filename = path
-    _create()
 
 
 @commands('disable-log')
@@ -285,15 +303,12 @@ def log_mode(bot, message):
 @thread(False)
 @priority('high')
 def log_quit(bot, message):
-    if message.sender.is_nick() or bot.db.get_channel_value(message.sender, 'disable-log'):
-        return
-
     time = datetime.utcnow()
     # make a copy of bot.privileges that we can safely iterate over
     privcopy = list(bot.privileges.items())
     # write logline to *all* channels that the user was present in
     for channel, privileges in privcopy:
-        if message.nick in privileges:
+        if message.nick in privileges and not bot.db.get_channel_value(message.sender, 'disable-log'):
             execute('INSERT INTO logquery (channel, nick, ident, host, message, intent, sent_at) VALUES (?,?,?,?,?,?,?)',
                 (channel, message.nick, message.user, message.host, message.match.string, 'QUIT', time))
 
