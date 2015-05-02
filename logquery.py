@@ -3,7 +3,7 @@
 logquery.py - Simple log query module
 Copyright 2015 Max Gurela
 
- _____                                            
+ _____
 |     |_.-----.-----.-----.--.--.-----.----.--.--.
 |       |  _  |  _  |  _  |  |  |  -__|   _|  |  |
 |_______|_____|___  |__   |_____|_____|__| |___  |
@@ -44,7 +44,6 @@ def configure(config):
 
     if config.option('Configure logquery module?', False):
         config.interactive_add('logquery', 'filename', '~/logquery.db')
-    
 
 
 def dict_factory(cursor, row):
