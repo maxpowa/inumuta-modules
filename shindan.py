@@ -8,7 +8,6 @@ Licensed under the Eiffel Forum License 2.
 from __future__ import unicode_literals
 from willie import web
 from willie.module import commands
-import translate
 from bs4 import BeautifulSoup
 import re
 import json
@@ -34,13 +33,7 @@ def shindan(bot, trigger):
         if shindan is None:
             bot.say('The shindanmaker ID %s does not exist!' % (trigger.group(3).strip(), ))
         else:
-            if 'en' in url:
-                bot.say(shindan.text.strip())
-            else:
-                msg, in_lang = translate.translate(shindan.text.strip())
-                if in_lang == 'ja':
-                    in_lang = 'Japanese'
-                bot.say('%s (Translated from %s)' % (msg, in_lang))
+            bot.say(shindan.text.strip())
     except Exception as e:
         bot.say('418 I\'m a teapot')
 
