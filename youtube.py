@@ -82,7 +82,7 @@ def ytget(bot, trigger, uri):
     result['snippet']['publishedAt'] = pubdate.strftime('%D %T')
 
     for k in result['statistics']:
-    	result['statistics'][k] = '{:,}'.format(long(result['statistics'][k]))
+        result['statistics'][k] = '{:,}'.format(long(result['statistics'][k]))
 
     return result
 
