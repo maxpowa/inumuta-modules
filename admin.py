@@ -190,7 +190,12 @@ def set_config(bot, trigger):
         return
 
     # Otherwise, set the value to one given as argument 2.
+    if not bot.config.has_section(section):
+        bot.config.add_section(section)
     setattr(getattr(bot.config, section), option, value)
+    if option.endswith("password") or option.endswith("pass"):
+        value = "(password censored)"
+    bot.reply("%s.%s = %s" % (section, option, value))
 
 
 @willie.module.require_privmsg
@@ -200,3 +205,4 @@ def set_config(bot, trigger):
 def save_config(bot, trigger):
     """Save state of willies config object to the configuration file."""
     bot.config.save()
+    bot.reply('Saved config!')
