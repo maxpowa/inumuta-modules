@@ -44,6 +44,7 @@ issueURL = (r'https?://(?:www\.)?github.com/([A-z0-9\-_]+/[A-z0-9\-_]+)/(?:issue
 commitURL = (r'https?://(?:www\.)?github.com/([A-z0-9\-_]+/[A-z0-9\-_]+)/(?:commit)/([A-z0-9\-]+)')
 regex = re.compile(issueURL)
 commitRegex = re.compile(commitURL)
+repoRegex = re.compile('github\.com/([^ /]+?)/([^ /]+)/?(?!\S)')
 willie_instance = None
 
 
@@ -70,11 +71,10 @@ def configure(config):
 
 
 def setup(willie):
-    repo_url = re.compile('github\.com/([^ /]+?)/([^ /]+)/?(?!\S)')
     if not willie.memory.contains('url_callbacks'):
         willie.memory['url_callbacks'] = tools.WillieMemory()
     willie.memory['url_callbacks'][regex] = issue_info
-    willie.memory['url_callbacks'][repo_url] = data_url
+    willie.memory['url_callbacks'][repoRegex] = data_url
     willie.memory['url_callbacks'][commitRegex] = commit_info
 
     if willie.config.has_section('github') and willie.config.github.webhook:
@@ -82,6 +82,9 @@ def setup(willie):
 
 
 def shutdown(willie):
+    del willie.memory['url_callbacks'][regex]
+    del willie.memory['url_callbacks'][repoRegex]
+    del willie.memory['url_callbacks'][commitRegex]
     shutdown_webhook(willie)
 
 '''
