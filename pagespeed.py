@@ -50,7 +50,7 @@ def show_pagespeed(bot, trigger):
         "{key}={value}".format(key=key, value=value)
         for key, value in params.items()
     )
-    raw = web.get('https://www.googleapis.com/pagespeedonline/v2/runPagespeed?' + query_string)
+    raw = web.get('https://www.googleapis.com/pagespeedonline/v2/runPagespeed?' + query_string, timeout=30)
     result = json.loads(raw)
 
     out = {}

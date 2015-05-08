@@ -40,11 +40,10 @@ from threading import Thread
 
 '''
 
-issueURL = (r'https?://(?:www\.)?github.com/'
-             '([A-z0-9\-]+/[A-z0-9\-]+)/'
-             '(?:issues|pull)/'
-             '([\d]+)')
+issueURL = (r'https?://(?:www\.)?github.com/([A-z0-9\-]+/[A-z0-9\-]+)/(?:issues|pull)/([\d]+)')
+commitURL = (r'https?://(?:www\.)?github.com/([A-z0-9\-]+/[A-z0-9\-]+)/(?:commit)/([A-z0-9\-]+)')
 regex = re.compile(issueURL)
+commitRegex = re.compile(commitURL)
 willie_instance = None
 
 
@@ -76,6 +75,7 @@ def setup(willie):
         willie.memory['url_callbacks'] = tools.WillieMemory()
     willie.memory['url_callbacks'][regex] = issue_info
     willie.memory['url_callbacks'][repo_url] = data_url
+    willie.memory['url_callbacks'][commitRegex] = commit_info
 
     if willie.config.has_section('github') and willie.config.github.webhook:
         setup_webhook(willie)
@@ -135,6 +135,46 @@ def issue_info(bot, trigger, match=None):
         data['title'],
         bold(' | '),
         body
+    ]
+    bot.say(''.join(response))
+
+
+@rule('.*%s.*' % commitURL)
+def commit_info(bot, trigger, match=None):
+    match = match or trigger
+    URL = 'https://api.github.com/repos/%s/commits/%s' % (match.group(1), match.group(2))
+
+    try:
+        raw = fetch_api_endpoint(bot, URL)
+    except HTTPError:
+        bot.say('[Github] API returned an error.')
+        return NOLIMIT
+    data = json.loads(raw)
+    try:
+        if len(data['commit']['message'].split('\n')) > 1:
+            body = data['commit']['message'].split('\n')[0] + '...'
+        else:
+            body = data['commit']['message'].split('\n')[0]
+    except (KeyError):
+        bot.say('[Github] API says this is an invalid commit. Please report this if you know it\'s a correct link!')
+        return NOLIMIT
+
+    if body.strip() == '':
+        body = 'No commit message provided.'
+
+    response = [
+        bold('[Github]'),
+        ' [',
+        match.group(1),
+        '] ',
+        data['author']['login'],
+        ': ',
+        body,
+        bold(' | '),
+        str(data['stats']['total']),
+        ' changes in ',
+        str(len(data['files'])),
+        ' files'
     ]
     bot.say(''.join(response))
 
