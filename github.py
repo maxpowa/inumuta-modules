@@ -40,8 +40,8 @@ from threading import Thread
 
 '''
 
-issueURL = (r'https?://(?:www\.)?github.com/([A-z0-9\-]+/[A-z0-9\-]+)/(?:issues|pull)/([\d]+)')
-commitURL = (r'https?://(?:www\.)?github.com/([A-z0-9\-]+/[A-z0-9\-]+)/(?:commit)/([A-z0-9\-]+)')
+issueURL = (r'https?://(?:www\.)?github.com/([A-z0-9\-_]+/[A-z0-9\-_]+)/(?:issues|pull)/([\d]+)')
+commitURL = (r'https?://(?:www\.)?github.com/([A-z0-9\-_]+/[A-z0-9\-_]+)/(?:commit)/([A-z0-9\-]+)')
 regex = re.compile(issueURL)
 commitRegex = re.compile(commitURL)
 willie_instance = None

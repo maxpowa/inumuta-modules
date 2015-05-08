@@ -4,6 +4,7 @@ youtube.py - Willie YouTube Module
 Copyright 2012, Dimitri Molenaars, Tyrope.nl.
 Copyright © 2012-2014, Elad Alfassa, <elad@fedoraproject.org>
 Copyright 2012, Edward Powell, embolalia.net
+Copyright 2015, Max Gurela
 Licensed under the Eiffel Forum License 2.
 
 http://willie.dfbta.net
@@ -90,8 +91,9 @@ def ytget(bot, trigger, uri):
 @commands('yt', 'youtube')
 @example('.yt Anime 404')
 def ytsearch(bot, trigger):
-    """Search YouTube"""
-    #modified from ytinfo: Copyright 2010-2011, Michael Yanovich, yanovich.net, Kenneth Sham.
+    """
+    .youtube <query> - Search YouTube
+    """
     if not trigger.group(2):
         return
     uri = 'https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=' + trigger.group(2)
@@ -99,7 +101,6 @@ def ytsearch(bot, trigger):
     vid = json.loads(raw)['items'][0]['id']['videoId']
     uri = 'https://www.googleapis.com/youtube/v3/videos?id=' + vid + '&part=contentDetails,snippet,statistics'
     video_info = ytget(bot, trigger, uri)
-
     if video_info is None:
         return
 
@@ -120,29 +121,23 @@ def ytsearch(bot, trigger):
 @rule('.*(youtube.com/watch\S*v=|youtu.be/)([\w-]+).*')
 def ytinfo(bot, trigger, found_match=None):
     """
-    Get information about the latest video uploaded by the channel provided.
+    Get information about the given youtube video
     """
     match = found_match or trigger
-    #Grab info from YT API
     uri = 'https://www.googleapis.com/youtube/v3/videos?id=' + match.group(2) + '&part=contentDetails,snippet,statistics'
 
     video_info = ytget(bot, trigger, uri)
-
     if video_info is None:
         return
 
-    #combine variables and print
-    try:
-        message = '[You' + color('Tube', colors.WHITE, colors.RED) + ']' + \
-                  ' Title: ' + video_info['snippet']['title'] + \
-                  ' | Uploader: ' + video_info['snippet']['channelTitle'] + \
-                  ' | Uploaded: ' + video_info['snippet']['publishedAt'] + \
-                  ' | Duration: ' + video_info['contentDetails']['duration'] + \
-                  ' | Views: ' + video_info['statistics']['viewCount'] + \
-                  ' | Comments: ' + video_info['statistics']['commentCount'] + \
-                  ' | ' + color(video_info['statistics']['likeCount'] + '+', colors.GREEN) + \
-                  ' | ' + color(video_info['statistics']['dislikeCount'] + '-', colors.RED)
-    except Exception as e:
-        return bot.say(str(e))
+    message = ('[You' + color('Tube', colors.WHITE, colors.RED) + ']' +
+              ' Title: ' + video_info['snippet']['title'] +
+              ' | Uploader: ' + video_info['snippet']['channelTitle'] +
+              ' | Uploaded: ' + video_info['snippet']['publishedAt'] +
+              ' | Duration: ' + video_info['contentDetails']['duration'] +
+              ' | Views: ' + video_info['statistics']['viewCount'] +
+              ' | Comments: ' + video_info['statistics']['commentCount'] +
+              ' | ' + color(video_info['statistics']['likeCount'] + '+', colors.GREEN) +
+              ' | ' + color(video_info['statistics']['dislikeCount'] + '-', colors.RED))
 
     bot.say(message)
