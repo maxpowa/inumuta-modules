@@ -4,11 +4,11 @@ pagespeed.py - Google pagespeed insights module
 Copyright 2015, Maxfield Gurela
 Licensed under the Eiffel Forum License 2.
 
- ______                                               __ 
+ ______                                               __
 |   __ \.---.-.-----.-----.-----.-----.-----.-----.--|  |
 |    __/|  _  |  _  |  -__|__ --|  _  |  -__|  -__|  _  |
 |___|   |___._|___  |_____|_____|   __|_____|_____|_____|
-              |_____|           |__|                     
+              |_____|           |__|
 """
 from __future__ import unicode_literals
 

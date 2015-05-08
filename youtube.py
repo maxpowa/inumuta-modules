@@ -86,6 +86,7 @@ def ytget(bot, trigger, uri):
 
     return result
 
+
 @commands('yt', 'youtube')
 @example('.yt Anime 404')
 def ytsearch(bot, trigger):
@@ -103,9 +104,9 @@ def ytsearch(bot, trigger):
         return
 
     message = ('[YT Search]' +
-              ' Title: ' + video_info['snippet']['title'] + 
-              ' | Uploader: ' + video_info['snippet']['channelTitle'] + 
-              ' | Uploaded: ' + video_info['snippet']['publishedAt'] + 
+              ' Title: ' + video_info['snippet']['title'] +
+              ' | Uploader: ' + video_info['snippet']['channelTitle'] +
+              ' | Uploaded: ' + video_info['snippet']['publishedAt'] +
               ' | Duration: ' + video_info['contentDetails']['duration'] +
               ' | Views: ' + video_info['statistics']['viewCount'] +
               ' | Comments: ' + video_info['statistics']['commentCount'] +
