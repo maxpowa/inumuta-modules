@@ -183,7 +183,7 @@ def follow_redirects(url):
     there's a problem.
     """
     try:
-        connection = web.get_urllib_object(url, 60)
+        connection = web.get_urllib_object(url, 10)
         url = connection.geturl() or url
         connection.close()
     except:
