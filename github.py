@@ -14,7 +14,7 @@ from __future__ import unicode_literals
 from willie import web, tools
 from willie.module import commands, rule, OP, NOLIMIT, example, interval
 from willie.formatting import bold, color
-from willie.tools import get_timezone, format_time
+from willie.tools.time import get_timezone, format_time
 
 import operator
 from collections import deque

@@ -8,7 +8,7 @@ from __future__ import unicode_literals
 import re
 import time
 import datetime
-from willie.tools import get_timezone, format_time
+from willie.tools.time import get_timezone, format_time
 from willie.tools import Identifier, WillieMemory
 from willie.module import rule, priority, commands, interval
 

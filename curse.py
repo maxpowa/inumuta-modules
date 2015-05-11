@@ -41,13 +41,13 @@ def get_page_info(bot, trigger):
     requested = None
     try:
         requested = get_info(trigger.group(1))
-    except:
-        return
+    except Exception:
+        try:
+            requested = get_info(trigger.group(1))
+        except Exception:
+            bot.say(get_prefix() + ' Unable to retrieve info about ' + trigger.group(1))
+            return
     if requested is None:
         bot.say('{} Error: Mod does not exist.'.format(get_prefix()))
-    
-    try:
-        message = '{} {} - {} downloads {} Latest: {}'.format(get_prefix(), color(requested['title'], 'lime'), requested['downloads']['total'], color('|', 'yellow'), requested['download']['name'])
-        bot.say(message)
-    except:
-        return
+    message = '{} {} - {} downloads {} Latest: {}'.format(get_prefix(), color(requested['title'], 'lime'), requested['downloads']['total'], color('|', 'yellow'), requested['download']['name'])
+    bot.say(message)

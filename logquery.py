@@ -277,7 +277,7 @@ def log_part(bot, message):
 @rule('.*')
 @event("KICK")
 @unblockable
-def log_kick(bot, message):
+def log_part(bot, message):
     if message.sender.is_nick() or bot.db.get_channel_value(message.sender, 'disable-log'):
         return
 

@@ -11,15 +11,14 @@ from __future__ import unicode_literals
 
 import time
 import datetime
-from willie.tools import Identifier, get_timezone, format_time
-from willie.module import commands, rule, priority
+from willie.tools import Identifier
+from willie.tools.time import get_timezone, format_time
+from willie.module import commands, rule, priority, thread
 
 
 @commands('seen')
 def seen(bot, trigger):
-    """
-    Reports when and where the user was last seen.
-    """
+    """Reports when and where the user was last seen."""
     if not trigger.group(2):
         bot.say(".seen <nick> - Reports when <nick> was last seen.")
         return
@@ -45,6 +44,7 @@ def seen(bot, trigger):
         bot.say("Sorry, I haven't seen {} around.".format(nick))
 
 
+@thread(False)
 @rule('(.*)')
 @priority('low')
 def note(bot, trigger):

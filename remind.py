@@ -17,6 +17,7 @@ import codecs
 from datetime import datetime
 from willie.module import commands, example, NOLIMIT
 import willie.tools
+from willie.tools.time import get_timezone, format_time
 
 try:
     import pytz
@@ -146,7 +147,7 @@ def remind(bot, trigger):
         duration = int(duration) + 1
     else:
         duration = int(duration)
-    timezone = willie.tools.get_timezone(
+    timezone = get_timezone(
         bot.db, bot.config, None, trigger.nick, trigger.sender)
     create_reminder(bot, trigger, duration, reminder, timezone)
 
@@ -171,8 +172,8 @@ def at(bot, trigger):
 
     timezone = 'UTC'
     if pytz:
-        timezone = willie.tools.get_timezone(bot.db, bot.config, tz,
-                                             trigger.nick, trigger.sender)
+        timezone = get_timezone(bot.db, bot.config, tz,
+                                trigger.nick, trigger.sender)
         if not timezone:
             timezone = 'UTC'
         now = datetime.now(pytz.timezone(timezone))
@@ -208,8 +209,8 @@ def create_reminder(bot, trigger, duration, message, tz):
 
     if duration >= 60:
         remind_at = datetime.utcfromtimestamp(t)
-        timef = willie.tools.format_time(bot.db, bot.config, tz, trigger.nick,
-                                         trigger.sender, remind_at)
+        timef = format_time(bot.db, bot.config, tz, trigger.nick,
+                            trigger.sender, remind_at)
 
         bot.reply('Okay, will remind at %s' % timef)
     else:
