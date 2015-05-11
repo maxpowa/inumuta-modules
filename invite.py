@@ -83,4 +83,4 @@ def part_chanop(bot, trigger):
 def chanlist(bot, trigger):
     if not trigger.admin:
         return
-    bot.say('My connected channels: ' + ', '.join(bot.channels))
+    bot.say('My connected channels ({}): {}'.format(len(bot.channels), ', '.join(bot.channels)))
