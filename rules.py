@@ -25,7 +25,7 @@ def show_rule(bot, trigger):
 
     if not trigger.sender.is_nick() and bot.privileges[trigger.sender][bot.nick] >= HALFOP:
         if rule == "WAMM" or rule == "asie":
-            bot.write(['KICK', trigger.sender, trigger.nick, 'The kick is the rule'])
+            bot.write(['KICK', trigger.sender, trigger.nick], text='The kick is the rule')
             return
 
     if rule.strip() in rules:
