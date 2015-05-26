@@ -91,6 +91,11 @@ def execute(*args, **kwargs):
         return cur.execute(*args, **kwargs)
 
 
+@commands('log')
+def show_log_url(bot, trigger):
+    bot.reply('http://irc.everythingisawesome.us/logs/channel/' + trigger.sender.replace('#', '', 1))
+
+
 @commands('disable-log')
 def do_not_log(bot, trigger):
     if bot.privileges[trigger.sender][trigger.nick] < OP:
