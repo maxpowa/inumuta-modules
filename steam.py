@@ -21,7 +21,8 @@ def setup(bot):
 
 def get_steam_info(url):
     # we get the soup manually because the steam pages have some odd encoding troubles
-    page = web.get(url)
+    headers = { 'Cookie':'lastagecheckage=1-January-1992; birthtime=694252801' }
+    page = web.get(url, headers=headers)
     soup = BeautifulSoup(page, 'lxml', from_encoding="utf-8")
 
     name = soup.find('div', {'class': 'apphub_AppName'}).text
