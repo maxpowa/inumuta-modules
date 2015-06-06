@@ -24,10 +24,10 @@ def hakasie(bot, trigger):
 @rule('(HAKASE|hakase){3,}')
 @commands('hakase')
 def nano(bot, trigger):
-    bot.reply('' + message.match.string.replace("HAKASE", "NANO"))
+    bot.reply('' + message.match.string.replace("HAKASE", "NANO").replace("hakase", "nano"))
 
 
 @rule('(NANO|nano){3,}')
 @commands('nano')
 def hakase(bot, trigger):
-    bot.reply('' + message.match.string.replace("NANO", "HAKASE"))
+    bot.reply('' + message.match.string.replace("NANO", "HAKASE").replace("nano", "hakase"))
