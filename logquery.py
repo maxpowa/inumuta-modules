@@ -219,7 +219,7 @@ def format_msg(msg):
     QUIT_TPL = "[{sent_at}] *** {nick} has quit IRC ({message})"
 
     intent = msg['intent']
-    msg['sent_at'] = msg['sent_at'].split(".")[0].split(" ")[1]
+    msg['sent_at'] = msg['sent_at'].split(".")[0]
     if (intent == 'PRIVMSG'):
         return MESSAGE_TPL.format(**msg)
     elif (intent == 'ACTION'):
