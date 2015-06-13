@@ -16,6 +16,8 @@ def promote_karma(bot, trigger):
     """
     Update karma status for specify IRC user if get '++' message.
     """
+    if (trigger.is_privmsg):
+        return bot.say('People like it when you tell them good things.')
     if (bot.db.get_nick_id(Identifier(trigger.group(1))) == bot.db.get_nick_id(Identifier(trigger.nick))):
         return bot.say('You may not give yourself karma!')
     current_karma = bot.db.get_nick_value(trigger.group(1), 'karma')
@@ -35,6 +37,8 @@ def demote_karma(bot, trigger):
     """
     Update karma status for specify IRC user if get '--' message.
     """
+    if (trigger.is_privmsg):
+        return bot.say('Say it to their face!')
     if (bot.db.get_nick_id(Identifier(trigger.group(1))) == bot.db.get_nick_id(Identifier(trigger.nick))):
         return bot.say('You may not reduce your own karma!')
     current_karma = bot.db.get_nick_value(trigger.group(1), 'karma')
