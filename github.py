@@ -513,6 +513,7 @@ def handle_auth_response():
 def configure_repo_messages(bot, trigger):
     '''
     .gh-hook <repo> [enable|disable] - Enable/disable displaying webhooks from repo in current channel (You must be a channel OP)
+    Repo notation is just <user/org>/<repo>, not the whole URL.
     '''
     allowed = bot.privileges[trigger.sender].get(trigger.nick, 0) >= OP
     if not allowed and not trigger.admin:
@@ -524,7 +525,7 @@ def configure_repo_messages(bot, trigger):
     channel = trigger.sender.lower()
     repo_name = trigger.group(3).lower()
 
-    if not '/' in repo_name:
+    if not '/' in repo_name or 'http://' in repo_name or 'https://' in repo_name:
         return bot.say('Invalid repo formatting, see ".help gh-hook" for an example')
 
     enabled = True if not trigger.group(4) or trigger.group(4).lower() == 'enable' else False

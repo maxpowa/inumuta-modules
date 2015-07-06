@@ -13,6 +13,7 @@ from willie.module import commands, rule, example, NOLIMIT, OP
 from willie.formatting import bold, color, colors
 from willie.web import USER_AGENT
 from willie.tools import WillieMemory, time
+import HTMLParser
 import datetime as dt
 import praw
 import re
@@ -82,8 +83,9 @@ def rpost_info(bot, trigger, match=None):
 
     percent = color(unicode(s.upvote_ratio * 100) + '%', point_color)
 
+    h = HTMLParser.HTMLParser()
     message = message.format(
-        title=s.title, link=link, nsfw=nsfw, points=s.score, percent=percent,
+        title=h.unescape(s.title), link=link, nsfw=nsfw, points=s.score, percent=percent,
         comments=s.num_comments, author=author, created=created)
 
     bot.say(message)
