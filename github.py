@@ -922,6 +922,21 @@ def fmt_watch_message(payload=None):
                   fmt_name(payload['sender']['login']))
 
 
+def fmt_status_message(payload=None):
+    if not payload:
+        payload = current_payload
+    branch = ''
+    for br in payload['branches']:
+        if br['commit']['sha'] == payload['sha']:
+            branch = br['name']
+    return '[{}/{}] {} - {} ({})'.format(
+                  fmt_repo(payload['repository']['name']),
+                  fmt_branch(branch),
+                  payload['description'],
+                  payload['target_url'],
+                  payload['state'])
+
+
 def shorten_url(url):
     try:
         res, headers = web.post('http://git.io', 'url=' + web.quote(url), return_headers=True)
@@ -961,6 +976,8 @@ def send_formatted_message(payload, row):
         messages.append(fmt_gollum_summary_message() + " " + fmt_url(shorten_url(url)))
     elif payload['event'] == 'watch':
         messages.append(fmt_watch_message())
+    elif payload['event'] == 'status':
+        messages.append(fmt_status_message())
 
     for message in messages:
         willie_instance.msg(row[0], message)
