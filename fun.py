@@ -61,6 +61,12 @@ def rotate(l, n):
     return l[n:] + l[:n]
 
 
+@module.rate(10)
+@module.rule('^neat$')
+def neat(bot, trigger):
+    bot.say('http://i.imgur.com/8GfHgHe.jpg')
+
+
 @module.commands('rainbow')
 def rainbow(bot, trigger):
     text = trigger.group(2)
