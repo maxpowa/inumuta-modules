@@ -70,8 +70,7 @@ def commands(bot, trigger):
 @priority('low')
 def help2(bot, trigger):
     response = (
-        'Hi, I\'m a bot. Say ".commands" to me in private for a list ' +
-        'of my commands, or see http://willie.dftba.net for more ' +
-        'general details. My owner is %s.'
+        'Hi, I\'m an IRC bot. Say ".commands" to me in private for a list ' +
+        'of my commands! My owner is %s.'
     ) % bot.config.owner
     bot.reply(response)
