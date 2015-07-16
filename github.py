@@ -696,13 +696,13 @@ def get_repo_name(payload=None):
 def get_after_sha(payload=None):
     if not payload:
         payload = current_payload
-    return payload['after'][0:6]
+    return payload['after'][0:7]
 
 
 def get_before_sha(payload=None):
     if not payload:
         payload = current_payload
-    return payload['before'][0:6]
+    return payload['before'][0:7]
 
 
 def get_push_summary_url(payload=None):
@@ -777,7 +777,7 @@ def fmt_commit_message(commit):
     author = commit['author']['name']
     sha = commit['id']
 
-    return '{}/{} {} {}: {}'.format(fmt_repo(get_repo_name()), fmt_branch(get_ref_name()), fmt_hash(sha[0:6]), fmt_name(author), short)
+    return '{}/{} {} {}: {}'.format(fmt_repo(get_repo_name()), fmt_branch(get_ref_name()), fmt_hash(sha[0:7]), fmt_name(author), short)
 
 
 def fmt_commit_comment_summary(payload=None, row=None):
@@ -791,7 +791,7 @@ def fmt_commit_comment_summary(payload=None, row=None):
     return '[{}] {} comment on commit {}: {}'.format(
                   fmt_repo(payload['repository']['name']),
                   fmt_name(payload['sender']['login']),
-                  fmt_hash(payload['comment']['commit_id'][0:6]),
+                  fmt_hash(payload['comment']['commit_id'][0:7]),
                   short)
 
 
@@ -877,7 +877,7 @@ def fmt_pull_request_review_comment_summary_message(payload=None):
                   fmt_repo(payload['repository']['name']),
                   fmt_name(payload['sender']['login']),
                   payload['pull_request']['number'],
-                  fmt_hash(sha1[0:6]),
+                  fmt_hash(sha1[0:7]),
                   short)
 
 
