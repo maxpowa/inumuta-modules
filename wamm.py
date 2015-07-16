@@ -38,6 +38,7 @@ def asie(bot, trigger):
 
 
 @module.commands('docker')
+@module.nickname_commands('docker')
 def docker(bot, trigger):
     bot.say('http://i.imgur.com/syIGxF0.png')
 
