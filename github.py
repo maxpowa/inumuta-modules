@@ -220,7 +220,7 @@ def get_data(bot, trigger, URL):
 
 @rule(r'https?://github\.com/([^ /]+?)/([^ /]+)/?(?!\S)')
 def data_url(bot, trigger):
-    URL = 'https://api.github.com/repos/%s/%s' % (trigger.group(1), trigger.group(2))
+    URL = 'https://api.github.com/repos/%s/%s' % (trigger.group(1).strip(), trigger.group(2).strip())
     fmt_response(bot, trigger, URL, True)
 
 
@@ -277,15 +277,15 @@ def fmt_response(bot, trigger, URL, from_regex=False):
 
     if not data:
         return
-    #bot.say(str(data))
 
     response = [
         bold('[Github]'),
         ' ',
-        data['full_name'],
-        ' - ',
-        data['description']
+        str(data['full_name'])
     ]
+
+    if data['description'] != None:
+        response.append(' - ' + str(data['description']))
 
     if not data['language'].strip() == '':
         response.extend([' | ', data['language'].strip()])
