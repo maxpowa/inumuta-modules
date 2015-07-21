@@ -63,7 +63,7 @@ def find_anime(bot, anime):
     url = 'https://hummingbird.me/api/v1/search/anime?query='
     raw = web.get(url + anime)
     try:
-        data = json.lods(raw)
+        data = json.loads(raw)
     except:
         return bot.say('[Hummingbird]Anime not found')
 
