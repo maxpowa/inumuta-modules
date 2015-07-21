@@ -33,12 +33,12 @@ def format_user(bot, user):
     try:
         data = json.loads(raw)
     except:
-        return bot.say('[Hummingbird] User does not exist.')
+        return bot.say(u'[Hummingbird] User does not exist.')
 
     if 'error' in data:
-        return bot.say('[Hummingbird] ' + data['error'])
+        return bot.say(u'[Hummingbird] An error occurred (' + data['error'] + ')')
 
-    output = '[Hummingbird] {name} | {website} | {about} | {life_wasted}'
+    output = u'[Hummingbird] {name} | {website} | {about} | {life_wasted}'
 
     data['about'] = data['about'].strip()
     h, m = divmod(int(data['life_spent_on_anime']), 60)
@@ -55,7 +55,7 @@ def hummingbird(bot, trigger):
     """
     anime = trigger.group(1)
     if not data:
-        bot.say("[Hummingbird] You need to specify an anime")
+        bot.say(u"[Hummingbird] You need to specify an anime")
     else:
         find_anime(bot, anime)
 
@@ -65,12 +65,12 @@ def find_anime(bot, anime):
     try:
         data = json.loads(raw)
     except:
-        return bot.say('[Hummingbird] No anime found matching \'' + anime + '\'')
+        return bot.say(u'[Hummingbird] No anime found matching \'' + anime + '\'')
 
     if 'error' in data:
-        return bot.say('[Hummingbird] An error occurred (' + data['error'] + ')')
+        return bot.say(u'[Hummingbird] An error occurred (' + data['error'] + ')')
 
-    output = '[Hummingbird] {title} | {show_type} | Rating: {rating} | Episodes: {episode_count} | {age_rating} | {url}'
+    output = u'[Hummingbird] {title} | {show_type} | Rating: {rating} | Episodes: {episode_count} | {age_rating} | {url}'
     if data['community_rating'] != 0:
         data['rating'] = str(data['community_rating']*20) + '%' 
     else:
