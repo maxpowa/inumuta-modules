@@ -13,7 +13,7 @@ from datetime import datetime, timedelta
 import json
 
 
-@commands('hbusr', 'hummingbirduser')
+@commands('hbuser', 'hummingbirduser', 'hbu')
 @example('.hummingbirduser maxpowa')
 def hummingbirduser(bot, trigger):
     """
