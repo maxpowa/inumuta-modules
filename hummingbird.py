@@ -28,7 +28,7 @@ def hummingbirduser(bot, trigger):
 
 
 def format_user(bot, user):
-    url = 'https://hummingbird.me/api/v1/users/{}'.format(user)
+    url = 'http://hummingbird.me/api/v1/users/{}'.format(user)
     raw = web.get(url)
     try:
         data = json.loads(raw)
@@ -47,32 +47,38 @@ def format_user(bot, user):
 
     bot.say(output.format(**data))
 
+
 @commands('hb', 'hummingbird')
 @example('.hummingbird Nichijou')
 def hummingbird(bot, trigger):
     """
     .Hummingbird [anime] - Show information on an anime
     """
-    anime = trigger.group(1)
-    if not data:
-        bot.say(u"[Hummingbird] You need to specify an anime")
+    anime = trigger.group(2)
+    if not anime:
+        bot.say(u'[Hummingbird] You need to specify an anime')
     else:
         find_anime(bot, anime)
 
+
 def find_anime(bot, anime):
-    url = 'https://hummingbird.me/api/v1/search/anime?query='
+    url = 'http://hummingbird.me/api/v1/search/anime?query='
     raw = web.get(url + anime)
     try:
         data = json.loads(raw)
     except:
         return bot.say(u'[Hummingbird] No anime found matching \'' + anime + '\'')
+    if len(data) < 1:
+        return bot.say(u'[Hummingbird] No anime found matching \'' + anime + '\'')
+    else:
+        data = data[0]
 
     if 'error' in data:
         return bot.say(u'[Hummingbird] An error occurred (' + data['error'] + ')')
 
     output = u'[Hummingbird] {title} | {show_type} | Rating: {rating} | Episodes: {episode_count} | {age_rating} | {url}'
     if data['community_rating'] != 0:
-        data['rating'] = str(data['community_rating']*20) + '%' 
+        data['rating'] = str(int(round(data['community_rating']*20))) + '%' 
     else:
         data['rating'] = '-'
 
