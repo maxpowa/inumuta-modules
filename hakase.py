@@ -21,13 +21,21 @@ def hakasie(bot, trigger):
         bot.reply('https://www.youtube.com/embed/5MJQhe6XdWg?autoplay=1')
 
 
-@rule('(HAKASE|hakase){3,}')
-@commands('hakase')
+@rule('(HAKASE|hakase){3,}$')
 def nano(bot, trigger):
-    bot.reply('' + trigger.match.string.replace("HAKASE", "NANO").replace("hakase", "nano"))
+    bot.reply('\u0016' + trigger.match.string.replace("HAKASE", "NANO").replace("hakase", "nano"))
 
 
-@rule('(NANO|nano){3,}')
-@commands('nano')
+@commands('hakase')
+def nanoc(bot, trigger):
+    bot.reply('\u0016NANONANONANONANONANONANO')
+
+
+@rule('(NANO|nano){3,}$')
 def hakase(bot, trigger):
-    bot.reply('' + trigger.match.string.replace("NANO", "HAKASE").replace("nano", "hakase"))
+    bot.reply('\u0016' + trigger.match.string.replace("NANO", "HAKASE").replace("nano", "hakase"))
+
+
+@commands('nano')
+def hakasec(bot, trigger):
+    bot.reply('\u0016HAKASEHAKASEHAKASEHAKASEHAKASEHAKASE')
