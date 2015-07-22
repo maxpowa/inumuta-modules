@@ -23,19 +23,19 @@ def hakasie(bot, trigger):
 
 @rule('(HAKASE|hakase){3,}$')
 def nano(bot, trigger):
-    bot.reply('\u0016' + trigger.match.string.replace("HAKASE", "NANO").replace("hakase", "nano"))
+    bot.reply('\u001D' + trigger.match.string.replace("HAKASE", "NANO").replace("hakase", "nano"))
 
 
 @commands('hakase')
 def nanoc(bot, trigger):
-    bot.reply('\u0016NANONANONANONANONANONANO')
+    bot.reply('\u001DNANONANONANONANONANONANO')
 
 
 @rule('(NANO|nano){3,}$')
 def hakase(bot, trigger):
-    bot.reply('\u0016' + trigger.match.string.replace("NANO", "HAKASE").replace("nano", "hakase"))
+    bot.reply('\u001D' + trigger.match.string.replace("NANO", "HAKASE").replace("nano", "hakase"))
 
 
 @commands('nano')
 def hakasec(bot, trigger):
-    bot.reply('\u0016HAKASEHAKASEHAKASEHAKASEHAKASEHAKASE')
+    bot.reply('\u001DHAKASEHAKASEHAKASEHAKASEHAKASEHAKASE')
