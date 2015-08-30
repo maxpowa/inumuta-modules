@@ -64,7 +64,13 @@ def rotate(l, n):
 @module.rate(10)
 @module.rule('^neat$')
 def neat(bot, trigger):
-    bot.say('http://i.imgur.com/8GfHgHe.jpg')
+    bot.say('https://i.imgur.com/8GfHgHe.jpg')
+
+
+@module.rate(10)
+@module.rule('.*(?:l-)?lewd.*')
+def lewd(bot, trigger):
+    bot.say('https://i.imgur.com/reAqk3e.png')
 
 
 @module.commands('rainbow')
@@ -78,6 +84,11 @@ def rainbow(bot, trigger):
         out += color(c, rainbow[0])
         rainbow = rotate(rainbow, 1)
     bot.say(out)
+
+
+@module.commands('grill')
+def grill(bot, trigger):
+    bot.say('http://i.imgur.com/YYZmtbs.png')
 
 
 @module.rule(' ?\*?\/?shrug\*?')
@@ -275,8 +286,10 @@ def flip(bot, trigger):
     """
     .flip [text] - Flips text upside down
     """
-    bot.say(u'(\u256f\u00b0\u25a1\u00b0\uff09\u256f\ufe35 ' + flip_text(trigger.group(2).strip()))
-
+    if (trigger.group(2)):
+        bot.say(u'(\u256f\u00b0\u25a1\u00b0\uff09\u256f\ufe35 ' + flip_text(trigger.group(2).strip()))
+    else:
+        bot.say(u'(\u256f\u00b0\u25a1\u00b0\uff09\u256f\ufe35 \u253B\u2501\u253B')
 
 # TEXT SWIRL-IFIER
 def swirl_text(text):

@@ -85,7 +85,7 @@ def opt_in(bot, trigger):
 @module.rule('([^\.].*)')
 def listen(bot, trigger):
     global last_message
-    if trigger.sender.is_nick() or not bot.db.get_nick_value(trigger.nick, 'opt-in'):
+    if trigger.sender.is_nick() or not bot.db.get_nick_value(trigger.nick, 'opt-in') or bot.db.get_channel_value(trigger.sender, 'disable-log'):
         return
 
     intent = 'PRIVMSG'
