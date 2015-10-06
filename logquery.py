@@ -312,7 +312,7 @@ def log_quit(bot, message):
     privcopy = list(bot.privileges.items())
     # write logline to *all* channels that the user was present in
     for channel, privileges in privcopy:
-        if message.nick in privileges and not bot.db.get_channel_value(message.sender, 'disable-log'):
+        if message.nick in privileges and not bot.db.get_channel_value(channel, 'disable-log'):
             execute('INSERT INTO logquery (channel, nick, ident, host, message, intent, sent_at) VALUES (?,?,?,?,?,?,?)',
                 (channel, message.nick, message.user, message.host, message.match.string, 'QUIT', time))
 
@@ -328,6 +328,6 @@ def log_nick_change(bot, message):
     privcopy = list(bot.privileges.items())
     # write logline to *all* channels that the user is present in
     for channel, privileges in privcopy:
-        if old_nick in privileges or new_nick in privileges:
+        if old_nick in privileges or new_nick in privileges and not bot.db.get_channel_value(channel, 'disable-log'):
             execute('INSERT INTO logquery (channel, nick, ident, host, message, intent, sent_at) VALUES (?,?,?,?,?,?,?)',
                 (channel, old_nick, message.user, message.host, new_nick, 'NICK', time))
