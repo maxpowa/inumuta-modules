@@ -103,27 +103,6 @@ def fetch_api_endpoint(bot, url):
     return web.get(url + oauth)
 
 
-def issue_comment(bot, trigger, match):
-    URL = 'https://api.github.com/repos/%s/issues/comments/%s' % (match.group(1), match.group(3))
-
-    try:
-        raw = fetch_api_endpoint(bot, URL)
-    except HTTPError:
-        bot.say('[Github] API returned an error.')
-        return NOLIMIT
-    data = json.loads(raw)
-    try:
-        if len(data['body'].split('\n')) > 1:
-            body = data['body'].split('\n')[0] + '...'
-        else:
-            body = data['body'].split('\n')[0]
-    except (KeyError):
-        bot.say('[Github] API says this is an invalid issue. Please report this if you know it\'s a correct link!')
-        return NOLIMIT
-
-    
-
-
 @rule('.*%s.*' % issueURL)
 def issue_info(bot, trigger, match=None):
     match = match or trigger
@@ -139,7 +118,7 @@ def issue_info(bot, trigger, match=None):
     data = json.loads(raw)
     try:
         if len(data['body'].split('\n')) > 1:
-            body = data['body'].split('\n')[0] + '...'
+            body = ' '.join(data['body'].split('\n')[0:1] + '...'
         else:
             body = data['body'].split('\n')[0]
     except (KeyError):
