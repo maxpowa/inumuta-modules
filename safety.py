@@ -8,12 +8,12 @@ This module uses virustotal.com
 """
 from __future__ import unicode_literals
 from __future__ import print_function
-import willie.web as web
-from willie.config import ConfigurationError
-from willie.formatting import color, bold
-from willie.logger import get_logger
-import willie.tools
-import willie.module
+import sopel.web as web
+from sopel.config import ConfigurationError
+from sopel.formatting import color, bold
+from sopel.logger import get_logger
+import sopel.tools
+import sopel.module
 import sys
 import json
 import time
@@ -53,7 +53,7 @@ def configure(config):
 def setup(bot):
     if not bot.config.has_section('safety'):
         raise ConfigurationError("Safety module not configured")
-    bot.memory['safety_cache'] = willie.tools.WillieMemory()
+    bot.memory['safety_cache'] = sopel.tools.SopelMemory()
     for item in bot.config.safety.get_list('known_good'):
         known_good.append(re.compile(item, re.I))
 
@@ -74,8 +74,8 @@ def _download_malwaredomains_db(path):
     urlretrieve('http://mirror1.malwaredomains.com/files/justdomains', path)
 
 
-@willie.module.rule('(?u).*(https?://\S+).*')
-@willie.module.priority('high')
+@sopel.module.rule('(?u).*(https?://\S+).*')
+@sopel.module.priority('high')
 def url_handler(bot, trigger):
     """ Check for malicious URLs """
     check = True    # Enable URL checking
@@ -154,7 +154,7 @@ def url_handler(bot, trigger):
                        'Posted a malicious link'])
 
 
-@willie.module.commands('safety')
+@sopel.module.commands('safety')
 def toggle_safety(bot, trigger):
     """ Set safety setting for channel """
     allowed_states = ['strict', 'on', 'off', 'local', 'local strict']
@@ -171,14 +171,14 @@ def toggle_safety(bot, trigger):
 
 
 # Clean the cache every day, also when > 1024 entries
-@willie.module.interval(24 * 60 * 60)
+@sopel.module.interval(24 * 60 * 60)
 def _clean_cache(bot):
     """ Cleanup old entries in URL cache """
     # TODO probably should be using locks here, to make sure stuff doesn't
     # explode
     oldest_key_age = 0
     oldest_key = ''
-    for key, data in willie.tools.iteritems(bot.memory['safety_cache']):
+    for key, data in sopel.tools.iteritems(bot.memory['safety_cache']):
         if data['age'] > oldest_key_age:
             oldest_key_age = data['age']
             oldest_key = key

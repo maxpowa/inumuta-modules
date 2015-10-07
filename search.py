@@ -1,17 +1,17 @@
 # coding=utf8
 """
-search.py - Willie Web Search Module
+search.py - Sopel Web Search Module
 Copyright 2008-9, Sean B. Palmer, inamidst.com
 Copyright 2012, Edward Powell, embolalia.net
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net
+http://sopel.dftba.net
 """
 from __future__ import unicode_literals
 
 import re
-from willie import web
-from willie.module import commands, example
+from sopel import web
+from sopel.module import commands, example
 import json
 
 

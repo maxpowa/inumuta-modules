@@ -1,19 +1,19 @@
 # coding=utf8
 """
-seen.py - Willie Seen Module
+seen.py - Sopel Seen Module
 Copyright 2008, Sean B. Palmer, inamidst.com
 Copyright © 2012, Elad Alfassa <elad@fedoraproject.org>
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net
+http://sopel.dftba.net
 """
 from __future__ import unicode_literals
 
 import time
 import datetime
-from willie.tools import Identifier
-from willie.tools.time import get_timezone, format_time
-from willie.module import commands, rule, priority, thread
+from sopel.tools import Identifier
+from sopel.tools.time import get_timezone, format_time
+from sopel.module import commands, rule, priority, thread
 
 
 @commands('seen')

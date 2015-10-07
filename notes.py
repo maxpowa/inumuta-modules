@@ -1,21 +1,21 @@
 # coding=utf8
 """
-tell.py - Willie Tell and Ask Module
+tell.py - Sopel Tell and Ask Module
 Copyright 2008, Sean B. Palmer, inamidst.com
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net
+http://sopel.dftba.net
 """
 from __future__ import unicode_literals
 
 import os
 import time
 import datetime
-import willie.tools
+import sopel.tools
 import threading
 import sys
-from willie.tools import iterkeys
-from willie.module import commands
+from sopel.tools import iterkeys
+from sopel.module import commands
 
 maximum = 4
 

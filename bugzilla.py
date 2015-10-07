@@ -1,17 +1,17 @@
 # coding=utf8
 """
-admin.py - Willie Bugzilla Module
+admin.py - Sopel Bugzilla Module
 Copyright © 2013, Edward Powell, embolalia.net
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net/
+http://sopel.dftba.net/
 """
 from __future__ import unicode_literals
 
 from lxml import etree
 import re
-from willie import web, tools
-from willie.module import rule
+from sopel import web, tools
+from sopel.module import rule
 
 regex = None
 
@@ -38,7 +38,7 @@ def setup(bot):
             and bot.config.bugzilla.get_list('domains')):
         return
     if not bot.memory.contains('url_callbacks'):
-        bot.memory['url_callbacks'] = tools.WillieMemory()
+        bot.memory['url_callbacks'] = tools.SopelMemory()
 
     domains = '|'.join(bot.config.bugzilla.get_list('domains'))
     regex = re.compile((r'https?://(%s)'

@@ -1,15 +1,15 @@
 # coding=utf8
 """
-translate.py - Willie Translation Module
+translate.py - Sopel Translation Module
 Copyright 2008, Sean B. Palmer, inamidst.com
 Copyright © 2013-2014, Elad Alfassa <elad@fedoraproject.org>
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net
+http://sopel.dftba.net
 """
 from __future__ import unicode_literals
-from willie import web
-from willie.module import rule, commands, priority, example
+from sopel import web
+from sopel.module import rule, commands, priority, example
 import json
 import sys
 import random
@@ -221,5 +221,5 @@ def collect_mangle_lines(bot, trigger):
 
 
 if __name__ == "__main__":
-    from willie.test_tools import run_example_tests
+    from sopel.test_tools import run_example_tests
     run_example_tests(__file__)

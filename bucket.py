@@ -5,10 +5,10 @@ Copyright 2014 Max Gurela
 Licensed under the Eiffel Forum License 2.
 """
 
-from willie import web
-from willie.module import commands, rule
-from willie.tools import Identifier
-from willie.formatting import color
+from sopel import web
+from sopel.module import commands, rule
+from sopel.tools import Identifier
+from sopel.formatting import color
 from optparse import OptionParser
 import re
 

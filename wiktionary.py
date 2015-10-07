@@ -1,16 +1,16 @@
 # coding=utf8
 """
-wiktionary.py - Willie Wiktionary Module
+wiktionary.py - Sopel Wiktionary Module
 Copyright 2009, Sean B. Palmer, inamidst.com
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net
+http://sopel.dftba.net
 """
 from __future__ import unicode_literals
 
 import re
-from willie import web
-from willie.module import commands, example
+from sopel import web
+from sopel.module import commands, example
 
 uri = 'http://en.wiktionary.org/w/index.php?title=%s&printable=yes'
 r_tag = re.compile(r'<[^>]+>')

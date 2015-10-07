@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 import urllib
 import urllib2
-from willie.module import commands, rule
+from sopel.module import commands, rule
 from bs4 import BeautifulSoup
 
 user_agent = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:17.0) Gecko/17.0' \

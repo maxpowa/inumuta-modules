@@ -6,8 +6,8 @@ Copyright 2014 Max Gurela
 Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
-from willie import module, web
-from willie.formatting import color
+from sopel import module, web
+from sopel.formatting import color
 import json
 import re
 

@@ -1,11 +1,11 @@
 # coding=utf8
 """
-spellcheck.py - Willie spell check Module
+spellcheck.py - Sopel spell check Module
 Copyright © 2012, Elad Alfassa, <elad@fedoraproject.org>
 Copyright © 2012, Lior Ramati
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net
+http://sopel.dftba.net
 
 This module relies on pyenchant, on Fedora and Red Hat based system, it can be found in the package python-enchant
 """
@@ -14,7 +14,7 @@ try:
     import enchant
 except ImportError:
     enchant = None
-from willie.module import commands, example
+from sopel.module import commands, example
 
 
 @commands('spellcheck', 'spell')

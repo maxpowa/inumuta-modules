@@ -5,7 +5,7 @@ steam.py - Show steam application prices/releases/etc
 Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
-from willie import module, web
+from sopel import module, web
 from bs4 import BeautifulSoup
 import re
 
@@ -15,7 +15,7 @@ steam_re = r'(.*:)//(store.steampowered.com)(:[0-9]+)?(.*)'
 def setup(bot):
     regex = re.compile(steam_re)
     if not bot.memory.contains('url_callbacks'):
-        bot.memory['url_callbacks'] = tools.WillieMemory()
+        bot.memory['url_callbacks'] = tools.SopelMemory()
     bot.memory['url_callbacks'][regex] = steam_url
 
 

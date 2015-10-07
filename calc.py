@@ -1,17 +1,17 @@
 # coding=utf8
 """
-calc.py - Willie Calculator Module
+calc.py - Sopel Calculator Module
 Copyright 2008, Sean B. Palmer, inamidst.com
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dfbta.net
+http://sopel.dfbta.net
 """
 from __future__ import unicode_literals
 
 import re
-from willie import web
-from willie.module import commands, example
-from willie.tools import eval_equation
+from sopel import web
+from sopel.module import commands, example
+from sopel.tools import eval_equation
 from socket import timeout
 import sys
 if sys.version_info.major < 3:
@@ -61,5 +61,5 @@ def py(bot, trigger):
 
 
 if __name__ == "__main__":
-    from willie.test_tools import run_example_tests
+    from sopel.test_tools import run_example_tests
     run_example_tests(__file__)

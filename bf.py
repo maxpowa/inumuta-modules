@@ -8,8 +8,8 @@ https://github.com/yiangos/python-text-to-brainfuck/blob/master/BFGenerator.py
 Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
-from willie.module import commands, thread
-from willie import web
+from sopel.module import commands, thread
+from sopel import web
 from io import StringIO as StringIO
 import re
 import random

@@ -1,13 +1,13 @@
 # coding=utf8
 """
-ipython.py - willie ipython console!
+ipython.py - sopel ipython console!
 Copyright © 2014, Elad Alfassa <elad@fedoraproject.org>
 Licensed under the Eiffel Forum License 2.
 
-Willie: http://willie.dftba.net/
+Sopel: http://sopel.dftba.net/
 """
 from __future__ import unicode_literals
-import willie
+import sopel
 import sys
 if sys.version_info.major >= 3:
     # Backup stderr/stdout wrappers
@@ -34,7 +34,7 @@ finally:
 console = None
 
 
-@willie.module.commands('console')
+@sopel.module.commands('console')
 def interactive_shell(bot, trigger):
     """
     Starts an interactive IPython console
@@ -61,7 +61,7 @@ def interactive_shell(bot, trigger):
     sys.stdout = sys.__stdout__
     sys.stderr = sys.__stderr__
 
-    banner1 = 'Willie interactive shell (embedded IPython)'
+    banner1 = 'Sopel interactive shell (embedded IPython)'
     banner2 = '`bot` and `trigger` are available. To exit, type exit'
     exitmsg = 'Interactive shell closed'
 

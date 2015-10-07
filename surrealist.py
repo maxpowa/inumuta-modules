@@ -6,8 +6,8 @@ Copyright 2014 Max Gurela
 Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
-from willie import web
-from willie.module import commands, rule
+from sopel import web
+from sopel.module import commands, rule
 from bs4 import BeautifulSoup
 
 

@@ -1,9 +1,9 @@
 # coding=utf8
-"""currency.py - Willie Exchange Rate Module
+"""currency.py - Sopel Exchange Rate Module
 Copyright 2013 Edward Powell, embolalia.com
 Licensed under the Eiffel Forum License 2
 
-http://willie.dftba.net
+http://sopel.dftba.net
 """
 from __future__ import unicode_literals
 
@@ -11,8 +11,8 @@ import json
 from lxml import etree
 import re
 
-from willie import web
-from willie.module import commands, example, NOLIMIT
+from sopel import web
+from sopel.module import commands, example, NOLIMIT
 
 # The Canadian central bank has better exchange rate data than the Fed, the
 # Bank of England, or the European Central Bank. Who knew?

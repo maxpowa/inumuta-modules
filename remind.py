@@ -1,10 +1,10 @@
 # coding=utf8
 """
-remind.py - Willie Reminder Module
+remind.py - Sopel Reminder Module
 Copyright 2011, Sean B. Palmer, inamidst.com
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net
+http://sopel.dftba.net
 """
 from __future__ import unicode_literals
 
@@ -15,9 +15,9 @@ import threading
 import collections
 import codecs
 from datetime import datetime
-from willie.module import commands, example, NOLIMIT
-import willie.tools
-from willie.tools.time import get_timezone, format_time
+from sopel.module import commands, example, NOLIMIT
+import sopel.tools
+from sopel.tools.time import get_timezone, format_time
 
 try:
     import pytz
@@ -49,7 +49,7 @@ def load_database(name):
 
 def dump_database(name, data):
     f = codecs.open(name, 'w', encoding='utf-8')
-    for unixtime, reminders in willie.tools.iteritems(data):
+    for unixtime, reminders in sopel.tools.iteritems(data):
         for channel, nick, message in reminders:
             f.write('%s\t%s\t%s\t%s\n' % (unixtime, channel, nick, message))
     f.close()
@@ -157,7 +157,7 @@ def remind(bot, trigger):
 def at(bot, trigger):
     """
     Gives you a reminder at the given time. Takes hh:mm:ssTimezone
-    message. Timezone is any timezone Willie takes elsewhere; the best choices
+    message. Timezone is any timezone Sopel takes elsewhere; the best choices
     are those from the tzdb; a list of valid options is available at
     http://dft.ba/-tz . The seconds and timezone are optional.
     """

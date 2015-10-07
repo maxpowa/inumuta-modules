@@ -6,10 +6,10 @@ Copyright 2015 Max Gurela
 Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
-from willie.module import commands
+from sopel.module import commands
 import re
 import random
-from willie import web
+from sopel import web
 from bs4 import BeautifulSoup
 from bs4.element import NavigableString
 

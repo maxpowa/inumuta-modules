@@ -1,11 +1,11 @@
 # coding=utf8
 """
-find.py - Willie Spelling correction module
+find.py - Sopel Spelling correction module
 Copyright 2011, Michael Yanovich, yanovich.net
 Copyright 2013, Edward Powell, embolalia.net
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net
+http://sopel.dftba.net
 
 Contributions from: Matt Meinwald, Morgan Goose and Max Gurela
 This module will fix spelling errors if someone corrects them
@@ -14,13 +14,13 @@ using the sed notation (s///) commonly found in vi/vim.
 from __future__ import unicode_literals
 
 import re
-from willie.tools import Identifier, WillieMemory
-from willie.module import rule, priority, thread
-from willie.formatting import bold
+from sopel.tools import Identifier, SopelMemory
+from sopel.module import rule, priority, thread
+from sopel.formatting import bold
 
 
 def setup(bot):
-    bot.memory['find_lines'] = WillieMemory()
+    bot.memory['find_lines'] = SopelMemory()
 
 
 @rule('.*')
@@ -34,7 +34,7 @@ def collectlines(bot, trigger):
 
     # Add a log for the channel and Identifier, if there isn't already one
     if trigger.sender not in bot.memory['find_lines']:
-        bot.memory['find_lines'][trigger.sender] = WillieMemory()
+        bot.memory['find_lines'][trigger.sender] = SopelMemory()
     if Identifier(trigger.nick) not in bot.memory['find_lines'][trigger.sender]:
         bot.memory['find_lines'][trigger.sender][Identifier(trigger.nick)] = list()
 

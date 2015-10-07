@@ -1,21 +1,21 @@
 # coding=utf8
 """
-youtube.py - Willie YouTube Module
+youtube.py - Sopel YouTube Module
 Copyright 2012, Dimitri Molenaars, Tyrope.nl.
 Copyright © 2012-2014, Elad Alfassa, <elad@fedoraproject.org>
 Copyright 2012, Edward Powell, embolalia.net
 Copyright 2015, Max Gurela
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dfbta.net
+http://sopel.dfbta.net
 
 This module will respond to .yt and .youtube commands and searches the youtubes.
 """
 from __future__ import unicode_literals, division
 
-from willie import web, tools
-from willie.module import rule, commands, example
-from willie.formatting import color, colors
+from sopel import web, tools
+from sopel.module import rule, commands, example
+from sopel.formatting import color, colors
 import datetime
 import json
 import re
@@ -54,7 +54,7 @@ def configure(config):
 
 def setup(bot):
     if not bot.memory.contains('url_callbacks'):
-        bot.memory['url_callbacks'] = tools.WillieMemory()
+        bot.memory['url_callbacks'] = tools.SopelMemory()
     bot.memory['url_callbacks'][regex] = ytinfo
 
 

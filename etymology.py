@@ -1,16 +1,16 @@
 # coding=utf8
 """
-etymology.py - Willie Etymology Module
+etymology.py - Sopel Etymology Module
 Copyright 2007-9, Sean B. Palmer, inamidst.com
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net
+http://sopel.dftba.net
 """
 from __future__ import unicode_literals
 
 import re
-from willie import web
-from willie.module import commands, example, NOLIMIT
+from sopel import web
+from sopel.module import commands, example, NOLIMIT
 
 etyuri = 'http://etymonline.com/?term=%s'
 etysearch = 'http://etymonline.com/?search=%s'

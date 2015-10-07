@@ -6,8 +6,8 @@ Copyright 2014 Max Gurela
 Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
-from willie.module import commands, rule, event, unblockable
-from willie.tools import Identifier
+from sopel.module import commands, rule, event, unblockable
+from sopel.tools import Identifier
 
 force = {}
 

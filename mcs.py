@@ -7,9 +7,9 @@ Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
 from mcstatus import MinecraftServer
-from willie.module import commands
-from willie import web
-from willie.formatting import color, bold
+from sopel.module import commands
+from sopel import web
+from sopel.formatting import color, bold
 import uuid
 import time
 import json

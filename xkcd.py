@@ -7,16 +7,16 @@ Copyright 2013, Edward Powell (embolalia.com)
 Copyright 2014, Max Gurela
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net
+http://sopel.dftba.net
 """
 from __future__ import unicode_literals
 
 import json
 import random
 import re
-from willie import web
+from sopel import web
 from search import google_search
-from willie.module import (commands, rule)
+from sopel.module import (commands, rule)
 
 ignored_sites = [
     # For google searching
@@ -33,11 +33,11 @@ ignored_sites = [
 sites_query = ' site:xkcd.com -site:' + ' -site:'.join(ignored_sites)
 
 
-def setup(willie):
+def setup(sopel):
     regex = re.compile('xkcd\.com/(\d+)')
-    if not willie.memory.contains('url_callbacks'):
-        willie.memory['url_callbacks'] = tools.WillieMemory()
-    willie.memory['url_callbacks'][regex] = get_page_info
+    if not sopel.memory.contains('url_callbacks'):
+        sopel.memory['url_callbacks'] = tools.SopelMemory()
+    sopel.memory['url_callbacks'][regex] = get_page_info
 
 
 def get_info(number=None):

@@ -1,11 +1,11 @@
 # coding=utf8
 """
-ip.py - Willie IP Lookup Module
+ip.py - Sopel IP Lookup Module
 Copyright 2011, Dimitri Molenaars, TyRope.nl,
 Copyright © 2013, Elad Alfassa <elad@fedoraproject.org>
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net
+http://sopel.dftba.net
 """
 from __future__ import unicode_literals
 
@@ -27,8 +27,8 @@ except ImportError:
     except ImportError:
         pass
 
-from willie.module import commands, example
-from willie.logger import get_logger
+from sopel.module import commands, example
+from sopel.logger import get_logger
 
 LOGGER = get_logger(__name__)
 
@@ -130,5 +130,5 @@ def ip(bot, trigger):
 
 
 if __name__ == "__main__":
-    from willie.test_tools import run_example_tests
+    from sopel.test_tools import run_example_tests
     run_example_tests(__file__)

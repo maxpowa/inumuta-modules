@@ -6,8 +6,8 @@ Copyright 2014 Max Gurela
 Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
-from willie.module import rate, rule, commands
-from willie.tools import Identifier
+from sopel.module import rate, rule, commands
+from sopel.tools import Identifier
 
 
 @rate(10)

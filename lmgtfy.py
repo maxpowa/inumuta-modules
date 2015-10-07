@@ -1,13 +1,13 @@
 # coding=utf8
 """
-lmgtfy.py - Willie Let me Google that for you module
+lmgtfy.py - Sopel Let me Google that for you module
 Copyright 2013, Dimitri Molenaars http://tyrope.nl/
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net/
+http://sopel.dftba.net/
 """
 from __future__ import unicode_literals
-from willie.module import commands
+from sopel.module import commands
 
 
 @commands('lmgtfy', 'lmgify', 'gify', 'gtfy')

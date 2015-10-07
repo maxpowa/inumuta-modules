@@ -1,14 +1,14 @@
 # coding=utf8
 """
-wikipedia.py - Willie Wikipedia Module
+wikipedia.py - Sopel Wikipedia Module
 Copyright 2013 Edward Powell - embolalia.net
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net
+http://sopel.dftba.net
 """
 from __future__ import unicode_literals
-from willie import web, tools
-from willie.module import NOLIMIT, commands, example, rule
+from sopel import web, tools
+from sopel.module import NOLIMIT, commands, example, rule
 import json
 import re
 
@@ -24,7 +24,7 @@ REDIRECT = re.compile(r'^REDIRECT (.*)')
 def setup(bot):
     regex = re.compile('([a-z]+).(wikipedia.org/wiki/)([^ ]+)')
     if not bot.memory.contains('url_callbacks'):
-        bot.memory['url_callbacks'] = tools.WillieMemory()
+        bot.memory['url_callbacks'] = tools.SopelMemory()
     bot.memory['url_callbacks'][regex] = mw_info
 
 

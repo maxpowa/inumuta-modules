@@ -6,7 +6,7 @@ Copyright 2014, Max Gurela http://everythingisawesome.us
 Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
-from willie.module import commands, rule
+from sopel.module import commands, rule
 
 
 @commands('hakasie')

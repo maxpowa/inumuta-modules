@@ -1,13 +1,13 @@
 # coding=utf8
 """
-units.py - Unit conversion module for Willie
+units.py - Unit conversion module for Sopel
 Copyright © 2013, Elad Alfassa, <elad@fedoraproject.org>
 Copyright © 2013, Dimitri Molenaars, <tyrope@tyrope.nl>
 Licensed under the Eiffel Forum License 2.
 
 """
 from __future__ import unicode_literals, division
-from willie.module import commands, example, NOLIMIT
+from sopel.module import commands, example, NOLIMIT
 import re
 
 find_temp = re.compile('(-?[0-9]*\.?[0-9]*)[ °]*(K|C|F)', re.IGNORECASE)
@@ -182,5 +182,5 @@ def mass(bot, trigger):
     bot.reply('{} = {}'.format(metric_part, stupid_part))
 
 if __name__ == "__main__":
-    from willie.test_tools import run_example_tests
+    from sopel.test_tools import run_example_tests
     run_example_tests(__file__)

@@ -4,11 +4,11 @@ rand.py - Rand Module
 Copyright 2013, Ari Koivula, <ari@koivu.la>
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net
+http://sopel.dftba.net
 """
 from __future__ import unicode_literals
 
-from willie.module import commands, example
+from sopel.module import commands, example
 import random
 import sys
 
@@ -45,5 +45,5 @@ def rand(bot, trigger):
 
 
 if __name__ == "__main__":
-    from willie.test_tools import run_example_tests
+    from sopel.test_tools import run_example_tests
     run_example_tests(__file__)

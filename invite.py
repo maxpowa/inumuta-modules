@@ -6,7 +6,7 @@ Copyright 2014 Max Gurela
 Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
-from willie.module import commands, event, rule, priority, OP, interval
+from sopel.module import commands, event, rule, priority, OP, interval
 
 
 def setup(bot):

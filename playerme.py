@@ -6,21 +6,21 @@ Copyright 2014 Max Gurela
 Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
-from willie.module import commands, rule, example
-from willie.formatting import color
-from willie import tools, web
+from sopel.module import commands, rule, example
+from sopel.formatting import color
+from sopel import tools, web
 from optparse import OptionParser
 import json
 import re
 
 
-def setup(willie):
+def setup(sopel):
     user_regex = re.compile(r'player\.me\/(\w+)')
     feed_regex = re.compile(r'player\.me/feed/(\d+)')
-    if not willie.memory.contains('url_callbacks'):
-        willie.memory['url_callbacks'] = tools.WillieMemory()
-    willie.memory['url_callbacks'][user_regex] = player_me_regex
-    willie.memory['url_callbacks'][feed_regex] = player_me_feed
+    if not sopel.memory.contains('url_callbacks'):
+        sopel.memory['url_callbacks'] = tools.SopelMemory()
+    sopel.memory['url_callbacks'][user_regex] = player_me_regex
+    sopel.memory['url_callbacks'][feed_regex] = player_me_feed
 
 
 @commands('player')

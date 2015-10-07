@@ -10,8 +10,8 @@ import urllib2
 import random
 import json
 from math import sqrt
-from willie import web
-from willie.module import commands, priority
+from sopel import web
+from sopel.module import commands, priority
 
 adjectives = [
     "a high caliber",

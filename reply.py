@@ -1,13 +1,13 @@
 # coding=utf8
 """
-ping.py - Willie Ping Module
+ping.py - Sopel Ping Module
 Author: Sean B. Palmer, inamidst.com
-About: http://willie.dftba.net
+About: http://sopel.dftba.net
 """
 from __future__ import unicode_literals
 
 import random
-from willie.module import rule, priority, thread
+from sopel.module import rule, priority, thread
 
 
 @rule(r'(?i)(hi|hello|hey) $nickname[ \t]*$')

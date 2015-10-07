@@ -6,18 +6,18 @@ Copyright 2014 Max Gurela
 Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
-from willie.module import commands, rule
-import willie.web as web
+from sopel.module import commands, rule
+import sopel.web as web
 import urllib
 import json
 import re
 
 
-def setup(willie):
+def setup(sopel):
     regex = re.compile('jpv\.everythingisawesome\.us/song/\?genre=(.+)&song=(.+)')
-    if not willie.memory.contains('url_callbacks'):
-        willie.memory['url_callbacks'] = tools.WillieMemory()
-    willie.memory['url_callbacks'][regex] = jpv_info
+    if not sopel.memory.contains('url_callbacks'):
+        sopel.memory['url_callbacks'] = tools.SopelMemory()
+    sopel.memory['url_callbacks'][regex] = jpv_info
 
 
 @rule('https?://jpv\.everythingisawesome\.us/song/\?genre=(.+)&song=(.+)')

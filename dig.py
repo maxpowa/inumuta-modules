@@ -1,13 +1,13 @@
 # coding=utf8
 """
-dns.py - Willie DNS module
+dns.py - Sopel DNS module
 Copyright 2015, Maxfield Gurela
 
 Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
 
-from willie.module import commands
+from sopel.module import commands
 from dns.resolver import dns
 
 

@@ -6,7 +6,7 @@ Copyright 2014 Max Gurela
 Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
-from willie.module import commands
+from sopel.module import commands
 import random
 
 abbreviations = [

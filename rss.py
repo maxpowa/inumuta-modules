@@ -1,10 +1,10 @@
 # coding=utf8
 """
-rss.py - Willie RSS Module
+rss.py - Sopel RSS Module
 Copyright 2012, Michael Yanovich, yanovich.net
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dfbta.net
+http://sopel.dfbta.net
 """
 from __future__ import unicode_literals
 
@@ -15,9 +15,9 @@ import socket
 
 import feedparser
 
-from willie.module import commands, interval
-from willie.config import ConfigurationError
-from willie.logger import get_logger
+from sopel.module import commands, interval
+from sopel.config import ConfigurationError
+from sopel.logger import get_logger
 
 LOGGER = get_logger(__name__)
 

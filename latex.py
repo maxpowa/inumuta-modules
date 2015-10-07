@@ -8,8 +8,8 @@ Licensed under the Eiffel Forum License 2.
 Uses http://quicklatex.com/
 """
 from __future__ import unicode_literals
-from willie import web
-from willie.module import commands
+from sopel import web
+from sopel.module import commands
 import re
 
 

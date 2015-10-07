@@ -5,14 +5,14 @@ Copyright 2010-2013, Dimitri "Tyrope" Molenaars, TyRope.nl
 Copyright 2013, Ari Koivula, <ari@koivu.la>
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net/
+http://sopel.dftba.net/
 """
 from __future__ import unicode_literals
 import random
 import re
 
-import willie.module
-from willie.tools.calculation import eval_equation
+import sopel.module
+from sopel.tools.calculation import eval_equation
 
 
 class DicePouch:
@@ -152,17 +152,17 @@ def _roll_dice(bot, dice_expression):
     return dice
 
 
-@willie.module.commands("roll")
-@willie.module.commands("dice")
-@willie.module.commands("d")
-@willie.module.priority("medium")
-@willie.module.example(".roll 3d1+1", 'You roll 3d1+1: (1+1+1)+1 = 4')
-@willie.module.example(".roll 3d1v2+1", 'You roll 3d1v2+1: (1[+1+1])+1 = 2')
-@willie.module.example(".roll 2d4", 'You roll 2d4: \(\d\+\d\) = \d', re=True)
-@willie.module.example(".roll 100d1", '[^:]*: \(100x1\) = 100', re=True)
-@willie.module.example(".roll 1001d1", 'I only have 1000 dice. =(')
-@willie.module.example(".roll 1d1 + 1d1", 'You roll 1d1 + 1d1: (1) + (1) = 2')
-@willie.module.example(".roll 1d1+1d1", 'You roll 1d1+1d1: (1)+(1) = 2')
+@sopel.module.commands("roll")
+@sopel.module.commands("dice")
+@sopel.module.commands("d")
+@sopel.module.priority("medium")
+@sopel.module.example(".roll 3d1+1", 'You roll 3d1+1: (1+1+1)+1 = 4')
+@sopel.module.example(".roll 3d1v2+1", 'You roll 3d1v2+1: (1[+1+1])+1 = 2')
+@sopel.module.example(".roll 2d4", 'You roll 2d4: \(\d\+\d\) = \d', re=True)
+@sopel.module.example(".roll 100d1", '[^:]*: \(100x1\) = 100', re=True)
+@sopel.module.example(".roll 1001d1", 'I only have 1000 dice. =(')
+@sopel.module.example(".roll 1d1 + 1d1", 'You roll 1d1 + 1d1: (1) + (1) = 2')
+@sopel.module.example(".roll 1d1+1d1", 'You roll 1d1+1d1: (1)+(1) = 2')
 def roll(bot, trigger):
     """.dice XdY[vZ][+N], rolls dice and reports the result.
 
@@ -217,10 +217,10 @@ def roll(bot, trigger):
         trigger.group(2), pretty_str, result))
 
 
-@willie.module.commands("choice")
-@willie.module.commands("ch")
-@willie.module.commands("choose")
-@willie.module.priority("medium")
+@sopel.module.commands("choice")
+@sopel.module.commands("ch")
+@sopel.module.commands("choose")
+@sopel.module.priority("medium")
 def choose(bot, trigger):
     """
     .choice option1|option2|option3 - Makes a difficult choice easy.
@@ -233,5 +233,5 @@ def choose(bot, trigger):
 
 
 if __name__ == "__main__":
-    from willie.test_tools import run_example_tests
+    from sopel.test_tools import run_example_tests
     run_example_tests(__file__)

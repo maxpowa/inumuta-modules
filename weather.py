@@ -1,16 +1,16 @@
 # coding=utf8
 """
-weather.py - Willie Yahoo! Weather Module
+weather.py - Sopel Yahoo! Weather Module
 Copyright 2008, Sean B. Palmer, inamidst.com
 Copyright 2012, Edward Powell, embolalia.net
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net
+http://sopel.dftba.net
 """
 from __future__ import unicode_literals
 
-from willie import web
-from willie.module import commands, example, NOLIMIT
+from sopel import web
+from sopel.module import commands, example, NOLIMIT
 
 import feedparser
 from lxml import etree

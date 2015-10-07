@@ -1,20 +1,20 @@
 # coding=utf8
 """
-url.py - Willie URL title module
+url.py - Sopel URL title module
 Copyright 2010-2011, Michael Yanovich, yanovich.net, Kenneth Sham
 Copyright 2012-2013 Edward Powell
 Copyright 2013      Lior Ramati (firerogue517@gmail.com)
 Copyright © 2014 Elad Alfassa <elad@fedoraproject.org>
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net
+http://sopel.dftba.net
 """
 from __future__ import unicode_literals
 
 import re
 import sys
-from willie import web, tools
-from willie.module import commands, rule, example
+from sopel import web, tools
+from sopel.module import commands, rule, example
 
 url_finder = None
 exclusion_char = '!'
@@ -79,9 +79,9 @@ def setup(bot=None):
 
     # Ensure that url_callbacks and last_seen_url are in memory
     if not bot.memory.contains('url_callbacks'):
-        bot.memory['url_callbacks'] = tools.WillieMemory()
+        bot.memory['url_callbacks'] = tools.SopelMemory()
     if not bot.memory.contains('last_seen_url'):
-        bot.memory['last_seen_url'] = tools.WillieMemory()
+        bot.memory['last_seen_url'] = tools.SopelMemory()
 
     if bot.config.has_option('url', 'exclusion_char'):
         exclusion_char = bot.config.url.exclusion_char
@@ -249,5 +249,5 @@ def get_hostname(url):
     return hostname
 
 if __name__ == "__main__":
-    from willie.test_tools import run_example_tests
+    from sopel.test_tools import run_example_tests
     run_example_tests(__file__)

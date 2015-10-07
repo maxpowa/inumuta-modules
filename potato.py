@@ -3,12 +3,12 @@
 potato.py - Be nice, give people potatoes \o/
 Copyright 2014 Max Gurela
 
-Adapted for willie from https://github.com/infinitylabs/uguubot/blob/master/disabled_plugins/potato.py
+Adapted for sopel from https://github.com/infinitylabs/uguubot/blob/master/disabled_plugins/potato.py
 
 Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
-from willie.module import commands
+from sopel.module import commands
 import re
 import random
 

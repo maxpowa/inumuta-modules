@@ -8,13 +8,13 @@ from __future__ import unicode_literals
 import re
 import time
 import datetime
-from willie.tools.time import get_timezone, format_time
-from willie.tools import Identifier, WillieMemory
-from willie.module import rule, priority, commands, interval
+from sopel.tools.time import get_timezone, format_time
+from sopel.tools import Identifier, SopelMemory
+from sopel.module import rule, priority, commands, interval
 
 
 def setup(bot):
-    bot.memory['pls_count'] = WillieMemory()
+    bot.memory['pls_count'] = SopelMemory()
     bot.memory['pls_count_time'] = time.time()
 
 
@@ -32,7 +32,7 @@ def collectpls(bot, trigger):
 
     # Add a count for the channel and nick, if there isn't already one
     if trigger.sender not in bot.memory['pls_count']:
-        bot.memory['pls_count'][trigger.sender] = WillieMemory()
+        bot.memory['pls_count'][trigger.sender] = SopelMemory()
     if Identifier(trigger.nick) not in bot.memory['pls_count'][trigger.sender]:
         bot.memory['pls_count'][trigger.sender][Identifier(trigger.nick)] = 0
 

@@ -12,7 +12,7 @@ Copyright 2015 Max Gurela
 Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
-from willie.module import commands, rule, unblockable, event, thread, priority, OP
+from sopel.module import commands, rule, unblockable, event, thread, priority, OP
 from datetime import datetime, date
 import sqlite3
 import re

@@ -1,11 +1,11 @@
 # coding=utf8
 """
-ping.py - Willie Ping Module
+ping.py - Sopel Ping Module
 """
 from __future__ import unicode_literals
 
 from subprocess import Popen, PIPE
-from willie.module import commands
+from sopel.module import commands
 
 
 @commands('ping')

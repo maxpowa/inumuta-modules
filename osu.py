@@ -8,9 +8,9 @@ Licensed under the Eiffel Forum License 2.
 Uses the osu!api, docs: https://github.com/peppy/osu-api/wiki
 """
 from __future__ import unicode_literals
-from willie.module import commands, rule
-from willie.formatting import color
-from willie import tools, web
+from sopel.module import commands, rule
+from sopel.formatting import color
+from sopel import tools, web
 import json
 import types
 import re
@@ -32,15 +32,15 @@ def configure(config):
 apikey = ''
 
 
-def setup(willie):
-    if not willie.config.osu.api_key:
+def setup(sopel):
+    if not sopel.config.osu.api_key:
         raise ConfigurationError('Could not configure the osu! module. Is the API key configured properly?')
     user_regex = re.compile('osu\.ppy\.sh/(u)/(\w+)')
     map_regex = re.compile('osu\.ppy\.sh/(s|b)/(\d+)')
-    if not willie.memory.contains('url_callbacks'):
-        willie.memory['url_callbacks'] = tools.WillieMemory()
-    willie.memory['url_callbacks'][user_regex] = osu_user
-    willie.memory['url_callbacks'][map_regex] = osu_beatmap
+    if not sopel.memory.contains('url_callbacks'):
+        sopel.memory['url_callbacks'] = tools.SopelMemory()
+    sopel.memory['url_callbacks'][user_regex] = osu_user
+    sopel.memory['url_callbacks'][map_regex] = osu_beatmap
 
 
 @rule('.*osu\.ppy\.sh/(u)/(\w+).*')

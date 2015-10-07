@@ -1,10 +1,10 @@
 # coding=utf8
 """
-reload.py - Willie Module Reloader Module
+reload.py - Sopel Module Reloader Module
 Copyright 2008, Sean B. Palmer, inamidst.com
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net
+http://sopel.dftba.net
 """
 from __future__ import unicode_literals
 
@@ -12,14 +12,14 @@ import sys
 import os.path
 import time
 import imp
-from willie.tools import iteritems
-import willie.module
+from sopel.tools import iteritems
+import sopel.module
 import subprocess
 
 
-@willie.module.nickname_commands("reload")
-@willie.module.priority("low")
-@willie.module.thread(False)
+@sopel.module.nickname_commands("reload")
+@sopel.module.priority("low")
+@sopel.module.thread(False)
 def f_reload(bot, trigger):
     """Reloads a module, for use by admins only."""
     if not trigger.admin:
@@ -46,7 +46,7 @@ def f_reload(bot, trigger):
             old_callables[obj_name] = obj
 
     bot.unregister(old_callables)
-    # Also remove all references to willie callables from top level of the
+    # Also remove all references to sopel callables from top level of the
     # module, so that they will not get loaded again if reloading the
     # module does not override them.
     for obj_name in old_callables.keys():
@@ -77,7 +77,7 @@ def f_reload(bot, trigger):
     bot.reply('%r (version: %s)' % (module, modified))
 
 
-@willie.module.nickname_commands('update')
+@sopel.module.nickname_commands('update')
 def f_update(bot, trigger):
     if not trigger.admin:
         return
@@ -91,9 +91,9 @@ def f_update(bot, trigger):
     f_reload(bot, trigger)
 
 
-@willie.module.nickname_commands("load")
-@willie.module.priority("low")
-@willie.module.thread(False)
+@sopel.module.nickname_commands("load")
+@sopel.module.priority("low")
+@sopel.module.thread(False)
 def f_load(bot, trigger):
     """Loads a module, for use by admins only."""
     if not trigger.admin:
@@ -126,25 +126,25 @@ def f_load(bot, trigger):
 
 
 # Catch PM based messages
-@willie.module.commands("reload")
-@willie.module.priority("low")
-@willie.module.thread(False)
+@sopel.module.commands("reload")
+@sopel.module.priority("low")
+@sopel.module.thread(False)
 def pm_f_reload(bot, trigger):
     """Wrapper for allowing delivery of .reload command via PM"""
     if trigger.is_privmsg:
         f_reload(bot, trigger)
 
 
-@willie.module.commands('update')
+@sopel.module.commands('update')
 def pm_f_update(bot, trigger):
     """Wrapper for allowing delivery of .update command via PM"""
     if trigger.is_privmsg:
         f_update(bot, trigger)
 
 
-@willie.module.commands("load")
-@willie.module.priority("low")
-@willie.module.thread(False)
+@sopel.module.commands("load")
+@sopel.module.priority("low")
+@sopel.module.thread(False)
 def pm_f_load(bot, trigger):
     """Wrapper for allowing delivery of .load command via PM"""
     if trigger.is_privmsg:

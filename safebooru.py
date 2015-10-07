@@ -2,13 +2,13 @@
 """
 safebooru.py - People on IRC will love your leggings fetish!
 Copyright 2014 Max Gurela
-Adapted for use with Willie from https://github.com/infinitylabs/uguubot/blob/master/plugins/gelbooru.py
+Adapted for use with Sopel from https://github.com/infinitylabs/uguubot/blob/master/plugins/gelbooru.py
 
 Licensed under the Eiffel Forum License 2 (It's GPL compatible!).
 """
 from __future__ import unicode_literals
-from willie.module import commands, rule
-from willie import tools, web
+from sopel.module import commands, rule
+from sopel import tools, web
 from bs4 import BeautifulSoup
 import random
 import re
@@ -17,11 +17,11 @@ safebooru_cache = []
 lastsearch = ''
 
 
-def setup(willie):
+def setup(sopel):
     regex = re.compile('safebooru.org.*(?:\?|&)id\=([-_a-zA-Z0-9]+)')
-    if not willie.memory.contains('url_callbacks'):
-        willie.memory['url_callbacks'] = tools.WillieMemory()
-    willie.memory['url_callbacks'][regex] = safebooru_url
+    if not sopel.memory.contains('url_callbacks'):
+        sopel.memory['url_callbacks'] = tools.SopelMemory()
+    sopel.memory['url_callbacks'][regex] = safebooru_url
 
 
 def refresh_cache(inp):

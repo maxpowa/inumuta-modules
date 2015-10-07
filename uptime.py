@@ -4,11 +4,11 @@ uptime.py - Uptime module
 Copyright 2014, Fabian Neundorf
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net
+http://sopel.dftba.net
 """
 from __future__ import unicode_literals
 
-from willie.module import commands
+from sopel.module import commands
 import datetime
 
 
@@ -19,7 +19,7 @@ def setup(bot):
 
 @commands('uptime')
 def uptime(bot, trigger):
-    """.uptime - Returns the uptime of Willie."""
+    """.uptime - Returns the uptime of Sopel."""
     delta = datetime.timedelta(seconds=round((datetime.datetime.utcnow() -
                                               bot.memory["uptime"])
                                              .total_seconds()))

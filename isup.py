@@ -2,14 +2,14 @@
 """
 isup.py - Simple website status check with isup.me
 Author: Edward Powell http://embolalia.net
-About: http://willie.dftba.net
+About: http://sopel.dftba.net
 
 This allows users to check if a website is up through isup.me.
 """
 from __future__ import unicode_literals
 
-from willie import web
-from willie.module import commands
+from sopel import web
+from sopel.module import commands
 
 
 @commands('isup')

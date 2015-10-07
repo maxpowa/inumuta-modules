@@ -1,16 +1,16 @@
 # coding=utf8
 """
-codepoints.py - Willie Codepoints Module
+codepoints.py - Sopel Codepoints Module
 Copyright 2013, Edward Powell, embolalia.net
 Copyright 2008, Sean B. Palmer, inamidst.com
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dfbta.net
+http://sopel.dfbta.net
 """
 from __future__ import unicode_literals
 import unicodedata
 import sys
-from willie.module import commands, example, NOLIMIT
+from sopel.module import commands, example, NOLIMIT
 
 if sys.version_info.major >= 3:
     unichr = chr
@@ -49,5 +49,5 @@ def codepoint(bot, trigger):
     bot.say(template % (point, name, arg))
 
 if __name__ == "__main__":
-    from willie.test_tools import run_example_tests
+    from sopel.test_tools import run_example_tests
     run_example_tests(__file__)

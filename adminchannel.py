@@ -1,19 +1,19 @@
 # coding=utf8
 """
-admin.py - Willie Admin Module
+admin.py - Sopel Admin Module
 Copyright 2010-2011, Michael Yanovich, Alek Rollyson, and Edward Powell
 Copyright © 2012, Elad Alfassa <elad@fedoraproject.org>
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net/
+http://sopel.dftba.net/
 
 """
 from __future__ import unicode_literals
 
 import re
-from willie import formatting
-from willie.module import commands, priority, OP, HALFOP, require_privilege
-from willie.tools import Identifier
+from sopel import formatting
+from sopel.module import commands, priority, OP, HALFOP, require_privilege
+from sopel.tools import Identifier
 
 
 def default_mask(trigger):
@@ -30,7 +30,7 @@ def default_mask(trigger):
 def op(bot, trigger):
     """
     Command to op users in a room. If no nick is given,
-    willie will op the nick who sent the command
+    sopel will op the nick who sent the command
     """
     if bot.privileges[trigger.sender][bot.nick] < OP:
         return bot.reply("I'm not a channel operator!")
@@ -46,7 +46,7 @@ def op(bot, trigger):
 def deop(bot, trigger):
     """
     Command to deop users in a room. If no nick is given,
-    willie will deop the nick who sent the command
+    sopel will deop the nick who sent the command
     """
     if bot.privileges[trigger.sender][bot.nick] < OP:
         return bot.reply("I'm not a channel operator!")
@@ -62,7 +62,7 @@ def deop(bot, trigger):
 def voice(bot, trigger):
     """
     Command to voice users in a room. If no nick is given,
-    willie will voice the nick who sent the command
+    sopel will voice the nick who sent the command
     """
     if bot.privileges[trigger.sender][bot.nick] < HALFOP:
         return bot.reply("I'm not a channel operator!")
@@ -78,7 +78,7 @@ def voice(bot, trigger):
 def devoice(bot, trigger):
     """
     Command to devoice users in a room. If no nick is given,
-    willie will devoice the nick who sent the command
+    sopel will devoice the nick who sent the command
     """
     if bot.privileges[trigger.sender][bot.nick] < HALFOP:
         return bot.reply("I'm not a channel operator!")

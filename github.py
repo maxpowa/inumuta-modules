@@ -11,10 +11,10 @@ Copyright 2014 Max Gurela
 """
 
 from __future__ import unicode_literals
-from willie import web, tools
-from willie.module import commands, rule, OP, NOLIMIT, example, interval
-from willie.formatting import bold, color
-from willie.tools.time import get_timezone, format_time
+from sopel import web, tools
+from sopel.module import commands, rule, OP, NOLIMIT, example, interval
+from sopel.formatting import bold, color
+from sopel.tools.time import get_timezone, format_time
 
 import operator
 from collections import deque
@@ -45,7 +45,7 @@ commitURL = (r'https?://(?:www\.)?github.com/([A-z0-9\-_]+/[A-z0-9\-_]+)/(?:comm
 regex = re.compile(issueURL)
 commitRegex = re.compile(commitURL)
 repoRegex = re.compile('github\.com/([^ /]+?)/([^ /]+)/?(?!\S)')
-willie_instance = None
+sopel_instance = None
 
 
 def configure(config):
@@ -70,22 +70,22 @@ def configure(config):
         config.interactive_add('github', 'webhook_port', '3333')
 
 
-def setup(willie):
-    if not willie.memory.contains('url_callbacks'):
-        willie.memory['url_callbacks'] = tools.WillieMemory()
-    willie.memory['url_callbacks'][regex] = issue_info
-    willie.memory['url_callbacks'][repoRegex] = data_url
-    willie.memory['url_callbacks'][commitRegex] = commit_info
+def setup(sopel):
+    if not sopel.memory.contains('url_callbacks'):
+        sopel.memory['url_callbacks'] = tools.SopelMemory()
+    sopel.memory['url_callbacks'][regex] = issue_info
+    sopel.memory['url_callbacks'][repoRegex] = data_url
+    sopel.memory['url_callbacks'][commitRegex] = commit_info
 
-    if willie.config.has_section('github') and willie.config.github.webhook:
-        setup_webhook(willie)
+    if sopel.config.has_section('github') and sopel.config.github.webhook:
+        setup_webhook(sopel)
 
 
-def shutdown(willie):
-    del willie.memory['url_callbacks'][regex]
-    del willie.memory['url_callbacks'][repoRegex]
-    del willie.memory['url_callbacks'][commitRegex]
-    shutdown_webhook(willie)
+def shutdown(sopel):
+    del sopel.memory['url_callbacks'][regex]
+    del sopel.memory['url_callbacks'][repoRegex]
+    del sopel.memory['url_callbacks'][commitRegex]
+    shutdown_webhook(sopel)
 
 '''
  _______ ______ _____        ______                    __
@@ -326,26 +326,26 @@ def fmt_response(bot, trigger, URL, from_regex=False):
 '''
 
 
-def setup_webhook(willie):
-    global willie_instance
-    willie_instance = willie
-    host = willie.config.github.webhook_host
-    port = willie.config.github.webhook_port
+def setup_webhook(sopel):
+    global sopel_instance
+    sopel_instance = sopel
+    host = sopel.config.github.webhook_host
+    port = sopel.config.github.webhook_port
 
     base = StoppableWSGIRefServer(host=host, port=port)
     server = Thread(target=bottle.run, kwargs={'server': base})
     server.setDaemon(True)
     server.start()
-    willie.memory['gh_webhook_server'] = base
-    willie.memory['gh_webhook_thread'] = server
+    sopel.memory['gh_webhook_server'] = base
+    sopel.memory['gh_webhook_thread'] = server
 
-    conn = willie.db.connect()
+    conn = sopel.db.connect()
     c = conn.cursor()
 
     try:
         c.execute('SELECT * FROM gh_hooks')
     except StandardError:
-        create_table(willie, c)
+        create_table(sopel, c)
         conn.commit()
     conn.close()
 
@@ -367,13 +367,13 @@ def create_table(bot, c):
         )'''.format(primary_key))
 
 
-def shutdown_webhook(willie):
-    global willie_instance
-    willie_instance = None
-    if willie.memory.contains('gh_webhook_server'):
+def shutdown_webhook(sopel):
+    global sopel_instance
+    sopel_instance = None
+    if sopel.memory.contains('gh_webhook_server'):
         print('Stopping webhook server')
-        willie.memory['gh_webhook_server'].stop()
-        willie.memory['gh_webhook_thread'].join()
+        sopel.memory['gh_webhook_server'].stop()
+        sopel.memory['gh_webhook_thread'].join()
         print('Github webhook shutdown complete')
 
 
@@ -395,13 +395,13 @@ class StoppableWSGIRefServer(bottle.ServerAdapter):
 
 
 def get_targets(repo):
-    conn = willie_instance.db.connect()
+    conn = sopel_instance.db.connect()
     c = conn.cursor()
 
-    #willie_instance.msg('#Inumuta', 'Checking db for '+repo)
+    #sopel_instance.msg('#Inumuta', 'Checking db for '+repo)
     c.execute('SELECT * FROM gh_hooks WHERE repo_name = ? AND enabled = 1', (repo.lower(), ))
     result = c.fetchall()
-    #willie_instance.msg('#Inumuta', 'Result: '+json.dumps(result))
+    #sopel_instance.msg('#Inumuta', 'Result: '+json.dumps(result))
     return result
 
 
@@ -422,7 +422,7 @@ def webhook():
     if event == 'ping':
         channels = get_targets(payload['repository']['full_name'])
         for chan in channels:
-            willie_instance.msg(chan[0], '[{}] {}: {} (Your webhook is now enabled)'.format(
+            sopel_instance.msg(chan[0], '[{}] {}: {} (Your webhook is now enabled)'.format(
                           fmt_repo(payload['repository']['name'], chan),
                           fmt_name(payload['sender']['login'], chan),
                           payload['zen']))
@@ -446,8 +446,8 @@ def handle_auth_response():
     repo = state.split(':')[0]
     channel = state.split(':')[1]
 
-    data = {'client_id': willie_instance.config.github.client_id,
-             'client_secret': willie_instance.config.github.secret,
+    data = {'client_id': sopel_instance.config.github.client_id,
+             'client_secret': sopel_instance.config.github.secret,
              'code': code}
     raw = web.post('https://github.com/login/oauth/access_token', data, headers={'Accept': 'application/json'})
     try:
@@ -987,4 +987,4 @@ def send_formatted_message(payload, row):
         messages.append(fmt_status_message())
 
     for message in messages:
-        willie_instance.msg(row[0], message)
+        sopel_instance.msg(row[0], message)

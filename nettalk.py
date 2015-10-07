@@ -1,6 +1,6 @@
 # coding=utf8
 """
-nettalk.py - Willie Nettalk Decrypter
+nettalk.py - Sopel Nettalk Decrypter
 Copyright 2015, Max Gurela <maxpowa@outlook.com>
 Licensed under the Eiffel Forum License 2.
 
@@ -8,7 +8,7 @@ Adapted from https://github.com/grawity/code/blob/2ac8eadebeb113f25093f4542c16da
 """
 from __future__ import unicode_literals
 
-from willie.module import rule
+from sopel.module import rule
 import sys, re
 
 codeChr = "0123456789abcdefghijklmnopqrstuvwxyz!?#%-+"

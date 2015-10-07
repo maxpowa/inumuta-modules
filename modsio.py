@@ -1,24 +1,24 @@
 # coding=utf8
 """
-modsio.py - Mods.io Willie module
+modsio.py - Mods.io Sopel module
 Copyright 2014 Max Gurela
 
 Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
-from willie import web
-from willie.module import rule
-from willie.formatting import color
+from sopel import web
+from sopel.module import rule
+from sopel.formatting import color
 
 import json
 import re
 
 
-def setup(willie):
+def setup(sopel):
     regex = re.compile('mods\.io/mods/(\d+)')
-    if not willie.memory.contains('url_callbacks'):
-        willie.memory['url_callbacks'] = tools.WillieMemory()
-    willie.memory['url_callbacks'][regex] = get_page_info
+    if not sopel.memory.contains('url_callbacks'):
+        sopel.memory['url_callbacks'] = tools.SopelMemory()
+    sopel.memory['url_callbacks'][regex] = get_page_info
 
 
 def get_prefix():

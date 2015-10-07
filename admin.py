@@ -1,6 +1,6 @@
 # coding=utf8
 """
-admin.py - Willie Admin Module
+admin.py - Sopel Admin Module
 Copyright 2010-2011, Sean B. Palmer (inamidst.com) and Michael Yanovich
 (yanovich.net)
 Copyright © 2012, Elad Alfassa, <elad@fedoraproject.org>
@@ -8,11 +8,11 @@ Copyright 2013, Ari Koivula <ari@koivu.la>
 
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net
+http://sopel.dftba.net
 """
 from __future__ import unicode_literals
 
-import willie.module
+import sopel.module
 
 
 def configure(config):
@@ -26,11 +26,11 @@ def configure(config):
     config.add_option('admin', 'auto_accept_invite', "Auto Accept All Invites")
 
 
-@willie.module.require_privmsg
-@willie.module.require_admin
-@willie.module.commands('join')
-@willie.module.priority('low')
-@willie.module.example('.join #example or .join #example key')
+@sopel.module.require_privmsg
+@sopel.module.require_admin
+@sopel.module.commands('join')
+@sopel.module.priority('low')
+@sopel.module.example('.join #example or .join #example key')
 def join(bot, trigger):
     """Join the specified channel. This is an admin-only command."""
     channel, key = trigger.group(3), trigger.group(4)
@@ -42,11 +42,11 @@ def join(bot, trigger):
         bot.join(channel, key)
 
 
-@willie.module.require_privmsg
-@willie.module.require_admin
-@willie.module.commands('part')
-@willie.module.priority('low')
-@willie.module.example('.part #example')
+@sopel.module.require_privmsg
+@sopel.module.require_admin
+@sopel.module.commands('part')
+@sopel.module.priority('low')
+@sopel.module.example('.part #example')
 def part(bot, trigger):
     """Part the specified channel. This is an admin-only command."""
     channel, _sep, part_msg = trigger.group(2).partition(' ')
@@ -56,10 +56,10 @@ def part(bot, trigger):
         bot.part(channel)
 
 
-@willie.module.require_privmsg
-@willie.module.require_owner
-@willie.module.commands('quit')
-@willie.module.priority('low')
+@sopel.module.require_privmsg
+@sopel.module.require_owner
+@sopel.module.commands('quit')
+@sopel.module.priority('low')
 def quit(bot, trigger):
     """Quit from the server. This is an owner-only command."""
     quit_message = trigger.group(2)
@@ -69,11 +69,11 @@ def quit(bot, trigger):
     bot.quit(quit_message)
 
 
-@willie.module.require_privmsg
-@willie.module.require_admin
-@willie.module.commands('msg')
-@willie.module.priority('low')
-@willie.module.example('.msg #YourPants Does anyone else smell neurotoxin?')
+@sopel.module.require_privmsg
+@sopel.module.require_admin
+@sopel.module.commands('msg')
+@sopel.module.priority('low')
+@sopel.module.example('.msg #YourPants Does anyone else smell neurotoxin?')
 def msg(bot, trigger):
     """
     Send a message to a given channel or nick. Can only be done in privmsg by an
@@ -90,10 +90,10 @@ def msg(bot, trigger):
     bot.msg(channel, message)
 
 
-@willie.module.require_privmsg
-@willie.module.require_admin
-@willie.module.commands('me')
-@willie.module.priority('low')
+@sopel.module.require_privmsg
+@sopel.module.require_admin
+@sopel.module.commands('me')
+@sopel.module.priority('low')
 def me(bot, trigger):
     """
     Send an ACTION (/me) to a given channel or nick. Can only be done in privmsg
@@ -111,27 +111,27 @@ def me(bot, trigger):
     bot.msg(channel, msg)
 
 
-@willie.module.event('INVITE')
-@willie.module.rule('.*')
-@willie.module.priority('low')
+@sopel.module.event('INVITE')
+@sopel.module.rule('.*')
+@sopel.module.priority('low')
 def invite_join(bot, trigger):
     """
-    Join a channel willie is invited to, if the inviter is an admin.
+    Join a channel sopel is invited to, if the inviter is an admin.
     """
     if trigger.admin or bot.config.admin.auto_accept_invite:
         bot.join(trigger.args[1])
         return
 
 
-@willie.module.event('KICK')
-@willie.module.rule(r'.*')
-@willie.module.priority('low')
+@sopel.module.event('KICK')
+@sopel.module.rule(r'.*')
+@sopel.module.priority('low')
 def hold_ground(bot, trigger):
     """
-    This function monitors all kicks across all channels willie is in. If it
+    This function monitors all kicks across all channels sopel is in. If it
     detects that it is the one kicked it'll automatically join that channel.
 
-    WARNING: This may not be needed and could cause problems if willie becomes
+    WARNING: This may not be needed and could cause problems if sopel becomes
     annoying. Please use this with caution.
     """
     if bot.config.has_section('admin') and bot.config.admin.hold_ground:
@@ -140,22 +140,22 @@ def hold_ground(bot, trigger):
             bot.join(channel)
 
 
-@willie.module.require_privmsg
-@willie.module.require_admin
-@willie.module.commands('mode')
-@willie.module.priority('low')
+@sopel.module.require_privmsg
+@sopel.module.require_admin
+@sopel.module.commands('mode')
+@sopel.module.priority('low')
 def mode(bot, trigger):
-    """Set a user mode on Willie. Can only be done in privmsg by an admin."""
+    """Set a user mode on Sopel. Can only be done in privmsg by an admin."""
     mode = trigger.group(3)
     bot.write(('MODE ', bot.nick + ' ' + mode))
 
 
-@willie.module.require_privmsg("This command only works as a private message.")
-@willie.module.require_admin("This command requires admin privileges.")
-@willie.module.commands('set')
-@willie.module.example('.set core.owner Me')
+@sopel.module.require_privmsg("This command only works as a private message.")
+@sopel.module.require_admin("This command requires admin privileges.")
+@sopel.module.commands('set')
+@sopel.module.example('.set core.owner Me')
 def set_config(bot, trigger):
-    """See and modify values of willies config object.
+    """See and modify values of sopels config object.
 
     Trigger args:
         arg1 - section and option, in the form "section.option"
@@ -198,11 +198,11 @@ def set_config(bot, trigger):
     bot.reply("%s.%s = %s" % (section, option, value))
 
 
-@willie.module.require_privmsg
-@willie.module.require_admin
-@willie.module.commands('save')
-@willie.module.example('.save')
+@sopel.module.require_privmsg
+@sopel.module.require_admin
+@sopel.module.commands('save')
+@sopel.module.example('.save')
 def save_config(bot, trigger):
-    """Save state of willies config object to the configuration file."""
+    """Save state of sopels config object to the configuration file."""
     bot.config.save()
     bot.reply('Saved config!')

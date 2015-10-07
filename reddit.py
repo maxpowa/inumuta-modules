@@ -1,18 +1,18 @@
 # coding=utf8
 """
-reddit-info.py - Willie Reddit module
+reddit-info.py - Sopel Reddit module
 Author: Edward Powell, embolalia.net
-About: http://willie.dftba.net
+About: http://sopel.dftba.net
 
 This module provides special tools for reddit, namely showing detailed
 info about reddit posts
 """
 from __future__ import unicode_literals
 
-from willie.module import commands, rule, example, NOLIMIT, OP
-from willie.formatting import bold, color, colors
-from willie.web import USER_AGENT
-from willie.tools import WillieMemory, time
+from sopel.module import commands, rule, example, NOLIMIT, OP
+from sopel.formatting import bold, color, colors
+from sopel.web import USER_AGENT
+from sopel.tools import SopelMemory, time
 import HTMLParser
 import datetime as dt
 import praw
@@ -32,7 +32,7 @@ user_regex = re.compile(user_url)
 
 def setup(bot):
     if not bot.memory.contains('url_callbacks'):
-        bot.memory['url_callbacks'] = WillieMemory()
+        bot.memory['url_callbacks'] = SopelMemory()
     bot.memory['url_callbacks'][post_regex] = rpost_info
     bot.memory['url_callbacks'][user_regex] = redditor_info
 

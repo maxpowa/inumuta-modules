@@ -9,9 +9,9 @@ http://justfen.com
 """
 from __future__ import unicode_literals
 import re
-from willie import web
-from willie.module import commands, example, VOICE
-from willie.formatting import color
+from sopel import web
+from sopel.module import commands, example, VOICE
+from sopel.formatting import color
 from urllib2 import quote
 import json
 import sys

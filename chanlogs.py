@@ -1,11 +1,11 @@
 # coding=utf8
 """
-chanlogs.py - Willie Channel Logger module
+chanlogs.py - Sopel Channel Logger module
 Copyright 2014, David Baumgold <david@davidbaumgold.com>
 
 Licensed under the Eiffel Forum License 2
 
-http://willie.dftba.net
+http://sopel.dftba.net
 """
 from __future__ import unicode_literals
 import os
@@ -19,9 +19,9 @@ try:
     import pytz
 except ImportError:
     pytz = None
-import willie.module
-import willie.tools
-from willie.config import ConfigurationError
+import sopel.module
+import sopel.tools
+from sopel.config import ConfigurationError
 
 MESSAGE_TPL = "{datetime}  <{trigger.nick}> {message}"
 ACTION_TPL = "{datetime}  * {trigger.nick} {message}"
@@ -72,7 +72,7 @@ def get_fpath(bot, trigger, channel=None):
     channel = channel or trigger.sender
     channel = channel.lstrip("#")
     channel = BAD_CHARS.sub('__', channel)
-    channel = willie.tools.Identifier(channel).lower()
+    channel = sopel.tools.Identifier(channel).lower()
 
     dt = get_datetime(bot)
     if bot.config.chanlogs.by_day:
@@ -109,11 +109,11 @@ def setup(bot):
 
     # locks for log files
     if not bot.memory.contains('chanlog_locks'):
-        bot.memory['chanlog_locks'] = willie.tools.WillieMemoryWithDefault(threading.Lock)
+        bot.memory['chanlog_locks'] = sopel.tools.SopelMemoryWithDefault(threading.Lock)
 
 
-@willie.module.rule('.*')
-@willie.module.unblockable
+@sopel.module.rule('.*')
+@sopel.module.unblockable
 def log_message(bot, message):
     "Log every message in a channel"
     # if this is a private message and we're not logging those, return early
@@ -135,9 +135,9 @@ def log_message(bot, message):
             f.write(logline.encode('utf8'))
 
 
-@willie.module.rule('.*')
-@willie.module.event("JOIN")
-@willie.module.unblockable
+@sopel.module.rule('.*')
+@sopel.module.event("JOIN")
+@sopel.module.unblockable
 def log_join(bot, trigger):
     tpl = bot.config.chanlogs.join_template or JOIN_TPL
     logline = _format_template(tpl, bot, trigger)
@@ -147,9 +147,9 @@ def log_join(bot, trigger):
             f.write(logline.encode('utf8'))
 
 
-@willie.module.rule('.*')
-@willie.module.event("PART")
-@willie.module.unblockable
+@sopel.module.rule('.*')
+@sopel.module.event("PART")
+@sopel.module.unblockable
 def log_part(bot, trigger):
     tpl = bot.config.chanlogs.part_template or PART_TPL
     logline = _format_template(tpl, bot, trigger=trigger)
@@ -159,11 +159,11 @@ def log_part(bot, trigger):
             f.write(logline.encode('utf8'))
 
 
-@willie.module.rule('.*')
-@willie.module.event("QUIT")
-@willie.module.unblockable
-@willie.module.thread(False)
-@willie.module.priority('high')
+@sopel.module.rule('.*')
+@sopel.module.event("QUIT")
+@sopel.module.unblockable
+@sopel.module.thread(False)
+@sopel.module.priority('high')
 def log_quit(bot, trigger):
     tpl = bot.config.chanlogs.quit_template or QUIT_TPL
     logline = _format_template(tpl, bot, trigger)
@@ -178,9 +178,9 @@ def log_quit(bot, trigger):
                     f.write(logline.encode('utf8'))
 
 
-@willie.module.rule('.*')
-@willie.module.event("NICK")
-@willie.module.unblockable
+@sopel.module.rule('.*')
+@sopel.module.event("NICK")
+@sopel.module.unblockable
 def log_nick_change(bot, trigger):
     tpl = bot.config.chanlogs.nick_template or NICK_TPL
     logline = _format_template(tpl, bot, trigger)

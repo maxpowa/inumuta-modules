@@ -4,15 +4,15 @@ radio.py - ShoutCAST radio Module
 Copyright 2012, Dimitri "Tyrope" Molenaars, TyRope.nl
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net/
+http://sopel.dftba.net/
 """
 from __future__ import unicode_literals
 
 from time import sleep
 from xml.dom.minidom import parseString
-import willie.web as web
-from willie.module import commands, OP
-from willie.logger import get_logger
+import sopel.web as web
+from sopel.module import commands, OP
+from sopel.logger import get_logger
 
 LOGGER = get_logger(__name__)
 

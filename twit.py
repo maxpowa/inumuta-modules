@@ -1,20 +1,20 @@
 # coding=utf8
 """
-twitter.py - Willie Twitter Module
+twitter.py - Sopel Twitter Module
 Copyright 2014 Max Gurela
 Copyright 2008-10, Michael Yanovich, opensource.osu.edu/~yanovich/wiki/
 Copyright 2011, Edward Powell, embolalia.net
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net
+http://sopel.dftba.net
 """
 from __future__ import unicode_literals
 import tweepy
 import time
 import re
-from willie.config import ConfigurationError
-from willie import tools
-from willie.module import rule
+from sopel.config import ConfigurationError
+from sopel import tools
+from sopel.module import rule
 import sys
 import HTMLParser
 
@@ -42,20 +42,20 @@ def configure(config):
         config.interactive_add('twitter', 'access_token_secret', 'Access token secret')
 
 
-def setup(willie):
+def setup(sopel):
     try:
-        auth = tweepy.OAuthHandler(willie.config.twitter.consumer_key, willie.config.twitter.consumer_secret)
-        auth.set_access_token(willie.config.twitter.access_token, willie.config.twitter.access_token_secret)
+        auth = tweepy.OAuthHandler(sopel.config.twitter.consumer_key, sopel.config.twitter.consumer_secret)
+        auth.set_access_token(sopel.config.twitter.access_token, sopel.config.twitter.access_token_secret)
         api = tweepy.API(auth)
     except:
         raise ConfigurationError('Could not authenticate with Twitter. Are the'
                                  ' API keys configured properly?')
     regex = re.compile('twitter.com\/(\S*)\/status\/([\d]+)')
     user_regex = re.compile('twitter.com\/([^\/]+)$')
-    if not willie.memory.contains('url_callbacks'):
-        willie.memory['url_callbacks'] = tools.WillieMemory()
-    willie.memory['url_callbacks'][regex] = gettweet
-    willie.memory['url_callbacks'][user_regex] = f_info
+    if not sopel.memory.contains('url_callbacks'):
+        sopel.memory['url_callbacks'] = tools.SopelMemory()
+    sopel.memory['url_callbacks'][regex] = gettweet
+    sopel.memory['url_callbacks'][user_regex] = f_info
 
 
 def format_thousands(integer):
@@ -69,11 +69,11 @@ def tweet_url(status):
 
 
 @rule('.*twitter.com\/(\S*)\/status\/([\d]+).*')
-def gettweet(willie, trigger, found_match=None):
+def gettweet(sopel, trigger, found_match=None):
     """Show the last tweet by the given user"""
     try:
-        auth = tweepy.OAuthHandler(willie.config.twitter.consumer_key, willie.config.twitter.consumer_secret)
-        auth.set_access_token(willie.config.twitter.access_token, willie.config.twitter.access_token_secret)
+        auth = tweepy.OAuthHandler(sopel.config.twitter.consumer_key, sopel.config.twitter.consumer_secret)
+        auth.set_access_token(sopel.config.twitter.access_token, sopel.config.twitter.access_token_secret)
         api = tweepy.API(auth)
 
         if found_match:
@@ -92,22 +92,22 @@ def gettweet(willie, trigger, found_match=None):
         twituser = '@' + status.user.screen_name.strip()
         h = HTMLParser.HTMLParser()
         if trigger.group(1) == 'twit':
-            willie.say('[Twitter] ' + twituser + ": " + h.unescape(str(status.text).replace('\n', ' ')) + ' <' + tweet_url(status) + '>')
+            sopel.say('[Twitter] ' + twituser + ": " + h.unescape(str(status.text).replace('\n', ' ')) + ' <' + tweet_url(status) + '>')
         else:
-            willie.say('[Twitter] ' + twituser + ": " + h.unescape(str(status.text).replace('\n', ' ')))
+            sopel.say('[Twitter] ' + twituser + ": " + h.unescape(str(status.text).replace('\n', ' ')))
     except:
-        willie.reply("You have input an invalid user.")
+        sopel.reply("You have input an invalid user.")
 gettweet.commands = ['twit', 'twitter']
 gettweet.priority = 'medium'
 gettweet.example = '.twit aplusk [tweetNum] or .twit 381982018927853568'
 
 
 @rule(r'(.*)twitter.com\/([^\/]+)(?:\s.*)?$')
-def f_info(willie, trigger):
+def f_info(sopel, trigger):
     """Show information about the given Twitter account"""
     try:
-        auth = tweepy.OAuthHandler(willie.config.twitter.consumer_key, willie.config.twitter.consumer_secret)
-        auth.set_access_token(willie.config.twitter.access_token, willie.config.twitter.access_token_secret)
+        auth = tweepy.OAuthHandler(sopel.config.twitter.consumer_key, sopel.config.twitter.consumer_secret)
+        auth.set_access_token(sopel.config.twitter.access_token, sopel.config.twitter.access_token_secret)
         api = tweepy.API(auth)
 
         twituser = trigger.group(2)
@@ -123,38 +123,38 @@ def f_info(willie, trigger):
         followers = format_thousands(info.followers_count)
         location = info.location
         description = info.description
-        willie.reply("@" + str(twituser) + ": " + str(name) + ". " + "ID: " + str(id) + ". Friend Count: " + friendcount + ". Followers: " + followers + ". Favourites: " + str(favourites) + ". Location: " + str(location) + ". Description: " + str(description))
+        sopel.reply("@" + str(twituser) + ": " + str(name) + ". " + "ID: " + str(id) + ". Friend Count: " + friendcount + ". Followers: " + followers + ". Favourites: " + str(favourites) + ". Location: " + str(location) + ". Description: " + str(description))
     except:
-        willie.reply("You have input an invalid user.")
+        sopel.reply("You have input an invalid user.")
 f_info.commands = ['twitinfo', 'twitter-info', 'twituser']
 f_info.priority = 'medium'
 f_info.example = '.twitinfo aplsuk'
 
 
-def f_update(willie, trigger):
-    """Tweet with Willie's account. Admin-only."""
+def f_update(sopel, trigger):
+    """Tweet with Sopel's account. Admin-only."""
     if trigger.admin:
-        auth = tweepy.OAuthHandler(willie.config.twitter.consumer_key, willie.config.twitter.consumer_secret)
-        auth.set_access_token(willie.config.twitter.access_token, willie.config.twitter.access_token_secret)
+        auth = tweepy.OAuthHandler(sopel.config.twitter.consumer_key, sopel.config.twitter.consumer_secret)
+        auth.set_access_token(sopel.config.twitter.access_token, sopel.config.twitter.access_token_secret)
         api = tweepy.API(auth)
 
-        print api.me().name
+        print(api.me().name)
 
         update = str(trigger.group(2))
         if len(update) <= 140:
             api.update_status(update)
-            willie.reply("Successfully posted to my twitter account.")
+            sopel.reply("Successfully posted to my twitter account.")
         else:
             toofar = len(update) - 140
-            willie.reply("Please shorten the length of your message by: " + str(toofar) + " characters.")
+            sopel.reply("Please shorten the length of your message by: " + str(toofar) + " characters.")
 f_update.commands = ['tweet']
 f_update.priority = 'medium'
 f_update.example = '.tweet Hello World!'
 
 
-def f_reply(willie, trigger):
-    auth = tweepy.OAuthHandler(willie.config.twitter.consumer_key, willie.config.twitter.consumer_secret)
-    auth.set_access_token(willie.config.twitter.access_token, willie.config.twitter.access_token_secret)
+def f_reply(sopel, trigger):
+    auth = tweepy.OAuthHandler(sopel.config.twitter.consumer_key, sopel.config.twitter.consumer_secret)
+    auth.set_access_token(sopel.config.twitter.access_token, sopel.config.twitter.access_token_secret)
     api = tweepy.API(auth)
 
     incoming = str(trigger.group(2))
@@ -165,15 +165,15 @@ def f_reply(willie, trigger):
         if len(update) <= 140:
             statusid = int(statusid)
             #api3.PostUpdate(str(" ".join(update)), in_reply_to_status_id=10503164300)
-            willie.reply("Successfully posted to my twitter account.")
+            sopel.reply("Successfully posted to my twitter account.")
         else:
             toofar = len(update) - 140
-            willie.reply("Please shorten the length of your message by: " + str(toofar) + " characters.")
+            sopel.reply("Please shorten the length of your message by: " + str(toofar) + " characters.")
     else:
-        willie.reply("Please provide a status ID.")
+        sopel.reply("Please provide a status ID.")
 #f_reply.commands = ['reply']
 f_reply.priority = 'medium'
 f_reply.example = '.reply 892379487 I like that idea!'
 
 if __name__ == '__main__':
-    print __doc__.strip()
+    print(__doc__.strip())

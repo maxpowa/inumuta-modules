@@ -1,11 +1,11 @@
 # coding=utf8
 """
-clock.py - Willie Clock Module
+clock.py - Sopel Clock Module
 Copyright 2008-9, Sean B. Palmer, inamidst.com
 Copyright 2012, Edward Powell, embolalia.net
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dfbta.net
+http://sopel.dfbta.net
 """
 from __future__ import unicode_literals
 
@@ -14,8 +14,8 @@ try:
 except ImportError:
     pytz = None
 
-from willie.module import commands, example, OP
-from willie.tools.time import get_timezone, format_time
+from sopel.module import commands, example, OP
+from sopel.tools.time import get_timezone, format_time
 
 
 def configure(config):

@@ -1,16 +1,16 @@
 # coding=utf8
 """
-help.py - Willie Help Module
+help.py - Sopel Help Module
 Copyright 2008, Sean B. Palmer, inamidst.com
 Copyright © 2013, Elad Alfassa, <elad@fedoraproject.org>
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net
+http://sopel.dftba.net
 """
 from __future__ import unicode_literals
 
-from willie.module import commands, rule, example, priority
-from willie.tools import iterkeys
+from sopel.module import commands, rule, example, priority
+from sopel.tools import iterkeys
 
 
 def setup(bot=None):
@@ -19,7 +19,7 @@ def setup(bot=None):
 
     if (bot.config.has_option('help', 'threshold') and not
             bot.config.help.threshold.isdecimal()):  # non-negative integer
-        from willie.config import ConfigurationError
+        from sopel.config import ConfigurationError
         raise ConfigurationError("Attribute threshold of section [help] must be a nonnegative integer")
 
 

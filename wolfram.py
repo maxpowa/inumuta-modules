@@ -1,8 +1,8 @@
 # coding=utf8
 
 from __future__ import unicode_literals
-from willie.module import commands
-from willie import web
+from sopel.module import commands
+from sopel import web
 import tungsten
 import json
 

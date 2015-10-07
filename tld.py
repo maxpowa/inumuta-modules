@@ -1,15 +1,15 @@
 # coding=utf8
 """
-tld.py - Willie TLD Module
+tld.py - Sopel TLD Module
 Copyright 2009-10, Michael Yanovich, yanovich.net
 Licensed under the Eiffel Forum License 2.
 
-http://willie.dftba.net
+http://sopel.dftba.net
 """
 from __future__ import unicode_literals
 
-from willie import web
-from willie.module import commands, example
+from sopel import web
+from sopel.module import commands, example
 import re
 import sys
 if sys.version_info.major >= 3:
