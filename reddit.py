@@ -97,7 +97,7 @@ def rpost_info(bot, trigger, match=None):
 
 
 def rcomment_info(bot, trigger, s):
-    message = ('[REDDIT] Comment on {title} {link}{nsfw} | {created} | {points} points | '
+    message = ('[REDDIT] Comment on {link}{nsfw} | {created} | {points} points | '
                '{author}: {message}')
 
     if (s.comments[0] == None):
@@ -133,7 +133,7 @@ def rcomment_info(bot, trigger, s):
 
     h = HTMLParser.HTMLParser()
     message = message.format(
-        title=h.unescape(s.title), link=link, nsfw=nsfw, points=c.score,
+        title=h.unescape(s.title), link=s.short_link, nsfw=nsfw, points=c.score,
         author=author, created=created, message=c)
 
     bot.say(message)
