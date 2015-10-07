@@ -23,8 +23,10 @@ if sys.version_info.major >= 3:
 
 domain = r'https?://(?:www\.|np\.)?reddit\.com'
 post_url = '(%s/r/.*?/comments/[\w-]+)' % domain
+comment_url = '(%s/r/.*?/comments/[\w-]+/\S+?/[\w-]+)' % domain
 user_url = '%s/u(ser)?/([\w-]+)' % domain
 post_regex = re.compile(post_url)
+comment_regex = re.compile(comment_url)
 user_regex = re.compile(user_url)
 
 
@@ -46,6 +48,9 @@ def rpost_info(bot, trigger, match=None):
     match = match or trigger
     s = r.get_submission(url=match.group(1))
 
+    if (comment_regex.match(match.group(0))):
+        return rcomment_info(bot, trigger, s)
+
     message = ('[REDDIT] {title} {link}{nsfw} | {points} points ({percent}) | '
                '{comments} comments | Posted by {author} | '
                'Created at {created}')
@@ -53,7 +58,7 @@ def rpost_info(bot, trigger, match=None):
     if s.is_self:
         link = '(self.{})'.format(s.subreddit.display_name)
     else:
-        link = '({}) to r/{}'.format(s.url, s.subreddit.display_name)
+        link = '({}) to /r/{}'.format(s.url, s.subreddit.display_name)
 
     if s.over_18:
         nsfw = bold(color(' [NSFW]', colors.RED))
@@ -91,9 +96,52 @@ def rpost_info(bot, trigger, match=None):
     bot.say(message)
 
 
+def rcomment_info(bot, trigger, s):
+    message = ('[REDDIT] Comment on {title} {link}{nsfw} | {created} | {points} points | '
+               '{author}: {message}')
+
+    if (s.comments[0] == None):
+        return
+
+    c = s.comments[0]
+    
+    if s.is_self:
+        link = '(self.{})'.format(s.subreddit.display_name)
+    else:
+        link = '({}) to /r/{}'.format(s.url, s.subreddit.display_name)
+
+    if s.over_18:
+        nsfw = bold(color(' [NSFW]', colors.RED))
+        sfw = bot.db.get_channel_value(trigger.sender, 'sfw')
+        if sfw:
+            link = '(link hidden)'
+            bot.write(['KICK', trigger.sender, trigger.nick,
+                       'Linking to NSFW content in a SFW channel.'])
+    else:
+        nsfw = ''
+
+    if c.author:
+        author = c.author.name
+    else:
+        author = '[deleted]'
+
+    tz = time.get_timezone(bot.db, bot.config, None, trigger.nick,
+                           trigger.sender)
+    time_created = dt.datetime.utcfromtimestamp(c.created_utc)
+    created = time.format_time(bot.db, bot.config, tz, trigger.nick,
+                               trigger.sender, time_created)
+
+    h = HTMLParser.HTMLParser()
+    message = message.format(
+        title=h.unescape(s.title), link=link, nsfw=nsfw, points=c.score,
+        author=author, created=created, message=c)
+
+    bot.say(message)
+
+
 # If you change this, you'll have to change some other things...
 @commands('redditor')
-@example('.redditor poem_for_your_sprog')
+@example('.redditor Batman')
 def redditor_info(bot, trigger, match=None):
     """Show information about the given Redditor"""
     commanded = re.match(bot.config.prefix + 'redditor', trigger)
