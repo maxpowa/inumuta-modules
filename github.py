@@ -40,7 +40,7 @@ from threading import Thread
 
 '''
 
-issueURL = (r'https?://(?:www\.)?github.com/([A-z0-9\-_]+/[A-z0-9\-_]+)/(?:issues|pull)/([\d]+)')
+issueURL = (r'https?://(?:www\.)?github.com/([A-z0-9\-_]+/[A-z0-9\-_]+)/(?:issues|pull)/([\d]+)(?:#issuecomment-([\d]+))?')
 commitURL = (r'https?://(?:www\.)?github.com/([A-z0-9\-_]+/[A-z0-9\-_]+)/(?:commit)/([A-z0-9\-]+)')
 regex = re.compile(issueURL)
 commitRegex = re.compile(commitURL)
@@ -107,6 +107,8 @@ def fetch_api_endpoint(bot, url):
 def issue_info(bot, trigger, match=None):
     match = match or trigger
     URL = 'https://api.github.com/repos/%s/issues/%s' % (match.group(1), match.group(2))
+    if (match.group(3)):
+        URL = 'https://api.github.com/repos/%s/issues/comments/%s' % (match.group(1), match.group(3))
 
     try:
         raw = fetch_api_endpoint(bot, URL)
@@ -115,8 +117,10 @@ def issue_info(bot, trigger, match=None):
         return NOLIMIT
     data = json.loads(raw)
     try:
-        if len(data['body'].split('\n')) > 1:
+        if len(data['body'].split('\n')) > 1 and len(data['body'].split('\n')[0]) > 180:
             body = data['body'].split('\n')[0] + '...'
+        elif len(data['body'].split('\n')) > 2 and len(data['body'].split('\n')[0]) < 180:
+            body = ' '.join(data['body'].split('\n')[:2]) + '...'
         else:
             body = data['body'].split('\n')[0]
     except (KeyError):
@@ -131,14 +135,17 @@ def issue_info(bot, trigger, match=None):
         ' [',
         match.group(1),
         ' #',
-        str(data['number']),
+        match.group(2),
         '] ',
         data['user']['login'],
-        ': ',
-        data['title'],
-        bold(' | '),
-        body
+        ': '
     ]
+
+    if ('title' in data):
+        response.append(data['title'])
+        response.append(bold(' | '))
+    response.append(body)
+
     bot.say(''.join(response))
 
 
