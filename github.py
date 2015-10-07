@@ -119,7 +119,7 @@ def issue_info(bot, trigger, match=None):
     try:
         if len(data['body'].split('\n')) > 1 and len(data['body'].split('\n')[0]) > 180:
             body = data['body'].split('\n')[0] + '...'
-        elif len(data['body'].split('\n')) > 2 and len(data['body'].split('\n')[0]) < 180:
+        elif len(data['body'].split('\n')) > 2 and len(data['body'].split('\n')[0]) <= 180:
             body = ' '.join(data['body'].split('\n')[:2]) + '...'
         else:
             body = data['body'].split('\n')[0]
