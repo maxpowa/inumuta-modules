@@ -7,7 +7,7 @@ Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
 from sopel.module import commands, rule
-import sopel.web as web
+from sopel import web, tools
 import urllib
 import json
 import re
