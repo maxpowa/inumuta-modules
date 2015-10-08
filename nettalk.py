@@ -8,7 +8,7 @@ Adapted from https://github.com/grawity/code/blob/2ac8eadebeb113f25093f4542c16da
 """
 from __future__ import unicode_literals
 
-from sopel.module import rule
+from sopel.module import rule, example
 import sys, re
 
 codeChr = "0123456789abcdefghijklmnopqrstuvwxyz!?#%-+"
@@ -52,6 +52,7 @@ def escape(s):
     return repr(s)[1:-1]
 
 @rule('\[NTCTC001\|(.+?)\]')
+@example('[NTCTC001|9j9if?wvtz]', '<.+?> nop', re=True)
 def decrypt_nettalk(bot, trigger):
     for msg in bruteforce(trigger.group(0)):
         bot.say('<{}> {}'.format(trigger.nick, msg))
