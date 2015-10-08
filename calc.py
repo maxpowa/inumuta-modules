@@ -11,13 +11,16 @@ from __future__ import unicode_literals
 import re
 from sopel import web
 from sopel.module import commands, example
-from sopel.tools import eval_equation
+from sopel.tools.calculation import eval_equation
 from socket import timeout
 import sys
 if sys.version_info.major < 3:
     import HTMLParser
 else:
     import html.parser as HTMLParser
+
+
+BASE_TUMBOLIA_URI = 'https://tumbolia-two.appspot.com/'
 
 
 @commands('c', 'calc')
@@ -52,10 +55,11 @@ def py(bot, trigger):
         return bot.say("Need an expression to evaluate")
 
     query = trigger.group(2)
-    uri = 'http://tumbolia.appspot.com/py/'
+    uri = BASE_TUMBOLIA_URI + 'py/'
     answer = web.get(uri + web.quote(query))
     if answer:
-        bot.say(answer)
+        #bot.say can potentially lead to 3rd party commands triggering.
+        bot.reply(answer)
     else:
         bot.reply('Sorry, no result.')
 

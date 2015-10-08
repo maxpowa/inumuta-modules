@@ -16,10 +16,12 @@ from sopel.config import ConfigurationError
 from sopel import tools
 from sopel.module import rule
 import sys
-import HTMLParser
 
 if sys.version_info.major < 3:
     str = unicode
+    import HTMLParser
+else:
+    import html.parser as HTMLParser
 
 
 def configure(config):

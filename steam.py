@@ -5,7 +5,7 @@ steam.py - Show steam application prices/releases/etc
 Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
-from sopel import module, web
+from sopel import module, web, tools
 from bs4 import BeautifulSoup
 import re
 

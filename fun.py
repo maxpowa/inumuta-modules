@@ -13,8 +13,11 @@ import os
 import string
 import random
 import re
+import sys
 from random import randint, choice
-
+if sys.version_info.major >= 3:
+    unichr = chr
+    xrange = range
 
 @module.commands('encode')
 def encode(bot, trigger):

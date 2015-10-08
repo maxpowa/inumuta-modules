@@ -7,17 +7,17 @@ Copyright 2013      Lior Ramati (firerogue517@gmail.com)
 Copyright © 2014 Elad Alfassa <elad@fedoraproject.org>
 Licensed under the Eiffel Forum License 2.
 
-http://sopel.dftba.net
+http://sopel.chat
 """
 from __future__ import unicode_literals
 
 import re
-import sys
 from sopel import web, tools
 from sopel.module import commands, rule, example
+from sopel.config.types import ValidatedAttribute, StaticSection
+
 
 url_finder = None
-exclusion_char = '!'
 # These are used to clean up the title tag before actually parsing it. Not the
 # world's best way to do this, but it'll do for now.
 title_tag_data = re.compile('<(/?)title( [^>]+)?>', re.IGNORECASE)
@@ -31,37 +31,34 @@ re_dcc = re.compile(r'(?i)dcc\ssend')
 max_bytes = 655360
 
 
-def configure(config):
-    """
+class UrlSection(StaticSection):
+    # TODO some validation rules maybe?
+    exclude = ValidatedAttribute('exclude')
+    exclusion_char = ValidatedAttribute('exclusion_char', default='!')
 
-    | [url] | example | purpose |
-    | ---- | ------- | ------- |
-    | exclude | https?://git\.io/.* | A list of regular expressions for URLs for which the title should not be shown. |
-    | exclusion_char | ! | A character (or string) which, when immediately preceding a URL, will stop the URL's title from being shown. |
-    """
-    if config.option('Exclude certain URLs from automatic title display', False):
-        if not config.has_section('url'):
-            config.add_section('url')
-        config.add_list(
-            'url',
-            'exclude',
-            'Enter regular expressions for each URL you would like to exclude.',
-            'Regex:')
-        config.interactive_add(
-            'url',
-            'exclusion_char',
-            'Prefix to suppress URL titling', '!')
+
+def configure(config):
+    config.define_section('url', UrlSection)
+    config.url.configure_setting(
+        'exclude',
+        'Enter regular expressions for each URL you would like to exclude.'
+    )
+    config.url.configure_setting(
+        'exclusion_char',
+        'Enter a character which can be prefixed to suppress URL titling'
+    )
 
 
 def setup(bot=None):
-    global url_finder, exclusion_char
+    global url_finder
 
+    # TODO figure out why this is needed, and get rid of it, because really?
     if not bot:
         return
+    bot.config.define_section('url', UrlSection)
 
-    if bot.config.has_option('url', 'exclude'):
-        regexes = [re.compile(s) for s in
-                   bot.config.url.get_list('exclude')]
+    if bot.config.url.exclude:
+        regexes = [re.compile(s) for s in bot.config.url.exclude]
     else:
         regexes = []
 
@@ -83,11 +80,8 @@ def setup(bot=None):
     if not bot.memory.contains('last_seen_url'):
         bot.memory['last_seen_url'] = tools.SopelMemory()
 
-    if bot.config.has_option('url', 'exclusion_char'):
-        exclusion_char = bot.config.url.exclusion_char
-
     url_finder = re.compile(r'(?u)(%s?(?:http|https|ftp)(?:://\S+))' %
-                            (exclusion_char))
+                            (bot.config.url.exclusion_char))
 
 
 @commands('title')
@@ -152,7 +146,7 @@ def process_urls(bot, trigger, urls):
 
     results = []
     for url in urls:
-        if not url.startswith(exclusion_char):
+        if not url.startswith(bot.config.url.exclusion_char):
             # Magic stuff to account for international domain names
             try:
                 url = web.iri_to_uri(url)

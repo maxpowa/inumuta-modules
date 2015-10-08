@@ -5,40 +5,28 @@ Copyright 2008, Sean B. Palmer, inamidst.com
 Copyright © 2013, Elad Alfassa, <elad@fedoraproject.org>
 Licensed under the Eiffel Forum License 2.
 
-http://sopel.dftba.net
+http://sopel.chat
 """
 from __future__ import unicode_literals
 
+import textwrap
+
+from sopel.formatting import bold
 from sopel.module import commands, rule, example, priority
-from sopel.tools import iterkeys
-
-
-def setup(bot=None):
-    if not bot:
-        return
-
-    if (bot.config.has_option('help', 'threshold') and not
-            bot.config.help.threshold.isdecimal()):  # non-negative integer
-        from sopel.config import ConfigurationError
-        raise ConfigurationError("Attribute threshold of section [help] must be a nonnegative integer")
 
 
 @rule('$nick' '(?i)(help|doc) +([A-Za-z]+)(?:\?+)?$')
 @example('.help tell')
-@commands('help')
+@commands('help', 'commands')
 @priority('low')
 def help(bot, trigger):
     """Shows a command's documentation, and possibly an example."""
-    if not trigger.group(2):
-        bot.reply('Say .help <command> (for example .help c) to get help for a command, or .commands for a list of commands.')
-    else:
+    if trigger.group(2):
         name = trigger.group(2)
         name = name.lower()
 
-        if bot.config.has_option('help', 'threshold'):
-            threshold = int(bot.config.help.threshold)
-        else:
-            threshold = 3
+        # number of lines of help to show
+        threshold = 3
 
         if name in bot.doc:
             if len(bot.doc[name][0]) + (1 if bot.doc[name][1] else 0) > threshold:
@@ -52,25 +40,32 @@ def help(bot, trigger):
                 msgfun(line)
             if bot.doc[name][1]:
                 msgfun('e.g. ' + bot.doc[name][1])
+    else:
+        if not trigger.is_privmsg:
+            bot.reply("I'm sending you a list of my commands in a private message!")
+        bot.say(
+            'You can see more info about any of these commands by doing .help '
+            '<command> (e.g. .help time)',
+            trigger.nick
+        )
 
-
-@commands('commands')
-@priority('low')
-def commands(bot, trigger):
-    """Return a list of bot's commands"""
-    names = ', '.join(sorted(iterkeys(bot.doc)))
-    if not trigger.is_privmsg:
-        bot.reply("I am sending you a private message of all my commands!")
-    bot.msg(trigger.nick, 'Commands I recognise: ' + names + '.', max_messages=10)
-    bot.msg(trigger.nick, ("For help, do '%s: help example' where example is the " +
-                           "name of the command you want help for.") % bot.nick)
+        name_length = max(6, max(len(k) for k in bot.command_groups.keys()))
+        for category, cmds in bot.command_groups.items():
+            category = category.upper().ljust(name_length)
+            cmds = '  '.join(cmds)
+            msg = bold(category) + '  ' + cmds
+            indent = ' ' * (name_length + 2)
+            msg = textwrap.wrap(msg, subsequent_indent=indent)
+            for line in msg:
+                bot.say(line, trigger.nick)
 
 
 @rule('$nick' r'(?i)help(?:[?!]+)?$')
 @priority('low')
 def help2(bot, trigger):
     response = (
-        'Hi, I\'m an IRC bot. Say ".commands" to me in private for a list ' +
-        'of my commands! My owner is %s.'
-    ) % bot.config.owner
+        'Hi, I\'m a bot. Say ".commands" to me in private for a list ' +
+        'of my commands, or see http://sopel.chat for more ' +
+        'general details. My owner is %s.'
+    ) % bot.config.core.owner
     bot.reply(response)

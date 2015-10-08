@@ -10,7 +10,11 @@ from sopel import web
 from sopel.module import commands, rule, thread, example
 from bs4 import BeautifulSoup
 import re
-import urllib2
+import sys
+if sys.version_info.major < 3:
+    from urllib import unquote
+else:
+    from urllib.parse import unquote
 
 user_agent = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:17.0) Gecko/17.0' \
              ' Firefox/17.0'
@@ -59,7 +63,7 @@ def pokedex(bot, trigger):
         url = 'http://veekun.com/dex/lookup?lookup=pokemon:'
 
     url = follow_redirects(bot, url + query)
-    url = urllib2.unquote(url)
+    url = unquote(url)
     if not url:
         bot.say(u'[Pok\u00E9dex] Invalid query, please try again.')
         return

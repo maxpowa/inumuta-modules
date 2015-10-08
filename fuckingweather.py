@@ -12,7 +12,11 @@ from __future__ import unicode_literals
 from sopel.module import commands, rate, priority, NOLIMIT
 from sopel import web
 import re
-import HTMLParser
+import sys
+if sys.version_info.major < 3:
+    import HTMLParser
+else:
+    import html.parser as HTMLParser
 
 
 @commands('fucking_weather', 'fw')

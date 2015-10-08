@@ -13,13 +13,15 @@ from sopel.module import commands, rule, example, NOLIMIT, OP
 from sopel.formatting import bold, color, colors
 from sopel.web import USER_AGENT
 from sopel.tools import SopelMemory, time
-import HTMLParser
 import datetime as dt
 import praw
 import re
 import sys
 if sys.version_info.major >= 3:
+    import html.parser as HTMLParser
     unicode = str
+else:
+    import HTMLParser
 
 domain = r'https?://(?:www\.|np\.)?reddit\.com'
 post_url = '(%s/r/.*?/comments/[\w-]+)' % domain

@@ -6,12 +6,17 @@ Copyright 2014 Max Gurela
 Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
-import urllib2
 import random
 import json
 from math import sqrt
 from sopel import web
 from sopel.module import commands, priority
+import sys
+if sys.version_info.major < 3:
+    from urllib2 import urlopen
+else:
+    from urllib.request import urlopen
+
 
 adjectives = [
     "a high caliber",
@@ -209,7 +214,7 @@ def habits(usage):
 
 
 def main():
-    raw = json.loads(urllib2.urlopen("http://osrc.dfm.io/maxpowa.json").read())
+    raw = json.loads(urlopen("http://osrc.dfm.io/maxpowa.json").read())
     print(raw)
     usage = raw['usage']
     print(usage)

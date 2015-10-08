@@ -6,7 +6,7 @@ Copyright 2014 Max Gurela
 Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
-from sopel import web
+from sopel import web, tools
 from sopel.module import rule
 from sopel.formatting import (color, bold)
 

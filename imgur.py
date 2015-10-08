@@ -10,8 +10,13 @@ from __future__ import unicode_literals
 import json
 import re
 import os.path
-from urllib2 import HTTPError
-from urlparse import urlparse
+import sys
+if sys.version_info.major < 3:
+    from urllib2 import HTTPError
+    from urlparse import urlparse
+else:
+    from urllib.error import HTTPError
+    from urllib.parse import urlparse
 from sopel.config import ConfigurationError
 from sopel import web, tools
 from sopel.module import rule

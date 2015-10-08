@@ -12,9 +12,12 @@ import re
 from sopel import web
 from sopel.module import commands, example, VOICE
 from sopel.formatting import color
-from urllib2 import quote
 import json
 import sys
+if sys.version_info.major < 3:
+    from urllib2 import quote
+else:
+    from urllib.parse import quote
 
 
 @commands('ud', 'udefine', 'urbandictionary', 'urbandict', 'udict')
