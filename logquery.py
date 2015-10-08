@@ -13,37 +13,27 @@ Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
 from sopel.module import commands, rule, unblockable, event, thread, priority, OP
+from sopel.config.types import StaticSection,FilenameAttribute
 from datetime import datetime, date
 import sqlite3
 import re
 import os
 
-filename = 'logquery.db'
+filename = 'log.db'
+class LogquerySection(StaticSection):
+    filename = FilenameAttribute('db_file', default='logs/log.db')
 
 
 def setup(bot):
     global filename
-    path = bot.config.logquery.filename
-    config_dir, config_file = os.path.split(bot.config.filename)
-    config_name, _ = os.path.splitext(config_file)
-    if path is None:
-        path = os.path.join(config_dir, 'logquery.db')
-    path = os.path.expanduser(path)
-    if not os.path.isabs(path):
-        path = os.path.normpath(os.path.join(config_dir, path))
-    filename = path
+    bot.config.define_section('logquery', LogquerySection)
+    filename = bot.config.logquery.filename
     _create()
 
 
 def configure(config):
-    """
-    | [logquery]   | example                        | purpose                           |
-    | ------------ | ------------------------------ | --------------------------------- |
-    | filename     | ~/logquery.db                  | Log DB filename                   |
-    """
-
-    if config.option('Configure logquery module?', False):
-        config.interactive_add('logquery', 'filename', '~/logquery.db')
+    config.define_section('logquery', LogquerySection)
+    config.logquery.configure_setting('db_file', 'logs/log.db')
 
 
 def dict_factory(cursor, row):
