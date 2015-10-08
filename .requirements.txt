@@ -1,0 +1,8 @@
+beautifulsoup4
+mcstatus
+tweepy
+tungsten
+pyfiglet
+bottle
+dnspython
+ipython
