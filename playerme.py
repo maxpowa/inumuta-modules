@@ -57,7 +57,7 @@ def player_me_feed(bot, trigger):
     except:
         return
 
-    bot.say(u'[Player.me] {}: {} via {}'.format(response['user']['username'], u' '.join(response['data']['post_raw'].split()), response['source']))
+    bot.say('[Player.me] {}: {} via {}'.format(response['user']['username'], ' '.join(response['data']['post_raw'].split()), response['source']))
 
 
 def handle_input(bot, trigger_args, trigger):
@@ -95,7 +95,7 @@ def handle_input(bot, trigger_args, trigger):
 
 
 def format_user(bot, opts, args):
-    query = u' '.join(args)
+    query = ' '.join(args)
 
     url = 'https://player.me/api/v1/users?_query={}'
 
@@ -130,7 +130,7 @@ def format_user(bot, opts, args):
         if len(list) < 1:
             bot.say('[Player.me] No users found')
         else:
-            bot.say('[Player.me] ' + u''.join(list[:-2]))
+            bot.say('[Player.me] ' + ''.join(list[:-2]))
         return
 
     try:
@@ -162,7 +162,7 @@ def format_user(bot, opts, args):
 
     if opts.bio:
         output += ' | '
-        output += u' '.join(user['description'].split())
+        output += ' '.join(user['description'].split())
 
     bot.say(''.join(output))
 
@@ -178,8 +178,8 @@ def format_user(bot, opts, args):
                 games += game['title']
                 games += ', '
 
-            bot.say(u'[Player.me] {}\'s favorite games: {}'.format(user['username'], u''.join(games[:-2])))
+            bot.say('[Player.me] {}\'s favorite games: {}'.format(user['username'], ''.join(games[:-2])))
 
         except:
-            bot.say(u'[Player.me] Unable to retrieve {}\'s favorite games'.format(user['username']))
+            bot.say('[Player.me] Unable to retrieve {}\'s favorite games'.format(user['username']))
             return

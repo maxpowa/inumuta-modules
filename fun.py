@@ -16,8 +16,9 @@ import re
 import sys
 from random import randint, choice
 if sys.version_info.major >= 3:
-    unichr = chr
     xrange = range
+else:
+    chr = unichr
 
 @module.commands('encode')
 def encode(bot, trigger):
@@ -49,7 +50,7 @@ def decode(bot, trigger):
     text = text.replace(encoding, '', 1).strip()
 
     if (encoding.lower() == 'binary'):
-        if (set(text) == set([u'1', u'0'])):
+        if (set(text) == set(['1', '0'])):
             bot.say(''.join(chr(int(text[i:i + 8], 2)) for i in xrange(0, len(text), 8)))
             return
         else:
@@ -96,7 +97,7 @@ def grill(bot, trigger):
 
 @module.rule(' ?\*?\/?shrug\*?')
 def shrug(bot, trigger):
-    bot.say(u'\u00AF\_(\u30C4)_/\u00AF')
+    bot.say('\u00AF\_(\u30C4)_/\u00AF')
 
 
 @module.commands('insult')
@@ -118,9 +119,9 @@ def magic(bot, trigger):
     .magic [target] - Cast your magic wand!
     """
     if trigger.group(2):
-        bot.say(u'(\u2229 \u0361\u00B0 \u035C\u0296 \u0361\u00B0)\u2283\u2501\u2606\uFF9F. * \uFF65 \uFF61\uFF9F, * ' + trigger.group(2).strip())
+        bot.say('(\u2229 \u0361\u00B0 \u035C\u0296 \u0361\u00B0)\u2283\u2501\u2606\uFF9F. * \uFF65 \uFF61\uFF9F, * ' + trigger.group(2).strip())
     else:
-        bot.say(u'(\u2229 \u0361\u00B0 \u035C\u0296 \u0361\u00B0)\u2283\u2501\u2606\uFF9F. * \uFF65 \uFF61\uFF9F, *')
+        bot.say('(\u2229 \u0361\u00B0 \u035C\u0296 \u0361\u00B0)\u2283\u2501\u2606\uFF9F. * \uFF65 \uFF61\uFF9F, *')
 
 
 @module.commands('spoiler')
@@ -129,7 +130,7 @@ def reverse(bot, trigger):
     .spoiler <where> <text> - Create a 'spoiler' that can be read by selecting the text
     """
     if trigger.group(3):
-        bot.msg(trigger.group(3), u'\u202E\u202E' + trigger.group(2).replace(trigger.group(3), '').strip())
+        bot.msg(trigger.group(3), '\u202E\u202E' + trigger.group(2).replace(trigger.group(3), '').strip())
     else:
         bot.say('Usage: .spoiler <where> <text>')
 
@@ -170,9 +171,9 @@ def hold(bot, trigger):
     .hold [target] - I'll hold it forever!
     """
     if trigger.group(2):
-        bot.say(u'\u10DA(\u0301\u25C9\u25DE\u0C6A\u25DF\u25C9\u2035\u10DA) let me hold your ' + trigger.group(2).strip().lower() + u' for a while \u10DA(\u0301\u25C9\u25DE\u0C6A\u25DF\u25C9\u2035\u10DA)')
+        bot.say('\u10DA(\u0301\u25C9\u25DE\u0C6A\u25DF\u25C9\u2035\u10DA) let me hold your ' + trigger.group(2).strip().lower() + ' for a while \u10DA(\u0301\u25C9\u25DE\u0C6A\u25DF\u25C9\u2035\u10DA)')
     else:
-        bot.say(u'\u10DA(\u0301\u25C9\u25DE\u0C6A\u25DF\u25C9\u2035\u10DA) let me hold your donger for a while \u10DA(\u0301\u25C9\u25DE\u0C6A\u25DF\u25C9\u2035\u10DA)')
+        bot.say('\u10DA(\u0301\u25C9\u25DE\u0C6A\u25DF\u25C9\u2035\u10DA) let me hold your donger for a while \u10DA(\u0301\u25C9\u25DE\u0C6A\u25DF\u25C9\u2035\u10DA)')
 
 
 @module.commands('unseen')
@@ -181,9 +182,9 @@ def unseen(bot, trigger):
     .unseen [donger] - The unseen donger
     """
     if trigger.group(2):
-        bot.say(u'(\u0E07\u0360\u00B0\u035F\u0644\u035C\u0361\u00B0)\u0E07 \u1D1B\u029C\u1D07 \u1D1C\u0274s\u1D07\u1D07\u0274 {} \u026As \u1D1B\u029C\u1D07 \u1D05\u1D07\u1D00\u1D05\u029F\u026A\u1D07s\u1D1B (\u0E07\u0360\u00B0\u035F\u0644\u035C\u0361\u00B0)\u0E07'.format(smallcaps(trigger.group(2).strip())))
+        bot.say('(\u0E07\u0360\u00B0\u035F\u0644\u035C\u0361\u00B0)\u0E07 \u1D1B\u029C\u1D07 \u1D1C\u0274s\u1D07\u1D07\u0274 {} \u026As \u1D1B\u029C\u1D07 \u1D05\u1D07\u1D00\u1D05\u029F\u026A\u1D07s\u1D1B (\u0E07\u0360\u00B0\u035F\u0644\u035C\u0361\u00B0)\u0E07'.format(smallcaps(trigger.group(2).strip())))
     else:
-        bot.say(u'(\u0E07\u0360\u00B0\u035F\u0644\u035C\u0361\u00B0)\u0E07 \u1D1B\u029C\u1D07 \u1D1C\u0274s\u1D07\u1D07\u0274 \u1D05\u1D0F\u0274\u0262\u1D07\u0280 \u026As \u1D1B\u029C\u1D07 \u1D05\u1D07\u1D00\u1D05\u029F\u026A\u1D07s\u1D1B (\u0E07\u0360\u00B0\u035F\u0644\u035C\u0361\u00B0)\u0E07')
+        bot.say('(\u0E07\u0360\u00B0\u035F\u0644\u035C\u0361\u00B0)\u0E07 \u1D1B\u029C\u1D07 \u1D1C\u0274s\u1D07\u1D07\u0274 \u1D05\u1D0F\u0274\u0262\u1D07\u0280 \u026As \u1D1B\u029C\u1D07 \u1D05\u1D07\u1D00\u1D05\u029F\u026A\u1D07s\u1D1B (\u0E07\u0360\u00B0\u035F\u0644\u035C\u0361\u00B0)\u0E07')
 
 
 @module.commands('smallcaps')
@@ -203,9 +204,9 @@ def raise_dongers(bot, trigger):
     .raise [dongers] - Raise those dongers.
     """
     if trigger.group(2):
-        bot.say(u'\u30FD\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\uFF89 raise your {} \u30FD\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\uFF89'.format(trigger.group(2).strip().lower()))
+        bot.say('\u30FD\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\uFF89 raise your {} \u30FD\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\uFF89'.format(trigger.group(2).strip().lower()))
     else:
-        bot.say(u'\u30FD\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\uFF89 raise your dongers \u30FD\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\uFF89')
+        bot.say('\u30FD\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\uFF89 raise your dongers \u30FD\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\uFF89')
 
 
 @module.commands('fight')
@@ -214,9 +215,9 @@ def fight_me(bot, trigger):
     .fight [person] - Just fight em
     """
     if trigger.group(2):
-        bot.say(u'(\u0E07\'\u0300-\'\u0301)\u0E07 FIGHT ME {} (\u0E07\'\u0300-\'\u0301)\u0E07'.format(trigger.group(2).strip().upper()))
+        bot.say('(\u0E07\'\u0300-\'\u0301)\u0E07 FIGHT ME {} (\u0E07\'\u0300-\'\u0301)\u0E07'.format(trigger.group(2).strip().upper()))
     else:
-        bot.say(u'(\u0E07\'\u0300-\'\u0301)\u0E07 FIGHT ME {} (\u0E07\'\u0300-\'\u0301)\u0E07'.format(trigger.nick.upper()))
+        bot.say('(\u0E07\'\u0300-\'\u0301)\u0E07 FIGHT ME {} (\u0E07\'\u0300-\'\u0301)\u0E07'.format(trigger.nick.upper()))
 
 
 @module.commands('hail')
@@ -247,9 +248,9 @@ def rollover(bot, trigger):
     bot.say('(._.) (|:) (.-.) (:|) (._.)')
 
 
-@module.rule(u'.*(\(\u256F\u00B0\u25A1\u00B0\)\u256F\uFE35 \u253B\u2501\u253B|\(\u256F\u00B0\u25A1\u00B0\uFF09\u256F\uFE35 \u253B\u2501\u253B|\(\u30CE\u0CA0\u76CA\u0CA0\)\u30CE\u5F61\u253B\u2501\u253B|\u253B\u2501\u253B).*')
+@module.rule('.*(\(\u256F\u00B0\u25A1\u00B0\)\u256F\uFE35 \u253B\u2501\u253B|\(\u256F\u00B0\u25A1\u00B0\uFF09\u256F\uFE35 \u253B\u2501\u253B|\(\u30CE\u0CA0\u76CA\u0CA0\)\u30CE\u5F61\u253B\u2501\u253B|\u253B\u2501\u253B).*')
 def table_upright(bot, trigger):
-    uprights = [u'\u252C\u2500\u252C \u30CE(^_^\u30CE)', u'\u252C\u2500\u252C\u30CE(\u00BA_\u00BA\u30CE)']
+    uprights = ['\u252C\u2500\u252C \u30CE(^_^\u30CE)', '\u252C\u2500\u252C\u30CE(\u00BA_\u00BA\u30CE)']
     bot.say(random.choice(uprights))
 
 
@@ -259,9 +260,9 @@ def riot(bot, trigger):
     .riot [text] - X OR RIOT
     """
     if trigger.group(2):
-        bot.say(u'\u30FD\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\uFF89 {} OR RIOT \u30FD\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\uFF89'.format(trigger.group(2).strip().upper()))
+        bot.say('\u30FD\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\uFF89 {} OR RIOT \u30FD\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\uFF89'.format(trigger.group(2).strip().upper()))
     else:
-        bot.say(u'\u30FD\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\uFF89 RIOT \u30FD\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\uFF89')
+        bot.say('\u30FD\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\uFF89 RIOT \u30FD\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\uFF89')
 
 
 @module.commands('zalgo')
@@ -290,16 +291,16 @@ def flip(bot, trigger):
     .flip [text] - Flips text upside down
     """
     if (trigger.group(2)):
-        bot.say(u'(\u256f\u00b0\u25a1\u00b0\uff09\u256f\ufe35 ' + flip_text(trigger.group(2).strip()))
+        bot.say('(\u256f\u00b0\u25a1\u00b0\uff09\u256f\ufe35 ' + flip_text(trigger.group(2).strip()))
     else:
-        bot.say(u'(\u256f\u00b0\u25a1\u00b0\uff09\u256f\ufe35 \u253B\u2501\u253B')
+        bot.say('(\u256f\u00b0\u25a1\u00b0\uff09\u256f\ufe35 \u253B\u2501\u253B')
 
 # TEXT SWIRL-IFIER
 def swirl_text(text):
     if not text:
         return None
     else:
-        swirl_chars = [u'\u0E04', u'\u0E52', u'\u03C2', u'\u0E54', u'\u0454', u'\u0166', u'\uFEEE', u'\u0452', u'\u0E40', u'\u05DF', u'\u043A', u'l', u'\u0E53', u'\u0E20', u'\u0E4F', u'\u05E7', u'\u1EE3', u'\u0433', u'\u0E23', u't', u'\u0E22', u'\u05E9', u'\u0E2C', u'\u05D0', u'\u05E5', u'z']
+        swirl_chars = ['\u0E04', '\u0E52', '\u03C2', '\u0E54', '\u0454', '\u0166', '\uFEEE', '\u0452', '\u0E40', '\u05DF', '\u043A', 'l', '\u0E53', '\u0E20', '\u0E4F', '\u05E7', '\u1EE3', '\u0433', '\u0E23', 't', '\u0E22', '\u05E9', '\u0E2C', '\u05D0', '\u05E5', 'z']
         abc_chars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
         comb_map = dict(zip(abc_chars, swirl_chars))
         #return str(comb_map)
@@ -311,7 +312,7 @@ def flip_text(text):
     if not text:
         return None
     else:
-        flip_chars = [u'\u0250', u'q', u'\u0254', u'p', u'\u01DD', u'\u025F', u'\u0183', u'\u0265', u'\u0131', u'\u027E', u'\u029E', u'l', u'\u026F', u'u', u'o', u'd', u'b', u'\u0279', u's', u'\u0287', u'n', u'\u028C', u'\u028D', u'x', u'\u028E', u'z', r'\\', r'/']
+        flip_chars = ['\u0250', 'q', '\u0254', 'p', '\u01DD', '\u025F', '\u0183', '\u0265', '\u0131', '\u027E', '\u029E', 'l', '\u026F', 'u', 'o', 'd', 'b', '\u0279', 's', '\u0287', 'n', '\u028C', '\u028D', 'x', '\u028E', 'z', r'\\', r'/']
         abc_chars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', r'/', r'\\']
         comb_map = dict(zip(abc_chars, flip_chars))
         #return str(comb_map)
@@ -320,11 +321,11 @@ def flip_text(text):
 # ZALGO CONVERTER
 #
 
-unoise = u''.join(map(unichr, xrange(0x300, 0x36F)))
+unoise = ''.join(map(chr, xrange(0x300, 0x36F)))
 
 
 def mungle(char, intensity=10):
-    return char + u''.join(random.sample(unoise, intensity))
+    return char + ''.join(random.sample(unoise, intensity))
 
 
 # SMALLCAPS CONVERTER
@@ -332,7 +333,7 @@ def smallcaps(text):
     if not text:
         return None
     else:
-        sc_chars = [u'\u1D00', u'\u0299', u'\u1D04', u'\u1D05', u'\u1D07', u'\u0493', u'\u0262', u'\u029C', u'\u026A', u'\u1D0A', u'\u1D0B', u'\u029F', u'\u1D0D', u'\u0274', u'\u1D0F', u'\u1D18', u'\u01EB', u'\u0280', u's', u'\u1D1B', u'\u1D1C', u'\u1D20', u'\u1D21', u'x', u'\u028F', u'\u1D22']
+        sc_chars = ['\u1D00', '\u0299', '\u1D04', '\u1D05', '\u1D07', '\u0493', '\u0262', '\u029C', '\u026A', '\u1D0A', '\u1D0B', '\u029F', '\u1D0D', '\u0274', '\u1D0F', '\u1D18', '\u01EB', '\u0280', 's', '\u1D1B', '\u1D1C', '\u1D20', '\u1D21', 'x', '\u028F', '\u1D22']
         abc_chars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
         comb_map = dict(zip(abc_chars, sc_chars))
         #return comb_map

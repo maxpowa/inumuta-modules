@@ -149,7 +149,7 @@ def findandreplace(bot, trigger):
     try:
         find = re.compile(find, reflags)
     except re.error as e:
-        bot.reply(u'That ain\'t valid regex! (%s)' % (e.message))
+        bot.reply('That ain\'t valid regex! (%s)' % (e.message))
         return
     for line in reversed(search_dict[trigger.sender][rIdentifier]):
         if line.startswith("\x01ACTION"):

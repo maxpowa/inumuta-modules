@@ -21,8 +21,9 @@ import sys
 if sys.version_info.major < 3:
     str = unicode
     import HTMLParser
+    unescape = HTMLParser.HTMLParser().unescape
 else:
-    import html.parser as HTMLParser
+    from html import unescape
 
 
 class TwitterSection(StaticSection):
@@ -88,11 +89,10 @@ def gettweet(sopel, trigger, found_match=None):
                     statusnum = int(parts[1]) - 1
                 status = api.user_timeline(twituser)[statusnum]
         twituser = '@' + status.user.screen_name.strip()
-        h = HTMLParser.HTMLParser()
         if trigger.group(1) == 'twit':
-            sopel.say('[Twitter] ' + twituser + ": " + h.unescape(str(status.text).replace('\n', ' ')) + ' <' + tweet_url(status) + '>')
+            sopel.say('[Twitter] ' + twituser + ": " + unescape(str(status.text).replace('\n', ' ')) + ' <' + tweet_url(status) + '>')
         else:
-            sopel.say('[Twitter] ' + twituser + ": " + h.unescape(str(status.text).replace('\n', ' ')))
+            sopel.say('[Twitter] ' + twituser + ": " + unescape(str(status.text).replace('\n', ' ')))
     except:
         sopel.reply("You have input an invalid user.")
 gettweet.commands = ['twit', 'twitter']

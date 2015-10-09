@@ -42,8 +42,8 @@ def ud_search(bot, trigger):
     except IndexError:
         bot.say('[UrbanDictionary] No results, do you even spell bruh?')
     else:
-        thumbsup = color(str(data['list'][0]['thumbs_up']) + '+', u'03')
-        thumbsdown = color(str(data['list'][0]['thumbs_down']) + '-', u'04')
+        thumbsup = color(str(data['list'][0]['thumbs_up']) + '+', '03')
+        thumbsdown = color(str(data['list'][0]['thumbs_down']) + '-', '04')
         permalink = data['list'][0]['permalink']
         length = len(thumbsup) + len(thumbsdown) + len(permalink) + 35
         ellipsies = ''

@@ -31,15 +31,15 @@ def get_steam_info(url):
 
     # the page has a ton of returns and tabs
     rel_date = soup.find('span', {'class': 'date'}).text.strip()
-    tags = soup.find('div', {'class': 'glance_tags'}).text.strip().replace(u'Free to Play', '').replace(u'+', '').split()
-    genre = " - Genre: " + u', '.join(tags[:4])
-    date = " - Release date: " + rel_date.replace(u"Release Date: ", u"")
+    tags = soup.find('div', {'class': 'glance_tags'}).text.strip().replace('Free to Play', '').replace('+', '').split()
+    genre = " - Genre: " + ', '.join(tags[:4])
+    date = " - Release date: " + rel_date.replace("Release Date: ", "")
     price = soup.find('div', {'class': 'game_purchase_price price'}).text.strip()
     if not "Free to Play" in price:
         price = "Price: " + price
     price = " - " + price
 
-    return u'[Steam] {}{}{}{}{}'.format(name, desc, genre, date, price)
+    return '[Steam] {}{}{}{}{}'.format(name, desc, genre, date, price)
 
 
 @module.rule(steam_re)
@@ -61,4 +61,4 @@ def steamsearch(bot, trigger):
     try:
         return bot.say(get_steam_info(result['href']) + " - " + result['href'].split('?')[0])
     except:
-        return bot.say(u'[Steam] Failed to find game')
+        return bot.say('[Steam] Failed to find game')

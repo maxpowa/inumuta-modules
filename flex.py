@@ -15,6 +15,6 @@ def flex(bot, trigger):
     .flex [donger] - Flex 'em
     """
     if trigger.group(2):
-        bot.say(u'\u1559\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\u1557 FLEX YOUR {} \u1559\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\u1557'.format(trigger.group(2).strip().upper()))
+        bot.say('\u1559\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\u1557 FLEX YOUR {} \u1559\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\u1557'.format(trigger.group(2).strip().upper()))
     else:
-        bot.say(u'\u1559\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\u1557 flex your dongers \u1559\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\u1557')
+        bot.say('\u1559\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\u1557 flex your dongers \u1559\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\u1557')

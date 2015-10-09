@@ -62,7 +62,7 @@ def show_pagespeed(bot, trigger):
 
     out['problems'] = []
     out['fmtproblems'] = ''
-    for k, v in result['formattedResults']['ruleResults'].iteritems():
+    for k, v in result['formattedResults']['ruleResults'].items():
         if v['ruleImpact'] > 0:
             out['problems'].append('{} (Impact: {})'.format(v['localizedRuleName'], math.ceil(v['ruleImpact'])))
 

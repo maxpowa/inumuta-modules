@@ -49,7 +49,7 @@ def fuckbrain(bot, trigger):
 
 def hastebin_it(text):
     raw = web.post('http://hastebin.com/documents', text)
-    return u'http://hastebin.com/raw/' + json.loads(raw)['key']
+    return 'http://hastebin.com/raw/' + json.loads(raw)['key']
 
 
 def fb(inp):

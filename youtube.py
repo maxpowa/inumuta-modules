@@ -16,14 +16,13 @@ from __future__ import unicode_literals, division
 from sopel import web, tools
 from sopel.module import rule, commands, example
 from sopel.formatting import color, colors
+from sopel.config.types import StaticSection, ValidatedAttribute
 import datetime
 import json
 import re
 import sys
 if sys.version_info.major < 3:
-    from HTMLParser import HTMLParser
-else:
-    from html.parser import HTMLParser
+    int = long
 
 ISO8601_PERIOD_REGEX = re.compile(
     r"^(?P<sign>[+-])?"
@@ -38,21 +37,17 @@ ISO8601_PERIOD_REGEX = re.compile(
 regex = re.compile('(youtube.com/watch\S*v=|youtu.be/)([\w-]+)')
 
 
+class YoutubeSection(StaticSection):
+    public_key = ValidatedAttribute('public_key', default=None)
+
+
 def configure(config):
-    """
-    Google api key can be created by signing up your bot at
-    [https://console.developers.google.com](https://console.developers.google.com).
-
-    | [google]     | example                        | purpose                               |
-    | ------------ | ------------------------------ | ------------------------------------- |
-    | public_key   | aoijeoifjaSIOAohsofhaoAS       | Google API key (server key preferred) |
-    """
-
-    if config.option('Configure youtube module? (You will need to register a new application at https://console.developers.google.com/)', False):
-        config.interactive_add('google', 'public_key', None)
+    config.define_section('youtube', YoutubeSection, validate=False)
+    config.youtube.configure_setting('public_key', 'Google APIs client public key (Register at https://console.developers.google.com/')
 
 
 def setup(bot):
+    bot.config.define_section('youtube', YoutubeSection)
     if not bot.memory.contains('url_callbacks'):
         bot.memory['url_callbacks'] = tools.SopelMemory()
     bot.memory['url_callbacks'][regex] = ytinfo
@@ -63,7 +58,7 @@ def shutdown(bot):
 
 
 def ytget(bot, trigger, uri):
-    if not bot.config.has_section('google') or not bot.config.google.public_key:
+    if not bot.config.google.public_key:
         return None
     bytes = web.get(uri + '&key=' + bot.config.google.public_key)
     try:
@@ -74,7 +69,7 @@ def ytget(bot, trigger, uri):
 
     splitdur = ISO8601_PERIOD_REGEX.match(result['contentDetails']['duration'])
     dur = []
-    for k, v in splitdur.groupdict().iteritems():
+    for k, v in splitdur.groupdict().items():
         if v is not None:
             dur.append(v.lower())
     result['contentDetails']['duration'] = ' '.join(dur)
@@ -83,7 +78,7 @@ def ytget(bot, trigger, uri):
     result['snippet']['publishedAt'] = pubdate.strftime('%D %T')
 
     for k in result['statistics']:
-        result['statistics'][k] = '{:,}'.format(long(result['statistics'][k]))
+        result['statistics'][k] = '{:,}'.format(int(result['statistics'][k]))
 
     return result
 

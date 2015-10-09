@@ -10,6 +10,10 @@ from __future__ import unicode_literals
 
 from sopel.module import rule, example
 import sys, re
+if sys.version_info.major >= 3:
+    xrange = range
+else:
+    chr = unichr
 
 codeChr = "0123456789abcdefghijklmnopqrstuvwxyz!?#%-+"
 multPl = 71

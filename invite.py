@@ -27,8 +27,10 @@ def setup(bot):
             pass
 
 
-@interval(60 * 30)
-def keep_joined(bot):
+@event('001', '251')
+@rule('.*')
+@interval(60 * 15)
+def agressive_join(bot, trigger):
     setup(bot)
 
 

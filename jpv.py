@@ -8,9 +8,13 @@ Licensed under the Eiffel Forum License 2.
 from __future__ import unicode_literals
 from sopel.module import commands, rule
 from sopel import web, tools
-import urllib
+import sys
 import json
 import re
+if sys.version_info.major < 3:
+    from urllib import unquote
+else:
+    from urllib.parse import unquote
 
 
 def setup(sopel):
@@ -33,8 +37,8 @@ def jpv_info(bot, trigger):
 def info(genre, title):
     if '.mp3' not in title:
         title = title + '.mp3'
-    genre = urllib.unquote(genre)
-    title = urllib.unquote(title)
+    genre = unquote(genre)
+    title = unquote(title)
     request = web.get('http://jpv.everythingisawesome.us/api/v1/song/' + genre + '/' + title)
     return json.loads(request)
 

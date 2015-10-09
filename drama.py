@@ -550,8 +550,8 @@ token = re.compile(r'%(.+?)%')
 
 
 def setup(bot):
-    parts['thing'] = [(thing[:1] + u'\u200B' + thing[1:]) for thing in parts['thing']]
-    parts['people'] = [(person[:1] + u'\u200B' + person[1:]) for person in parts['people']]
+    parts['thing'] = [(thing[:1] + '\u200B' + thing[1:]) for thing in parts['thing']]
+    parts['people'] = [(person[:1] + '\u200B' + person[1:]) for person in parts['people']]
 
 
 def replace_tokens(input, used=[]):
@@ -578,7 +578,7 @@ def drama(bot, trigger):
         words = raw.split()
         out = []
         for word in words:
-            out.append(word[:1] + u'\u0081' + word[1:])
+            out.append(word[:1] + '\u0081' + word[1:])
         bot.say(' '.join(out))
     except Exception:
         if (trigger.nick.lower() == "asie"):

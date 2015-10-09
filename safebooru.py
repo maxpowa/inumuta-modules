@@ -67,14 +67,14 @@ def safebooru(bot, trigger):
 
     id, score, url, rating, tags = safebooru_cache.pop()
 
-    if u'e' in rating:
-        rating = u'\x02\x034NSFW\x03\x02'
-    elif u'q' in rating:
-        rating = u'\x02\x037Questionable\x03\x02'
-    elif u's' in rating:
-        rating = u'\x02\x033Safe\x03\x02'
+    if 'e' in rating:
+        rating = '\x02\x034NSFW\x03\x02'
+    elif 'q' in rating:
+        rating = '\x02\x037Questionable\x03\x02'
+    elif 's' in rating:
+        rating = '\x02\x033Safe\x03\x02'
 
-    bot.say(u'\x02[Safebooru]\x02 Score: \x02{}\x02 | Rating: {} | http://safebooru.org/index.php?page=post&s=view&id={} | Tags: {}'.format(score, rating, id, tags.strip()))
+    bot.say('\x02[Safebooru]\x02 Score: \x02{}\x02 | Rating: {} | http://safebooru.org/index.php?page=post&s=view&id={} | Tags: {}'.format(score, rating, id, tags.strip()))
 
 
 @rule(r'(?:.*)(?:safebooru.org.*?id=)([-_a-zA-Z0-9]+)(?: .+)?')
@@ -84,14 +84,14 @@ def safebooru_url(bot, trigger):
 
     id, score, url, rating, tags = (posts[0].get('id'), posts[0].get('score'), posts[0].get('file_url'), posts[0].get('rating'), posts[0].get('tags'))
 
-    if u'e' in rating:
+    if 'e' in rating:
         rating = "\x02\x034NSFW\x03\x02"
-    elif u'q' in rating:
+    elif 'q' in rating:
         rating = "\x02\x037Questionable\x03\x02"
-    elif u's' in rating:
+    elif 's' in rating:
         rating = "\x02\x033Safe\x03\x02"
 
-    bot.say(u'\x02[Safebooru]\x02 Score: \x02{}\x02 | Rating: {} | Tags: {}'.format(score, rating, tags.strip()))
+    bot.say('\x02[Safebooru]\x02 Score: \x02{}\x02 | Rating: {} | Tags: {}'.format(score, rating, tags.strip()))
 
 
 def get_soup(url):

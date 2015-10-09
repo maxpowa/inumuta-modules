@@ -21,32 +21,32 @@ user_agent = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:17.0) Gecko/17.0' \
 
 
 @thread(True)
-@commands('dex', 'pokedex', u'pok\u00e9dex')
-@example('.pokedex Charmander', u'[Pok\u00E9dex] #004 Charmander | Fire | Blaze | Generation 1 | \u215E male, \u215B female | Egg: Monster/Dragon')
+@commands('dex', 'pokedex', 'pok\u00e9dex')
+@example('.pokedex Charmander', '[Pok\u00E9dex] #004 Charmander | Fire | Blaze | Generation 1 | \u215E male, \u215B female | Egg: Monster/Dragon')
 def pokedex(bot, trigger):
     """
     .pokedex <query> - Search for a Pokemon and much, much more. See '.pokedex manual' for more information
     """
     if not trigger.group(3):
-        bot.say(u'[Pok\u00E9dex] Please consult the Pok\u00E9dex manual (.pokedex manual).')
+        bot.say('[Pok\u00E9dex] Please consult the Pok\u00E9dex manual (.pokedex manual).')
         return
 
     if trigger.group(3).lower() == 'welcome':
-        bot.say(u'<Prof. Oak> Hello there! Welcome to the world of Pok\u00E9mon! My name is Oak! People call me the Pok\u00E9mon Prof! This world is inhabited by creatures called Pok\u00E9mon! For some people, Pok\u00E9mon are pets. Other use them for fights. Myself... I study Pok\u00E9mon as a profession. {nick}! Your very own Pok\u00E9mon legend is about to unfold! A world of dreams and adventures with Pok\u00E9mon awaits! Let\'s go!'.replace('{nick}', trigger.nick))
-        bot.say(u'<Prof. Oak> First things first, lets get your pok\u00E9dex set up. I\'ll need you to run a couple queries to make sure it\'s working properly.')
+        bot.say('<Prof. Oak> Hello there! Welcome to the world of Pok\u00E9mon! My name is Oak! People call me the Pok\u00E9mon Prof! This world is inhabited by creatures called Pok\u00E9mon! For some people, Pok\u00E9mon are pets. Other use them for fights. Myself... I study Pok\u00E9mon as a profession. {nick}! Your very own Pok\u00E9mon legend is about to unfold! A world of dreams and adventures with Pok\u00E9mon awaits! Let\'s go!'.replace('{nick}', trigger.nick))
+        bot.say('<Prof. Oak> First things first, lets get your pok\u00E9dex set up. I\'ll need you to run a couple queries to make sure it\'s working properly.')
         return
 
     if trigger.group(3).lower() == 'manual':
-        bot.action(u'opens the Pok\u00E9dex man pages (transmitted via notice)')
-        bot.notice(u'The pok\u00e9dex is operated with two base commands, either .dex or .pokedex', recipient=trigger.nick)
-        bot.notice(u'\u0081', recipient=trigger.nick)
-        bot.notice(u'You may use the pokedex to research the following things:', recipient=trigger.nick)
-        bot.notice(u' - Pok\u00e9mon         .dex Abra or .dex 63', recipient=trigger.nick)
-        bot.notice(u' - Pok\u00e9mon stats   .dex -s Abra or .dex -s 63', recipient=trigger.nick)
-        bot.notice(u' - Pok\u00e9mon moves   .dex move:tackle', recipient=trigger.nick)
-        bot.notice(u' - Pok\u00e9mon types   .dex type:psychic', recipient=trigger.nick)
-        bot.notice(u' - Items           .dex item:master ball', recipient=trigger.nick)
-        bot.notice(u'For language-specific results, just prepend @<lang code>. (e.g. .dex @en:charge)', recipient=trigger.nick)
+        bot.action('opens the Pok\u00E9dex man pages (transmitted via notice)')
+        bot.notice('The pok\u00e9dex is operated with two base commands, either .dex or .pokedex', recipient=trigger.nick)
+        bot.notice('\u0081', recipient=trigger.nick)
+        bot.notice('You may use the pokedex to research the following things:', recipient=trigger.nick)
+        bot.notice(' - Pok\u00e9mon         .dex Abra or .dex 63', recipient=trigger.nick)
+        bot.notice(' - Pok\u00e9mon stats   .dex -s Abra or .dex -s 63', recipient=trigger.nick)
+        bot.notice(' - Pok\u00e9mon moves   .dex move:tackle', recipient=trigger.nick)
+        bot.notice(' - Pok\u00e9mon types   .dex type:psychic', recipient=trigger.nick)
+        bot.notice(' - Items           .dex item:master ball', recipient=trigger.nick)
+        bot.notice('For language-specific results, just prepend @<lang code>. (e.g. .dex @en:charge)', recipient=trigger.nick)
         return
 
     query = trigger.group(2).strip()
@@ -65,7 +65,7 @@ def pokedex(bot, trigger):
     url = follow_redirects(bot, url + query)
     url = unquote(url)
     if not url:
-        bot.say(u'[Pok\u00E9dex] Invalid query, please try again.')
+        bot.say('[Pok\u00E9dex] Invalid query, please try again.')
         return
 
     soup = get_soup(url)
@@ -73,12 +73,12 @@ def pokedex(bot, trigger):
         try:
             crumb = soup.find('ul', id='breadcrumbs').text.lower()
         except:
-            bot.say(u'[Pok\u00E9dex] Please return to Professor Oak, you are missing an important software patch. (404)')
+            bot.say('[Pok\u00E9dex] Please return to Professor Oak, you are missing an important software patch. (404)')
             return
 
         if 'moves' in crumb:
             parse_move(bot, soup)
-        elif u'pok\u00E9mon' in crumb:
+        elif 'pok\u00E9mon' in crumb:
             parse_poke(bot, soup, all_stats)
         elif 'item' in crumb:
             parse_item(bot, soup)
@@ -89,10 +89,10 @@ def pokedex(bot, trigger):
         elif 'abilities' in crumb:
             parse_abilities(bot, soup)
         else:
-            bot.say(u'[Pok\u00E9dex] There is no Pok\u00E9dex function that sufficiently matches what you\'re trying.')
+            bot.say('[Pok\u00E9dex] There is no Pok\u00E9dex function that sufficiently matches what you\'re trying.')
             return
     else:
-        bot.say(u'[Pok\u00E9dex] http://puu.sh/cvW4m/e510f8be5b.jpg')
+        bot.say('[Pok\u00E9dex] http://puu.sh/cvW4m/e510f8be5b.jpg')
         return
 
 
@@ -129,7 +129,7 @@ def parse_move(bot, soup):
     target = soup.find_all('div', class_='dex-column')[0].find_all('dd')[3].text
     effect_chance = soup.find_all('div', class_='dex-column')[0].find_all('dd')[4].text
 
-    output = [u'[Pok\u00E9dex] ', title, ' | ', types[1], '/', types[0], ' | ', summary]
+    output = ['[Pok\u00E9dex] ', title, ' | ', types[1], '/', types[0], ' | ', summary]
     output += ' | Dmg: '
     output += power.split(';')[0].strip()
     output += ' | Acc: '
@@ -176,7 +176,7 @@ def parse_poke(bot, soup, stats=False):
 
     output = []
     if not stats:
-        output += u'[Pok\u00E9dex] #'
+        output += '[Pok\u00E9dex] #'
         output += pokemon['number']
         output += ' '
         output += pokemon['name']
@@ -200,7 +200,7 @@ def parse_poke(bot, soup, stats=False):
             output += '/'
         output.pop()
     else:
-        output += u'[Pok\u00E9dex] #'
+        output += '[Pok\u00E9dex] #'
         output += pokemon['number']
         output += ' '
         output += pokemon['name']
@@ -235,7 +235,7 @@ def parse_item(bot, soup):
     cost = soup.find('dl').find_all('dd')[0].text.strip()
     flags = [item.text for item in soup.find('dl').find('ul', class_='classic-list').find_all('li')]
 
-    output = [u'[Pok\u00E9dex] ', title, ' | ', cost, ' | ', summary, ' | Flags: ']
+    output = ['[Pok\u00E9dex] ', title, ' | ', cost, ' | ', summary, ' | Flags: ']
     for flag in flags:
         output += flag.lower()
         output += ', '
@@ -258,17 +258,17 @@ def parse_type(bot, soup):
         taken[i] = (li.find('a').find('img').get('title'), li.text.strip())
     taken.sort(key=lambda x: x[1])
 
-    red = u'\x034'
-    green = u'\x033'
-    yellow = u'\x038'
-    reset = u'\x03'
+    red = '\x034'
+    green = '\x033'
+    yellow = '\x038'
+    reset = '\x03'
 
-    output = [u'[Pok\u00E9dex] ', title, u' | Legend:', green, ' 2x', reset, yellow, u' \xbdx', reset, red, ' 0x', reset, ' | Damage Dealt: ']
+    output = ['[Pok\u00E9dex] ', title, ' | Legend:', green, ' 2x', reset, yellow, ' \xbdx', reset, red, ' 0x', reset, ' | Damage Dealt: ']
     for type, value in dealt:
         if value != '1' and type != title:
             if value == '0':
                 type = red + type + reset
-            elif value == u'\xbd':
+            elif value == '\xbd':
                 type = yellow + type + reset
             elif value == '2':
                 type = green + type + reset
@@ -280,7 +280,7 @@ def parse_type(bot, soup):
         if value != '1' and type != title:
             if value == '0':
                 type = red + type + reset
-            elif value == u'\xbd':
+            elif value == '\xbd':
                 type = yellow + type + reset
             elif value == '2':
                 type = green + type + reset
@@ -294,7 +294,7 @@ def parse_abilities(bot, soup):
     soup = soup.find('div', id='content')
     title = soup.find('p', id='dex-page-name').text
     summary = re.sub(r'\(.+\)$', '', soup.find('div', class_='dex-page-beside-portrait').find('div', class_="markdown").text)
-    bot.say(u'[Pok\u00E9dex] ' + title + ': ' + summary)
+    bot.say('[Pok\u00E9dex] ' + title + ': ' + summary)
 
 
 def parse_disambig(bot, soup, sender=None):
@@ -305,5 +305,5 @@ def parse_disambig(bot, soup, sender=None):
 
     if (len(things) > 10):
         things = things[:10]
-    bot.say(u'[Pok\u00E9dex] Sorry, I couldn\'t find exactly what you\'re looking for. I did find ' + str(len(things)) + ' possible results though. (transmitted via notice)')
+    bot.say('[Pok\u00E9dex] Sorry, I couldn\'t find exactly what you\'re looking for. I did find ' + str(len(things)) + ' possible results though. (transmitted via notice)')
     [bot.notice(' - ' + re.sub(r'\(.+\)$', '', thing), recipient=sender) for thing in things]

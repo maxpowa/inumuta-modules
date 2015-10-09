@@ -80,7 +80,7 @@ def nickometer(bot, trigger):
     for special in specialCost:
         tempNick = nick
         if special[0][0] != '\\':
-            tempNick = trans(tempNick, u'023457+8', u'ozeasttb')
+            tempNick = trans(tempNick, '023457+8', 'ozeasttb')
 
         if tempNick and re.search(special[0], tempNick, re.IGNORECASE):
             score += special[1]

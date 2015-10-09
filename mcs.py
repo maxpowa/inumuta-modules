@@ -43,19 +43,19 @@ def status(bot, trigger):
     try:
         server = MinecraftServer.lookup(trigger.group(3).strip())
     except Exception:
-        bot.say(u'[MCS] Unable to find a Minecraft server running at \'{}\''.format(trigger.group(3).strip()))
+        bot.say('[MCS] Unable to find a Minecraft server running at \'{}\''.format(trigger.group(3).strip()))
 
     try:
         status = server.status()
-        desc = ' '.join(re.sub(u'\u00A7.', '', status.description).split())
-        bot.say(u'[MCS] {0} | {1} players | {2} ms | {3}'.format(trigger.group(3).strip(), status.players.online, status.latency, desc))
+        desc = ' '.join(re.sub('\u00A7.', '', status.description).split())
+        bot.say('[MCS] {0} | {1} players | {2} ms | {3}'.format(trigger.group(3).strip(), status.players.online, status.latency, desc))
     except Exception as e:
         try:
             raw = web.get('http://minespy.net/api/serverping/' + str(server.host) + ':' + str(server.port))
             status = json.loads(raw)
-            bot.say(u'[MCS] {0} | {1} players | {2} ms | {3}'.format(trigger.group(3).strip(), str(status['online']), str(status['latency']), str(status['strippedmotd'])))
+            bot.say('[MCS] {0} | {1} players | {2} ms | {3}'.format(trigger.group(3).strip(), str(status['online']), str(status['latency']), str(status['strippedmotd'])))
         except Exception as e:
-            bot.say(u'[MCS] Unable to fetch info from \'{}\' ({})'.format(trigger.group(3).strip(), e))
+            bot.say('[MCS] Unable to fetch info from \'{}\' ({})'.format(trigger.group(3).strip(), e))
 
 
 @commands('mcstatus', 'mcs')
@@ -71,7 +71,7 @@ def mcstats(bot, trigger):
         out = []
         # use a loop so we don't have to update it if they add more servers
         for server, status in response.items():
-            out.append(u'{} {} '.format(server, format_status(status)))
+            out.append('{} {} '.format(server, format_status(status)))
         bot.say(''.join(out))
     except Exception as e:
         bot.say('[MCS] Mojang server status check is currently offline. ({})'.format(e))
@@ -98,4 +98,4 @@ def has_paid(bot, user):
 
 
 def format_status(status):
-    return status.replace('red', color(u'\u2718', 'red')).replace('green', color(u'\u2713', 'green')).replace('yellow', color(u'~', 'yellow'))
+    return status.replace('red', color('\u2718', 'red')).replace('green', color('\u2713', 'green')).replace('yellow', color('~', 'yellow'))

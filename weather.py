@@ -50,7 +50,7 @@ def get_temp(parsed):
     except (KeyError, ValueError):
         return 'unknown'
     f = round((temp * 1.8) + 32, 2)
-    return (u'%d\u00B0C (%d\u00B0F)' % (temp, f))
+    return ('%d\u00B0C (%d\u00B0F)' % (temp, f))
 
 
 def get_humidity(parsed):
@@ -99,21 +99,21 @@ def get_wind(parsed):
         description = 'Hurricane'
 
     if (degrees <= 22.5) or (degrees > 337.5):
-        degrees = u'\u2193'
+        degrees = '\u2193'
     elif (degrees > 22.5) and (degrees <= 67.5):
-        degrees = u'\u2199'
+        degrees = '\u2199'
     elif (degrees > 67.5) and (degrees <= 112.5):
-        degrees = u'\u2190'
+        degrees = '\u2190'
     elif (degrees > 112.5) and (degrees <= 157.5):
-        degrees = u'\u2196'
+        degrees = '\u2196'
     elif (degrees > 157.5) and (degrees <= 202.5):
-        degrees = u'\u2191'
+        degrees = '\u2191'
     elif (degrees > 202.5) and (degrees <= 247.5):
-        degrees = u'\u2197'
+        degrees = '\u2197'
     elif (degrees > 247.5) and (degrees <= 292.5):
-        degrees = u'\u2192'
+        degrees = '\u2192'
     elif (degrees > 292.5) and (degrees <= 337.5):
-        degrees = u'\u2198'
+        degrees = '\u2198'
 
     return description + ' ' + str(m_s) + 'm/s (' + degrees + ')'
 
@@ -150,7 +150,7 @@ def weather(bot, trigger):
     temp = get_temp(parsed)
     humidity = get_humidity(parsed)
     wind = get_wind(parsed)
-    bot.say(u'%s: %s, %s, %s, %s' % (location, cover, temp, humidity, wind))
+    bot.say('%s: %s, %s, %s, %s' % (location, cover, temp, humidity, wind))
 
 
 @commands('setlocation', 'setwoeid')

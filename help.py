@@ -10,6 +10,7 @@ http://sopel.chat
 from __future__ import unicode_literals
 
 import textwrap
+import collections
 
 from sopel.formatting import bold
 from sopel.module import commands, rule, example, priority
@@ -50,7 +51,7 @@ def help(bot, trigger):
         )
 
         name_length = max(6, max(len(k) for k in bot.command_groups.keys()))
-        for category, cmds in bot.command_groups.items():
+        for category, cmds in collections.OrderedDict(sorted(bot.command_groups.items())).items():
             category = category.upper().ljust(name_length)
             cmds = '  '.join(cmds)
             msg = bold(category) + '  ' + cmds
@@ -65,7 +66,6 @@ def help(bot, trigger):
 def help2(bot, trigger):
     response = (
         'Hi, I\'m a bot. Say ".commands" to me in private for a list ' +
-        'of my commands, or see http://sopel.chat for more ' +
-        'general details. My owner is %s.'
+        'of my commands. My owner is %s.'
     ) % bot.config.core.owner
     bot.reply(response)

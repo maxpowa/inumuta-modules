@@ -7,6 +7,10 @@ Licensed under the Eiffel Forum License 2.
 """
 from __future__ import unicode_literals
 from sopel.module import commands
+import sys
+if sys.version_info.major < 3:
+    str = unicode
+    chr = unichr
 
 
 @commands('df', 'deadfish')
@@ -29,21 +33,21 @@ def deadfish(bot, trigger):
     for c in inp:
         if memory == 256 or memory < 0 or memory > 9223372036859223372036854775807:  # Synthetic max limit
             memory = 0  # Overflow
-        if c == u'i':
+        if c == 'i':
             memory += 1  # Increment
-        if c == u'd':
+        if c == 'd':
             memory -= 1  # Decrement
-        if c == u'r':
+        if c == 'r':
             memory = 0  # Inline reset (very handy)
-        if c == u'o':
+        if c == 'o':
             output.append(memory)  # Output
-        if c == u's':
+        if c == 's':
             memory *= memory  # Square
 
-    outputstr = u' '.join(str(x) for x in output)
+    outputstr = ' '.join(str(x) for x in output)
     if charoutput:
-        outputstr = u''
+        outputstr = ''
         for rep in output:
-            outputstr += unichr(rep)
+            outputstr += chr(rep)
 
     bot.say(outputstr)

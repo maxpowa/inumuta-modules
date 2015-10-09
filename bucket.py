@@ -4,6 +4,7 @@ Copyright 2014 Max Gurela
 
 Licensed under the Eiffel Forum License 2.
 """
+from __future__ import unicode_literals
 
 from sopel import web
 from sopel.module import commands, rule
@@ -67,7 +68,7 @@ def find_item(db, query):
 
 
 def format_item(id, name, desc, cost):
-    template = u"{0:<6}|{1:15}|{2:25}|{3:>8.2f}"  # column widths
+    template = "{0:<6}|{1:15}|{2:25}|{3:>8.2f}"  # column widths
     desc = ((desc[:23] + '..') if len(desc) > 25 else desc)
     return template.format(id, name, desc, float(cost))
 
@@ -151,7 +152,7 @@ def give_item(bot, trigger):
     .give <nick> <item> [count] - Give a user an item from your inventory. Will fail if you don't have the item, or the item doesn't exist.
     """
     if not trigger.group(2):
-        return bot.say(u'[bucket] \u0F3C \u3064 \u25D5_\u25D5 \u0F3D\u3064')
+        return bot.say('[bucket] \u0F3C \u3064 \u25D5_\u25D5 \u0F3D\u3064')
 
     args = trigger.group(2).strip()
     admin_give = False
@@ -180,7 +181,7 @@ def give_item(bot, trigger):
         success = transfer_item_to_from_nick(bot.db, trigger.nick, nick, str(item[0]), count)
 
     if success:
-        bot.say(u'\u0F3C \u3064 \u25D5_\u25D5 \u0F3D\u3064 Transferred {}x {} from {} to {}.'.format(count, item[1], trigger.nick, nick))
+        bot.say('\u0F3C \u3064 \u25D5_\u25D5 \u0F3D\u3064 Transferred {}x {} from {} to {}.'.format(count, item[1], trigger.nick, nick))
     else:
         bot.say('[bucket] Transfer failed. Check your inventory counts before transferring! (.inv)')
 
@@ -193,12 +194,12 @@ def show_inv(bot, trigger):
 
     inv = get_inventory_from_nick(bot.db, nick)
     response = []
-    for id, count in inv.iteritems():
+    for id, count in inv.items():
         id, name, desc, cost = get_item(bot.db, id)
         if count > 0:
-            response.append(u'{}x {}'.format(count, name))
+            response.append('{}x {}'.format(count, name))
 
-    bot.say(u'[bucket] {} has: {}'.format(nick, u', '.join(response)))
+    bot.say('[bucket] {} has: {}'.format(nick, ', '.join(response)))
 
 
 @commands('inspect')
@@ -207,15 +208,15 @@ def inspect_item(bot, trigger):
     .inspect <item>
     """
     if not trigger.group(2):
-        bot.say(u'What am I supposed to inspect?')
+        bot.say('What am I supposed to inspect?')
         return
 
     result = find_item(bot.db, trigger.group(2).strip())
     if result:
         id, name, desc, cost = result
-        bot.say(u'{0}: {1} | ${2:.2f}'.format(name, desc, float(cost)))
+        bot.say('{0}: {1} | ${2:.2f}'.format(name, desc, float(cost)))
     else:
-        bot.say(u'Sorry, I don\'t know anything about "{}".'.format(trigger.group(2).strip()))
+        bot.say('Sorry, I don\'t know anything about "{}".'.format(trigger.group(2).strip()))
 
 
 @commands('bucket')
@@ -254,14 +255,14 @@ def bucket_man(bot, trigger):
         if not trigger.is_privmsg:
             bot.reply("I am sending you a notice of the bucket module help")
         for line in parser.format_help().strip().splitlines():
-            bot.notice(line, recipient=trigger.nick)
+            bot.notice(line, destination=trigger.nick)
         return
 
     if opts.peek:
         content = bot.db.execute('SELECT * FROM bucket_items').fetchall()
-        template = u"{0:<6}|{1:15}|{2:25}|{3:8}"  # column widths
+        template = "{0:<6}|{1:15}|{2:25}|{3:8}"  # column widths
         bot.say(template.format("ItemId", "ItemName", "ItemDesc", "ItemCost"))  # header
-        bot.say(u'------|---------------|-------------------------|--------')
+        bot.say('------|---------------|-------------------------|--------')
         for rec in content:
             bot.say(format_item(*rec))
 
@@ -273,6 +274,6 @@ def bucket_man(bot, trigger):
             bot.reply('Err: Missing item description')
             return
         item = add_or_update_item(bot.db, opts.id, opts.name, opts.description, opts.cost)
-        bot.say(u'Added ' + format_item(*get_item(bot.db, item)))
+        bot.say('Added ' + format_item(*get_item(bot.db, item)))
     elif opts.remove:
-        bot.say(u'Removed ' + str(remove_item(bot.db, opts.remove)))
+        bot.say('Removed ' + str(remove_item(bot.db, opts.remove)))

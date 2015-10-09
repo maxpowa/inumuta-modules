@@ -51,10 +51,10 @@ def osu_user(bot, trigger):
     raw = web.get('https://osu.ppy.sh/api/get_user' + data)
     response = json.loads(raw)
     if not response:
-        bot.say('[' + color('osu!', u'13') + '] ' + 'Invalid user')
+        bot.say('[' + color('osu!', '13') + '] ' + 'Invalid user')
         return
     if not response[0]:
-        bot.say('[' + color('osu!', u'13') + '] ' + 'Invalid user')
+        bot.say('[' + color('osu!', '13') + '] ' + 'Invalid user')
         return
     user = response[0]
     level = 0
@@ -65,7 +65,7 @@ def osu_user(bot, trigger):
     except:
         pass
     output = [
-        '[', color('osu!', u'13'), '] ',
+        '[', color('osu!', '13'), '] ',
         str(user['username']),
         ' | Level ',
         str(level),
@@ -95,12 +95,12 @@ def osu_beatmap(bot, trigger):
         topscore = json.loads(rawscore)[0]
     response = json.loads(raw)
     if not response[0]:
-        bot.say('[' + color('osu!', u'13') + '] ' + ' Invalid link')
+        bot.say('[' + color('osu!', '13') + '] ' + ' Invalid link')
         return
     beatmap = response[0]
     m, s = divmod(int(beatmap['total_length']), 60)
     output = [
-        '[', color('osu!', u'13'), '] ',
+        '[', color('osu!', '13'), '] ',
         beatmap['artist'],
         ' - ',
         beatmap['title'],

@@ -23,8 +23,10 @@ from collections import deque
 import os
 import sys
 if sys.version_info.major < 3:
+    from urllib import urlencode
     from urllib2 import HTTPError
 else:
+    from urllib.parse import urlencode
     from urllib.error import HTTPError
 import json
 import re
@@ -196,7 +198,7 @@ def get_data(bot, trigger, URL):
         bot.say('[Github] API returned an error.')
         return NOLIMIT
     data = json.loads(raw)
-    langData = json.loads(rawLang).items()
+    langData = list(json.loads(rawLang).items())
     langData = sorted(langData, key=operator.itemgetter(1), reverse=True)
 
     if 'message' in data:
@@ -342,7 +344,7 @@ def setup_webhook(sopel):
 
     try:
         c.execute('SELECT * FROM gh_hooks')
-    except StandardError:
+    except Exception:
         create_table(sopel, c)
         conn.commit()
     conn.close()
@@ -539,7 +541,7 @@ def configure_repo_messages(bot, trigger):
         'client_id': bot.config.github.client_id,
         'scope': 'write:repo_hook',
         'state': '{}:{}'.format(repo_name, channel)}
-    auth_url = 'https://github.com/login/oauth/authorize?{}'.format(urllib.urlencode(auth_data))
+    auth_url = 'https://github.com/login/oauth/authorize?{}'.format(urlencode(auth_data))
 
     conn = bot.db.connect()
     c = conn.cursor()
@@ -906,7 +908,7 @@ def fmt_gollum_summary_message(payload=None):
             # Set default value to 0 and increment 1, only incrementing if key already exists
             counts[payload['pages']['action']] = counts.setdefault(payload['pages']['action'], 0) + 1
         actions = []
-        for action, count in counts.iteritems():
+        for action, count in counts.items():
             actions.append(action + " " + count)
 
         return '[{}] {} {} wiki pages'.format(

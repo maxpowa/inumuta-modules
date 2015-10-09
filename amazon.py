@@ -11,6 +11,9 @@ from sopel.module import commands, rule
 from lxml import html
 import json
 import re
+import sys
+if sys.version_info.major >= 3:
+    xrange = range
 
 
 def setup(sopel):

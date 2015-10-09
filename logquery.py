@@ -223,7 +223,7 @@ def format_msg(msg):
     elif (intent == 'QUIT'):
         return QUIT_TPL.format(**msg)
 
-    return u'<{nick}/{channel}> {message}'.format(**msg)
+    return '<{nick}/{channel}> {message}'.format(**msg)
 
 
 @rule('.*')

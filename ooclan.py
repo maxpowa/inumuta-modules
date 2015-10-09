@@ -24,4 +24,4 @@ def death_event(bot, trigger):
             'http://i.imgur.com/Upji2hK.gif',
             'http://i.imgur.com/ltyA1iY.gif'
         ]
-        bot.say('gg ' + trigger.group(1).strip()[:1] + u'\u0081' + trigger.group(1).strip()[1:] + ', ' + random.choice(opts))
+        bot.say('gg ' + trigger.group(1).strip()[:1] + '\u0081' + trigger.group(1).strip()[1:] + ', ' + random.choice(opts))

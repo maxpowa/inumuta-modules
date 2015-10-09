@@ -18,10 +18,11 @@ import praw
 import re
 import sys
 if sys.version_info.major >= 3:
-    import html.parser as HTMLParser
+    from html import unescape
     unicode = str
 else:
     import HTMLParser
+    unescape = HTMLParser.HTMLParser().unescape
 
 domain = r'https?://(?:www\.|np\.)?reddit\.com'
 post_url = '(%s/r/.*?/comments/[\w-]+)' % domain
@@ -90,9 +91,8 @@ def rpost_info(bot, trigger, match=None):
 
     percent = color(unicode(s.upvote_ratio * 100) + '%', point_color)
 
-    h = HTMLParser.HTMLParser()
     message = message.format(
-        title=h.unescape(s.title), link=link, nsfw=nsfw, points=s.score, percent=percent,
+        title=unescape(s.title), link=link, nsfw=nsfw, points=s.score, percent=percent,
         comments=s.num_comments, author=author, created=created)
 
     bot.say(message)
@@ -133,9 +133,8 @@ def rcomment_info(bot, trigger, s):
     created = time.format_time(bot.db, bot.config, tz, trigger.nick,
                                trigger.sender, time_created)
 
-    h = HTMLParser.HTMLParser()
     message = message.format(
-        title=h.unescape(s.title), link=s.short_link, nsfw=nsfw, points=c.score,
+        title=unescape(s.title), link=s.short_link, nsfw=nsfw, points=c.score,
         author=author, created=created, message=c)
 
     bot.say(message)
