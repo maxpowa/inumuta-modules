@@ -5,7 +5,7 @@ Copyright 2008, Sean B. Palmer, inamidst.com
 Copyright © 2013-2014, Elad Alfassa <elad@fedoraproject.org>
 Licensed under the Eiffel Forum License 2.
 
-http://sopel.dftba.net
+http://sopel.chat
 """
 from __future__ import unicode_literals
 from sopel import web
@@ -17,22 +17,6 @@ import os
 mangle_lines = {}
 if sys.version_info.major >= 3:
     unicode = str
-
-
-def configure(config):
-    """
-
-    | [translate] | example | purpose |
-    | ---- | ------- | ------- |
-    | research | True | Enable research mode (logging) for .mangle |
-    | collect_mangle_lines | False | Collect mangle lines to allow .mangle the last message in the channel |
-    """
-    if config.option('Configure mangle module', False):
-        config.add_section('translate')
-        if config.option("Enable research mode"):
-            config.translate.research = True
-        if config.option("Collect mangle lines"):
-            config.translate.collect_mangle_lines = True
 
 
 def translate(text, in_lang='auto', out_lang='en'):
@@ -180,10 +164,6 @@ def mangle(bot, trigger):
     if phrase[0] == '':
         bot.reply("What do you want me to mangle?")
         return
-    if bot.config.has_section('translate') and bot.config.translate.research:
-        research_logfile = open(os.path.join(bot.config.logdir, 'mangle.log'), 'a')
-        research_logfile.write('Phrase: %s\n' % str(phrase))
-        research_logfile.write('Lang_list: %s\n' % lang_list)
     for lang in lang_list:
         backup = phrase
         try:
@@ -200,26 +180,20 @@ def mangle(bot, trigger):
             phrase = backup
             continue
 
-        if bot.config.has_section('translate') and bot.config.translate.research:
-            research_logfile.write('-> %s\n' % str(phrase))
         if not phrase:
             phrase = backup
             break
-    if bot.config.has_section('translate') and bot.config.translate.research:
-        research_logfile.write('->[FINAL] %s\n' % str(phrase))
-        research_logfile.write('----------------------------\n\n\n')
-        research_logfile.close()
     bot.reply(phrase[0])
 
 
 @rule('(.*)')
 @priority('low')
 def collect_mangle_lines(bot, trigger):
-    if bot.config.has_section('translate') and bot.config.translate.collect_mangle_lines:
-        global mangle_lines
-        mangle_lines[trigger.sender.lower()] = "%s said '%s'" % (trigger.nick, (trigger.group(0).strip()))
+    global mangle_lines
+    mangle_lines[trigger.sender.lower()] = "%s said '%s'" % (trigger.nick, (trigger.group(0).strip()))
 
 
 if __name__ == "__main__":
     from sopel.test_tools import run_example_tests
     run_example_tests(__file__)
+

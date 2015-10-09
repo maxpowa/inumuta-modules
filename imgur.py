@@ -17,9 +17,14 @@ if sys.version_info.major < 3:
 else:
     from urllib.error import HTTPError
     from urllib.parse import urlparse
+from sopel.config.types import StaticSection, ValidatedAttribute
 from sopel.config import ConfigurationError
 from sopel import web, tools
 from sopel.module import rule
+
+
+class ImgurSection(StaticSection):
+    client_id = ValidatedAttribute('client_id', default=None)
 
 
 class ImgurClient(object):
@@ -52,31 +57,27 @@ class ImgurClient(object):
 
 
 def configure(config):
-    """
-    The client ID can be obtained by registering your bot at
-    https://api.imgur.com/oauth2/addclient
-
-    |  [imgur]  |     example     |              purpose             |
-    | --------- | --------------- | -------------------------------- |
-    | client_id | 1b3cfe15768ba29 | Bot's ID, for Imgur's reference. |
-    """
-
-    if config.option('Configure Imgur? (You will need to register at https://api.imgur.com/oauth2/addclient)', False):
-        config.interactive.add('imgur', 'client_id', 'Client ID')
+    config.define_section('imgur', ImgurSection, validate=False)
+    config.imgur.configure_setting('client_id', 'Imgur API Client ID')
 
 
 def setup(bot):
+    bot.config.define_section('imgur', ImgurSection)
     """
     Tests the validity of the client ID given in the configuration.
     If it is not, initializes sopel's memory callbacks for imgur URLs,
     and uses them as the trigger for the link parsing function.
     """
+    if not bot.config.imgur.client_id:
+        raise ConfigurationError('Could not setup the Imgur module. Is '
+                                 'the API key configured properly?')
     try:
         client = ImgurClient(bot.config.imgur.client_id)
         client.request('gallery.json')
     except HTTPError:
-        raise ConfigurationError('Could not validate the client ID with Imgur. \
-                                 Are you sure you set it up correctly?')
+        raise ConfigurationError('Could not validate the client ID with Imgur.'
+                     ' Have you run "sopel --configure-modules" or specified '
+                     'the Imgur API key in the config?')
     imgur_regex = re.compile('(?:https?://)?(?:i\.)?imgur\.com/(.*)$')
     if not bot.memory.contains('url_callbacks'):
         bot.memory['url_callbacks'] = tools.SopelMemory()

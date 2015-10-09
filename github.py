@@ -15,6 +15,7 @@ from sopel import web, tools
 from sopel.module import commands, rule, OP, NOLIMIT, example, interval
 from sopel.formatting import bold, color
 from sopel.tools.time import get_timezone, format_time
+from sopel.config.types import StaticSection, ValidatedAttribute, NO_DEFAULT
 
 import operator
 from collections import deque
@@ -48,36 +49,33 @@ repoRegex = re.compile('github\.com/([^ /]+?)/([^ /]+)/?(?!\S)')
 sopel_instance = None
 
 
+class GithubSection(StaticSection):
+    client_id = ValidatedAttribute('client_id', default=None)
+    secret    = ValidatedAttribute('secret', default=None)
+    webhook   = ValidatedAttribute('webhook', bool, default=False)
+    webhook_host = ValidatedAttribute('webhook_host', default='0.0.0.0')
+    webhook_port = ValidatedAttribute('webhook_port', default='3333')
+
+
 def configure(config):
-    """
-    Client id and secret can be discovered by signing up your bot at
-    [https://github.com/settings/applications/new](https://github.com/settings/applications/new).
-
-    | [github]     | example                        | purpose                               |
-    | ------------ | ------------------------------ | ------------------------------------- |
-    | client_id    | ao123123sf12                   | Github Client ID                      |
-    | secret       | 1u3432jpqj235j2oi5oji545l34j5j | Github Client Secret                  |
-    | webhook      | False                          | Webhook server state (True to enable) |
-    | webhook_host | 127.0.0.1                      | Webhook listen host                   |
-    | webhook_port | 3333                           | Webhook listen port                   |
-    """
-
-    if config.option('Configure github module? (You will need to register on https://github.com/settings/applications/new)', False):
-        config.interactive_add('github', 'client_id', 'github client id')
-        config.interactive_add('github', 'secret', 'github secret')
-        config.interactive_add('github', 'webhook', False)
-        config.interactive_add('github', 'webhook_host', '127.0.0.1')
-        config.interactive_add('github', 'webhook_port', '3333')
+    config.define_section('github', GithubSection, validate=False)
+    config.github.configure_setting('client_id', 'Github API Client ID')
+    config.github.configure_setting('secret',    'Github API Client Secret')
+    config.github.configure_setting('webhook',   'Enable webhook listener functionality')
+    if config.github.webhook:
+        config.github.configure_setting('webhook_host', 'Listen IP for incoming webhooks (0.0.0.0 for all IPs)')
+        config.github.configure_setting('webhook_port', 'Listen port for incoming webhooks')
 
 
 def setup(sopel):
+    sopel.config.define_section('github', GithubSection)
     if not sopel.memory.contains('url_callbacks'):
         sopel.memory['url_callbacks'] = tools.SopelMemory()
     sopel.memory['url_callbacks'][regex] = issue_info
     sopel.memory['url_callbacks'][repoRegex] = data_url
     sopel.memory['url_callbacks'][commitRegex] = commit_info
 
-    if sopel.config.has_section('github') and sopel.config.github.webhook:
+    if sopel.config.github.webhook:
         setup_webhook(sopel)
 
 

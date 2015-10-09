@@ -8,6 +8,9 @@ Licensed under the Eiffel Forum License 2.
 Uses the osu!api, docs: https://github.com/peppy/osu-api/wiki
 """
 from __future__ import unicode_literals
+
+from sopel.config.types import StaticSection, ValidatedAttribute
+from sopel.config import ConfigurationError
 from sopel.module import commands, rule
 from sopel.formatting import color
 from sopel import tools, web
@@ -16,25 +19,19 @@ import types
 import re
 
 
+class OsuSection(StaticSection):
+    api_key = ValidatedAttribute('api_key', default=None)
+
+
 def configure(config):
-    """
-    These values are all found by signing up your bot at
-    [https://osu.ppy.sh/p/api](https://osu.ppy.sh/p/api).
-
-    | [osu] | example | purpose |
-    | --------- | ------- | ------- |
-    | api_key | b8ac80a7bdb556da303f4154bae451b1640e8e75 | osu api key |
-    """
-
-    if config.option('Configure osu! module? (You will need to register on https://osu.ppy.sh/p/api)', False):
-        config.interactive_add('osu', 'api_key', 'osu api key')
-
-apikey = ''
+    config.define_section('osu', OsuSection, validate=False)
+    config.osu.configure_setting('api_key', 'osu API key (Register your bot at https://osu.ppy.sh/p/api)')
 
 
 def setup(sopel):
+    sopel.config.define_section('osu', OsuSection)
     if not sopel.config.osu.api_key:
-        raise ConfigurationError('Could not configure the osu! module. Is the API key configured properly?')
+        raise ConfigurationError('Could not setup the osu! module. Is the API key configured properly?')
     user_regex = re.compile('osu\.ppy\.sh/(u)/(\w+)')
     map_regex = re.compile('osu\.ppy\.sh/(s|b)/(\d+)')
     if not sopel.memory.contains('url_callbacks'):

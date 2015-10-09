@@ -13,6 +13,7 @@ import tweepy
 import time
 import re
 from sopel.config import ConfigurationError
+from sopel.config.types import StaticSection, ValidatedAttribute
 from sopel import tools
 from sopel.module import rule
 import sys
@@ -24,24 +25,19 @@ else:
     import html.parser as HTMLParser
 
 
+class TwitterSection(StaticSection):
+    consumer_key    = ValidatedAttribute('consumer_key',    default=None)
+    consumer_secret = ValidatedAttribute('consumer_secret', default=None)
+    access_token    = ValidatedAttribute('access_token',    default=None)
+    access_token_secret = ValidatedAttribute('access_token_secret', default=None)
+
+
 def configure(config):
-    """
-    These values are all found by signing up your bot at
-    [https://dev.twitter.com/apps/new](https://dev.twitter.com/apps/new).
-
-    | [twitter] | example | purpose |
-    | --------- | ------- | ------- |
-    | consumer_key | 09d8c7b0987cAQc7fge09 | OAuth consumer key |
-    | consumer_secret | LIaso6873jI8Yasdlfi76awer76yhasdfi75h6TFJgf | OAuth consumer secret |
-    | access_token | 564018348-Alldf7s6598d76tgsadfo9asdf56uUf65aVgdsf6 | OAuth access token |
-    | access_token_secret | asdfl7698596KIKJVGvJDcfcvcsfdy85hfddlku67 | OAuth access token secret |
-    """
-
-    if config.option('Configure Twitter? (You will need to register on http://api.twitter.com)', False):
-        config.interactive_add('twitter', 'consumer_key', 'Consumer key')
-        config.interactive_add('twitter', 'consumer_secret', 'Consumer secret')
-        config.interactive_add('twitter', 'access_token', 'Access token')
-        config.interactive_add('twitter', 'access_token_secret', 'Access token secret')
+    config.define_section('twitter', TwitterSection, validate=False)
+    config.twitter.configure_setting('consumer_key', 'Consumer key (Register at http://api.twitter.com)')
+    config.twitter.configure_setting('consumer_secret', 'Consumer secret')
+    config.twitter.configure_setting('access_token', 'Access token')
+    config.twitter.configure_setting('access_token_secret', 'Access token secret')
 
 
 def setup(sopel):
