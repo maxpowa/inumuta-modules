@@ -9,6 +9,6 @@ from __future__ import unicode_literals
 from sopel.module import rule
 
 
-@rule('#blame$nickname')
+@rule('#?(die|blame|kill|beat|spit|hit|crash|batter|hammer|pound|thrash|bap|shoot|smack|whack|zap)(es|s)?[\s]*$nickname')
 def blame(bot, trigger):
     bot.action('dies a little inside')
