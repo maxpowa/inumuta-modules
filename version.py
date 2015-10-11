@@ -18,37 +18,50 @@ import json
 
 @sopel.module.commands('owner')
 def owner(bot, trigger):
-    bot.say('I am owned by ' + bot.config.core.owner + '.')
+    bot.reply('I am owned by ' + bot.config.core.owner + '.')
 
 
-@sopel.module.rule('\x01VERSION\x01')
 @sopel.module.commands('version')
-@sopel.module.rate(20)
-def ctcp_version(bot, trigger):
-    bot.write(('NOTICE', trigger.nick),
-              '\x01VERSION Inumuta %s\x01' % sopel.__version__)
+def version(bot, trigger):
+    bot.reply('Inumuta %s' % sopel.__version__)
 
 
 @sopel.module.commands('source')
-@sopel.module.rule('\x01SOURCE\x01')
-@sopel.module.rate(20)
-def ctcp_source(bot, trigger):
-    bot.notice('\x01SOURCE https://github.com/maxpowa/Inumuta/\x01',
-               recipient=trigger.nick)
+def source(bot, trigger):
+    bot.reply('Core: https://github.com/maxpowa/Inumuta '
+              '| Modules: https://github.com/maxpowa/inumuta-modules')
 
 
 @sopel.module.rule('.*')
-@sopel.module.rate(10)
+def ctcp_version(bot, trigger):
+    if ('intent' in trigger.tags and 
+            trigger.tags['intent'].upper() == 'VERSION'):
+        bot.notice('\x01VERSION Inumuta %s\x01' % sopel.__version__,
+                   destination=trigger.nick)
+
+
+@sopel.module.rule('.*')
+def ctcp_source(bot, trigger):
+    if ('intent' in trigger.tags and
+            trigger.tags['intent'].upper() == 'SOURCE'):
+        bot.notice('\x01SOURCE Core: https://github.com/maxpowa/Inumuta '
+              '| Modules: https://github.com/maxpowa/inumuta-modules\x01',
+                   destination=trigger.nick)
+
+
+@sopel.module.rule('.*')
 def ctcp_ping(bot, trigger):
-    if 'intent' in trigger.tags and trigger.tags['intent'] == 'PING':
+    if ('intent' in trigger.tags and
+            trigger.tags['intent'].upper() == 'PING'):
         bot.notice('\x01PING {}\x01'.format(trigger.group()),
-                   recipient=trigger.nick)
+                   destination=trigger.nick)
 
 
-@sopel.module.rule('\x01TIME\x01')
-@sopel.module.rate(20)
+@sopel.module.rule('.*')
 def ctcp_time(bot, trigger):
-    dt = datetime.now()
-    current_time = dt.strftime("%A, %d. %B %Y %I:%M%p")
-    bot.write(('NOTICE', trigger.nick),
-              '\x01TIME {0}\x01'.format(current_time))
+    if ('intent' in trigger.tags and
+            trigger.tags['intent'].upper() == 'TIME'):
+        dt = datetime.now()
+        current_time = dt.strftime("%A, %d. %B %Y %I:%M%p")
+        bot.notice('\x01TIME {0}\x01'.format(current_time),
+                   destination=trigger.nick)
