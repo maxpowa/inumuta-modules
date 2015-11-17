@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 admin.py - Sopel Admin Module
 Copyright 2010-2011, Sean B. Palmer (inamidst.com) and Michael Yanovich
@@ -8,22 +8,33 @@ Copyright 2013, Ari Koivula <ari@koivu.la>
 
 Licensed under the Eiffel Forum License 2.
 
-http://sopel.dftba.net
+http://sopel.chat
 """
-from __future__ import unicode_literals
+from __future__ import unicode_literals, absolute_import, print_function, division
 
+from sopel.config.types import (
+    StaticSection, ValidatedAttribute, FilenameAttribute
+)
 import sopel.module
 
 
+class AdminSection(StaticSection):
+    hold_ground = ValidatedAttribute('hold_ground', bool, default=False)
+    """Auto re-join on kick"""
+    auto_accept_invite = ValidatedAttribute('auto_accept_invite', bool,
+                                            default=True)
+
+
 def configure(config):
-    """
-    | [admin] | example | purpose |
-    | -------- | ------- | ------- |
-    | hold_ground | False | Auto re-join on kick |
-    | auto_accept_invite | False | Auto accept invites from non-admin users |
-    """
-    config.add_option('admin', 'hold_ground', "Auto re-join on kick")
-    config.add_option('admin', 'auto_accept_invite', "Auto Accept All Invites")
+    config.define_section('admin', AdminSection)
+    config.admin.configure_setting('hold_ground',
+                                   "Automatically re-join after being kicked?")
+    config.admin.configure_setting('auto_accept_invite',
+                                   'Automatically join channels when invited?')
+
+
+def setup(bot):
+    bot.config.define_section('admin', AdminSection)
 
 
 @sopel.module.require_privmsg
@@ -134,7 +145,7 @@ def hold_ground(bot, trigger):
     WARNING: This may not be needed and could cause problems if sopel becomes
     annoying. Please use this with caution.
     """
-    if bot.config.has_section('admin') and bot.config.admin.hold_ground:
+    if bot.config.admin.hold_ground:
         channel = trigger.sender
         if trigger.args[1] == bot.nick:
             bot.join(channel)
@@ -167,35 +178,46 @@ def set_config(bot, trigger):
     # Get section and option from first argument.
     arg1 = trigger.group(3).split('.')
     if len(arg1) == 1:
-        section, option = "core", arg1[0]
+        section_name, option = "core", arg1[0]
     elif len(arg1) == 2:
-        section, option = arg1
+        section_name, option = arg1
     else:
         bot.reply("Usage: .set section.option value")
+        return
+    section = getattr(bot.config, section_name)
+    static_sec = isinstance(section, StaticSection)
+
+    if static_sec and not hasattr(section, option):
+        bot.say('[{}] section has no option {}.'.format(section_name, option))
         return
 
     # Display current value if no value is given.
     value = trigger.group(4)
     if not value:
-        if not bot.config.has_option(section, option):
-            bot.reply("Option %s.%s does not exist." % (section, option))
+        if not static_sec and bot.config.parser.has_option(section, option):
+            bot.reply("Option %s.%s does not exist." % (section_name, option))
             return
         # Except if the option looks like a password. Censor those to stop them
         # from being put on log files.
         if option.endswith("password") or option.endswith("pass"):
             value = "(password censored)"
         else:
-            value = getattr(getattr(bot.config, section), option)
-        bot.reply("%s.%s = %s" % (section, option, value))
+            value = getattr(section, option)
+        bot.reply("%s.%s = %s" % (section_name, option, value))
         return
 
     # Otherwise, set the value to one given as argument 2.
-    if not bot.config.has_section(section):
-        bot.config.add_section(section)
-    setattr(getattr(bot.config, section), option, value)
-    if option.endswith("password") or option.endswith("pass"):
-        value = "(password censored)"
-    bot.reply("%s.%s = %s" % (section, option, value))
+    if static_sec:
+        descriptor = getattr(section.__class__, option)
+        try:
+            if isinstance(descriptor, FilenameAttribute):
+                value = descriptor.parse(bot.config, descriptor, value)
+            else:
+                value = descriptor.parse(descriptor, value)
+        except ValueError as exc:
+            bot.say("Can't set attribute: " + str(exc))
+            return
+    setattr(section, option, value)
 
 
 @sopel.module.require_privmsg
@@ -205,4 +227,4 @@ def set_config(bot, trigger):
 def save_config(bot, trigger):
     """Save state of sopels config object to the configuration file."""
     bot.config.save()
-    bot.reply('Saved config!')
+    bot.reply('config saved')
