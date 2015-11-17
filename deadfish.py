@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 deadfish.py - The fish are dead
 Copyright 2014 Max Gurela

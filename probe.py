@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 probe.py - Don't worry, it's not your butts.
 Copyright 2014 Max Gurela

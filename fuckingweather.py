@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 fuckingweather.py - Sopel module for The Fucking Weather
 Copyright 2013 Michael Yanovich

@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 bf.py - brainfuck interpreter adapted from
 https://github.com/infinitylabs/uguubot/blob/master/disabled_plugins/bf.py

@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 playerme.py - A module for the "Facebook for gamers", player.me
 Copyright 2014 Max Gurela

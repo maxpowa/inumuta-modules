@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 jpv.py - J-Pop and Vocaloid songs
 Copyright 2014 Max Gurela

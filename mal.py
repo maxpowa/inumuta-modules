@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 mal.py - My Anime List Module
 Copyright 2014 Max Gurela

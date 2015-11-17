@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 logquery.py - Simple log query module
 Copyright 2015 Max Gurela

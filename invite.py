@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 invite.py - Invite all the things
 Copyright 2014 Max Gurela

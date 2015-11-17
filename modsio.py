@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 modsio.py - Mods.io Sopel module
 Copyright 2014 Max Gurela

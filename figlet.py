@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 figlet.py - A simple interface to pyfiglet
 Copyright 2014 Max Gurela

@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 horrible.py - Yeah. The code is horrible too
 Copyright 2015 Max Gurela

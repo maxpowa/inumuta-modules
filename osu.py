@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 osu.py - A module for querying Osu! services
 Copyright 2014 Max Gurela

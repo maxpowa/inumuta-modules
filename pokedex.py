@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 pokedex.py - Get your Pokemon fix!
 Copyright 2014 Max Gurela

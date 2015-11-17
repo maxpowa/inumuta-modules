@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 latex.py - Render LaTeX equations
 Copyright 2014 Max Gurela

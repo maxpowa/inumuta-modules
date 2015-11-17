@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 nickometer.py - We already know how lame your nick is, here's proof
 Copyright 2014 Max Gurela

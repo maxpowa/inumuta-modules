@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 curse.py - Curse Sopel module
 Copyright 2014 Max Gurela

@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 hummingbird.py - You have no life.
 Copyright 2015 Max Gurela

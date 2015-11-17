@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 pagespeed.py - Google pagespeed insights module
 Copyright 2015, Maxfield Gurela

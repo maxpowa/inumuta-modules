@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 bomb.py - Simple Sopel bomb prank game
 Copyright 2012, Edward Powell http://embolalia.net

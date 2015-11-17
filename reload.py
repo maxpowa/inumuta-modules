@@ -46,7 +46,8 @@ def f_reload(bot, trigger):
 
     old_callables = {}
     for obj_name, obj in iteritems(vars(old_module)):
-        bot.unregister(obj)
+        if callable(obj):
+            bot.unregister(obj)
 
     # Also remove all references to sopel callables from top level of the
     # module, so that they will not get loaded again if reloading the

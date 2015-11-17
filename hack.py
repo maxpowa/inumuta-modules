@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 hack.py - Pretend you're doing hacker-ish things (based on http://shinytoylabs.com/jargon/)
 Copyright 2014 Max Gurela

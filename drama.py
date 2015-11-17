@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 drama.py - Creates drama wherever you go!
 Copyright 2014 Max Gurela

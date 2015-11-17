@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 flex.py - FLEX YOUR DAMN DONGERS
 Copyright 2014 Max Gurela

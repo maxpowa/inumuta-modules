@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 amazon.py - amazon plugin adapted from
 https://github.com/infinitylabs/uguubot/blob/master/plugins/amazon.py

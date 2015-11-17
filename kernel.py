@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 kernel.py - Show the current linux kernels
 Copyright 2014 Max Gurela

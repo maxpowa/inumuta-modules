@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 potato.py - Be nice, give people potatoes \o/
 Copyright 2014 Max Gurela

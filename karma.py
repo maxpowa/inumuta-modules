@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 karma.py - maxpowa++
 Copyright 2014 Max Gurela

@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 osrc.py - A module for displaying users open source report card, https://osrc.dfm.io/
 Copyright 2014 Max Gurela

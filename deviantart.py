@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 deviantart.py - Deviantart Sopel module, Displays additional info about deviantart links
 Copyright 2014 Max Gurela

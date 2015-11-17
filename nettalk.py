@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 nettalk.py - Sopel Nettalk Decrypter
 Copyright 2015, Max Gurela <maxpowa@outlook.com>

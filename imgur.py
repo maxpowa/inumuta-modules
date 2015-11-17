@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 imgur.py - Sopel imgur Information Module
 Copyright 2014, Max Gurela

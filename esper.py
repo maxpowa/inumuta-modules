@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 esper.py - An esper is an individual capable of telepathy and other similar paranormal abilities
 Copyright 2014 Max Gurela

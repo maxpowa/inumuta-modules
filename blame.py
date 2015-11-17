@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 blame.py - Don't blame $nickname :V
 Copyright 2014 Max Gurela

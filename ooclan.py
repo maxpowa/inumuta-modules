@@ -1,4 +1,4 @@
-# coding=utf8
+# coding=utf-8
 """
 ooclan.py - GG Bot
 Copyright 2014 Max Gurela
