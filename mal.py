@@ -14,10 +14,10 @@ import json
 def search(title):
     response = '[{}]'
     if is_integer(title.strip()):
-        response = web.get('https://mal-api.test.ramblingahoge.net/anime/' + web.quote(title), verify_ssl=False)
+        response = web.get('https://api.atarashiiapp.com/2/anime/' + web.quote(title), verify_ssl=False)
         return json.loads('[' + response + ']')
     else:
-        response = web.get('https://mal-api.test.ramblingahoge.net/anime/search?q=' + web.quote(title), verify_ssl=False)
+        response = web.get('https://api.atarashiiapp.com/2/anime/search?q=' + web.quote(title), verify_ssl=False)
         return json.loads(response)
 
 
