@@ -1,27 +1,37 @@
-# coding=utf8
+# coding=utf-8
 """
 wikipedia.py - Sopel Wikipedia Module
 Copyright 2013 Edward Powell - embolalia.net
 Licensed under the Eiffel Forum License 2.
 
-http://sopel.dftba.net
+http://sopel.chat
 """
-from __future__ import unicode_literals
+from __future__ import unicode_literals, absolute_import, print_function, division
 from sopel import web, tools
+from sopel.config.types import StaticSection, ValidatedAttribute
 from sopel.module import NOLIMIT, commands, example, rule
 import json
 import re
 
 import sys
 if sys.version_info.major < 3:
-    from urlparse import unquote
+    from urlparse import unquote as _unquote
+    unquote = lambda s: _unquote(s.encode('utf-8')).decode('utf-8') 
 else:
     from urllib.parse import unquote
 
 REDIRECT = re.compile(r'^REDIRECT (.*)')
 
 
+class WikipediaSection(StaticSection):
+    default_lang = ValidatedAttribute('default_lang', default='en')
+    """The default language to find articles from."""
+    lang_per_channel = ValidatedAttribute('lang_per_channel')
+
+
 def setup(bot):
+    bot.config.define_section('wikipedia', WikipediaSection)
+
     regex = re.compile('([a-z]+).(wikipedia.org/wiki/)([^ ]+)')
     if not bot.memory.contains('url_callbacks'):
         bot.memory['url_callbacks'] = tools.SopelMemory()
@@ -29,18 +39,11 @@ def setup(bot):
 
 
 def configure(config):
-    """
-    |  [wikipedia]  | example | purpose |
-    | ------------- | ------- | ------- |
-    | default_lang  | en      | Set the Global default wikipedia lang |
-    """
-    if config.option('Configure wikipedia module', False):
-        config.add_section('wikipedia')
-        config.interactive_add('wikipedia', 'default_lang', 'Wikipedia default language', 'en')
-
-        if config.option('Would you like to configure individual default language per channel', False):
-            c = 'Enter #channel:lang, one at time. When done, hit enter again.'
-            config.add_list('wikipedia', 'lang_per_channel', c, 'Channel:')
+    config.define_section('wikipedia', WikipediaSection)
+    config.wikipedia.configure_setting(
+        'default_lang',
+        "Enter the default language to find articles from."
+    )
 
 
 def mw_search(server, query, num):
@@ -79,6 +82,7 @@ def mw_snippet(server, query):
                    '&action=query&prop=extracts&exintro&explaintext'
                    '&exchars=300&redirects&titles=')
     snippet_url += query
+    print(snippet_url)
     snippet = json.loads(web.get(snippet_url))
     snippet = snippet['query']['pages']
 
@@ -102,16 +106,11 @@ def mw_info(bot, trigger, found_match=None):
 @commands('w', 'wiki', 'wik')
 @example('.w San Francisco')
 def wikipedia(bot, trigger):
-
-    #Set the global default lang. 'en' if not definded
-    if not bot.config.has_option('wikipedia', 'default_lang'):
-        lang = 'en'
-    else:
-        lang = bot.config.wikipedia.default_lang
+    lang = bot.config.wikipedia.default_lang
 
     #change lang if channel has custom language set
     if (trigger.sender and not trigger.sender.is_nick() and
-            bot.config.has_option('wikipedia', 'lang_per_channel')):
+            bot.config.wikipedia.lang_per_channel):
         customlang = re.search('(' + trigger.sender + '):(\w+)',
                                bot.config.wikipedia.lang_per_channel)
         if customlang is not None:
