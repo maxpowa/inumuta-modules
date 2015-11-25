@@ -20,47 +20,6 @@ if sys.version_info.major >= 3:
 else:
     chr = unichr
 
-@module.commands('encode')
-def encode(bot, trigger):
-    encoding = trigger.group(3)
-    text = trigger.group(2)
-    if not encoding or not text:
-        bot.say('encode usage: .encode <encoding> <string>')
-        return
-
-    text = text.replace(encoding, '', 1).strip()
-
-    if (encoding.lower() == 'binary'):
-        bot.say(''.join('{:08b}'.format(ord(c)) for c in text))
-        return
-    try:
-        bot.say(text.encode(encoding, 'strict'))
-    except Exception as e:
-        bot.say('[Encode] {}'.format(e.message))
-
-
-@module.commands('decode')
-def decode(bot, trigger):
-    encoding = trigger.group(3)
-    text = trigger.group(2)
-    if not encoding or not text:
-        bot.say('decode usage: .decode <encoding> <string>')
-        return
-
-    text = text.replace(encoding, '', 1).strip()
-
-    if (encoding.lower() == 'binary'):
-        if (set(text) == set(['1', '0'])):
-            bot.say(''.join(chr(int(text[i:i + 8], 2)) for i in xrange(0, len(text), 8)))
-            return
-        else:
-            bot.say('[Decode] Invalid binary string')
-    try:
-        bot.say(text.decode(encoding, 'strict'))
-    except Exception as e:
-        bot.say('[Decode] {}'.format(e.message))
-
-
 def rotate(l, n):
     return l[n:] + l[:n]
 
