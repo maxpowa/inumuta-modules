@@ -140,7 +140,7 @@ def roll(bot, trigger):
     orig_str = trigger.group(2).lower()
     parts = []
     parts_s = []
-    for piece in trigger.group(2).lower().split('+'):
+    for piece in orig_str.split('+'):
         p, s = term(piece)
         if p == None:
             return bot.reply(s)
