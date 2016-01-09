@@ -1,7 +1,7 @@
 beautifulsoup4
 mcstatus
 tweepy
-tungsten
+wolframalpha
 pyfiglet
 bottle
 dnspython

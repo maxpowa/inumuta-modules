@@ -1,6 +1,7 @@
 beautifulsoup4
 mcstatus
 tweepy
+wolframalpha
 pyfiglet
 bottle
 dnspython3
