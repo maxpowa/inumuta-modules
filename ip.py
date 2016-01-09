@@ -4,7 +4,7 @@
 # Copyright © 2013, Elad Alfassa <elad@fedoraproject.org>
 # Licensed under the Eiffel Forum License 2.
 
-from __future__ import unicode_literals
+from __future__ import unicode_literals, absolute_import, print_function, division
 
 import pygeoip
 import socket
@@ -119,7 +119,7 @@ def ip(bot, trigger):
     except AttributeError:
         response += ' | Location: Unknown'
     except socket.gaierror:
-        return bot.say('[IP/Host Lookup] Invalid IP/Hostname')
+        return bot.say('[IP/Host Lookup] Unable to resolve IP/Hostname')
 
     region_data = gi_city.region_by_name(query)
     try:
@@ -137,4 +137,3 @@ def ip(bot, trigger):
 if __name__ == "__main__":
     from sopel.test_tools import run_example_tests
     run_example_tests(__file__)
-
