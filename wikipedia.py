@@ -16,7 +16,7 @@ import re
 import sys
 if sys.version_info.major < 3:
     from urlparse import unquote as _unquote
-    unquote = lambda s: _unquote(s.encode('utf-8')).decode('utf-8') 
+    unquote = lambda s: _unquote(s.encode('utf-8')).decode('utf-8')
 else:
     from urllib.parse import unquote
 
@@ -82,7 +82,6 @@ def mw_snippet(server, query):
                    '&action=query&prop=extracts&exintro&explaintext'
                    '&exchars=300&redirects&titles=')
     snippet_url += query
-    print(snippet_url)
     snippet = json.loads(web.get(snippet_url))
     snippet = snippet['query']['pages']
 
