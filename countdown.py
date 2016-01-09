@@ -6,7 +6,7 @@ Licensed under the Eiffel Forum License 2.
 
 http://sopel.dfbta.net
 """
-from __future__ import unicode_literals
+from __future__ import unicode_literals, absolute_import, print_function, division
 from sopel.module import commands, NOLIMIT
 import datetime
 
@@ -21,13 +21,17 @@ def generic_countdown(bot, trigger):
         bot.say("Please use correct format: .countdown 2012 12 21")
         return NOLIMIT
     text = trigger.group(2).split()
-    if text and (text[0].isdigit() and text[1].isdigit() and text[2].isdigit()
-            and len(text) == 3):
-        diff = (datetime.datetime(int(text[0]), int(text[1]), int(text[2]))
-                - datetime.datetime.today())
-        bot.say(str(diff.days) + " days, " + str(diff.seconds / 60 / 60)
+    if text and (len(text) == 3 and text[0].isdigit() and text[1].isdigit()
+                 and text[2].isdigit()):
+        try:
+            diff = (datetime.datetime(int(text[0]), int(text[1]), int(text[2]))
+                    - datetime.datetime.today())
+        except:
+            bot.say("Please use correct format: .countdown 2012 12 21")
+            return NOLIMIT
+        bot.say(str(diff.days) + " days, " + str(diff.seconds // 3600)
                    + " hours and "
-                   + str(diff.seconds / 60 - diff.seconds / 60 / 60 * 60)
+                   + str(diff.seconds % 3600 // 60 )
                    + " minutes until "
                    + text[0] + " " + text[1] + " " + text[2])
     else:
