@@ -5,10 +5,10 @@ Copyright 2010-2011, Michael Yanovich, Alek Rollyson, and Edward Powell
 Copyright © 2012, Elad Alfassa <elad@fedoraproject.org>
 Licensed under the Eiffel Forum License 2.
 
-http://sopel.dftba.net/
+http://sopel.chat/
 
 """
-from __future__ import unicode_literals
+from __future__ import unicode_literals, absolute_import, print_function, division
 
 import re
 from sopel import formatting
@@ -118,8 +118,8 @@ def kick(bot, trigger):
         channel = opt
         reasonidx = 3
     reason = ' '.join(text[reasonidx:])
-    if nick != bot.config.nick:
-        bot.write(['KICK', channel, nick, reason])
+    if nick != bot.config.core.nick:
+        bot.write(['KICK', channel, nick], reason)
 
 
 def configureHostMask(mask):
@@ -254,7 +254,7 @@ def unquiet(bot, trigger):
     quietmask = configureHostMask(quietmask)
     if quietmask == '':
         return
-    bot.write(['MODE', opt, '-q', quietmask])
+    bot.write(['MODE', channel, '-q', quietmask])
 
 
 @require_chanmsg
@@ -276,6 +276,7 @@ def kickban(bot, trigger):
     opt = Identifier(text[1])
     nick = opt
     mask = text[2]
+    channel = trigger.sender
     reasonidx = 3
     if not opt.is_nick():
         if argc < 5:
@@ -289,7 +290,7 @@ def kickban(bot, trigger):
     if mask == '':
         return
     bot.write(['MODE', channel, '+b', mask])
-    bot.write(['KICK', channel, nick, ' :', reason])
+    bot.write(['KICK', channel, nick], reason)
 
 
 @require_chanmsg
