@@ -24,7 +24,7 @@ def dig(bot, trigger):
     request.flags |= dns.flags.AD
     request.find_rrset(request.additional, dns.name.root, ADDITIONAL_RDCLASS,
                        dns.rdatatype.OPT, create=True, force_unique=True)       
-    response = dns.query.udp(request, NAME_SERVER)
+    response = dns.query.tcp(request, NAME_SERVER)
     bot.say('Sending results in a PM')
     for line in str(response).split('\n'):
         bot.msg(trigger.nick, line)
@@ -43,4 +43,4 @@ def rdns(bot, trigger):
             addr = addr[:-1]
         bot.say(addr)
     except:
-        bot.say('Hey dipshit, you\'re supposed to give .rdns an IP!')    
+        bot.say('You\'re supposed to give .rdns an IP!')    
