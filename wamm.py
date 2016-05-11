@@ -43,6 +43,12 @@ def docker(bot, trigger):
     bot.say('http://i.imgur.com/syIGxF0.png')
 
 
+@module.commands('selene', 'selini')
+@module.nickname_commands('selene', 'selini')
+def selene(bot, trigger):
+    bot.say('http://i.imgur.com/CEsyZTz.png')
+
+
 @module.commands('under')
 def underwhere(bot, trigger):
     if not trigger.group(2):
