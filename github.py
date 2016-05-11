@@ -404,6 +404,10 @@ def get_targets(repo):
     #willie_instance.msg('#Inumuta', 'Result: '+json.dumps(result))
     return result
 
+@bottle.error(500)
+def error_handler(error):
+    print(repr(error))
+
 
 @bottle.get("/webhook")
 def show_hook_info():
@@ -462,7 +466,7 @@ def handle_auth_response():
 
         data = {
             "name": "web",
-            "active": "true",
+            "active": True,
             "events": ["*"],
             "config": {
                 "url": "http://xpw.us/webhook",
@@ -477,7 +481,7 @@ def handle_auth_response():
             if 'errors' in res:
                 raise ValueError(', '.join([error['message'] for error in res['errors']]))
             else:
-                raise ValueError('Webhook creation failed, try again.')
+                raise ValueError('Webhook creation failed. If you\'re creating a webhook on an organization repo, please ensure you\'ve granted Inumuta IRC Bot access to the organization at https://github.com/settings/applications')
 
         raw, headers = web.get(res['ping_url'] + '?access_token={}'.format(access_token), return_headers=True)
 
@@ -760,8 +764,8 @@ def fmt_push_summary_message(payload=None, row=None):
         message.append("\00304deleted\017 {} at {}".format(fmt_branch(get_ref_name()), fmt_hash(get_before_sha())))
 
     elif payload['forced']:
-        message.append("\00304force-pushed\017 {} from {} to {}").format(
-                       fmt_branch(get_ref_name()), fmt_hash(get_before_sha()), fmt_hash(get_after_sha()))
+        message.append("\00304force-pushed\017 {} from {} to {}".format(
+                       fmt_branch(get_ref_name()), fmt_hash(get_before_sha()), fmt_hash(get_after_sha())))
 
     elif len(payload['commits']) > 0 and len(get_distinct_commits()) == 0:
         if payload['base_ref']:
