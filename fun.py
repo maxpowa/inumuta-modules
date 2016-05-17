@@ -139,6 +139,14 @@ def rimshot(bot, trigger):
     bot.say('*Badumtsss*')
 
 
+@module.commands('praise')
+def praise(bot, trigger):
+    """
+    .praise - ༼ つ ◕_◕ ༽つ PRAISE HELIX ༼ つ ◕_◕ ༽つ
+    """
+    bot.say('\u0F3C \u3064 \u25D5_\u25D5 \u0F3D\u3064 PRAISE HELIX \u0F3C \u3064 \u25D5_\u25D5 \u0F3D\u3064')
+
+
 @module.commands('uwot')
 def uwot(bot, trigger):
     """
