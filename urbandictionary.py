@@ -28,12 +28,12 @@ def ud_search(bot, trigger):
     url = 'http://api.urbandictionary.com/v0/define?term=%s' % (query.encode('utf-8'))
     #bot.say(url)
     try:
-        response = web.get_urllib_object(url, 20)
+        response = web.get(url)
     except UnicodeError:
         bot.say('[UrbanDictionary] ENGLISH MOTHERFUCKER, DO YOU SPEAK IT?')
         return
     else:
-        data = json.loads(response.read())
+        data = json.loads(response)
         #bot.say(str(data))
     try:
         definition = data['list'][0]['definition'].replace('\n', ' ')

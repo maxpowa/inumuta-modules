@@ -16,7 +16,6 @@ import sopel
 import sopel.module
 import sopel.web
 
-wait_time = 24 * 60 * 60  # check once per day
 startup_check_run = False
 version_url = 'http://sopel.chat/latest.json'
 message = (
@@ -38,8 +37,9 @@ def startup_version_check(bot, trigger):
         check_version(bot)
 
 
-@sopel.module.interval(wait_time)
-def check_version(bot):
+@sopel.module.require_admin
+@sopel.module.commands('check_update')
+def check_version(bot, trigger):
     version = sopel.version_info
 
     info = json.loads(sopel.web.get(version_url))
@@ -55,5 +55,6 @@ def check_version(bot):
     msg = message.format(latest, sopel.__version__, notes)
 
     if version < latest_version:
-        bot.msg(bot.config.core.owner, msg)
-
+        bot.reply(msg)
+    else:
+        bot.reply('No new version available. I am running {}'.format(sopel.__version__))
