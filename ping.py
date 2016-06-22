@@ -24,7 +24,7 @@ def ping(bot, trigger):
     command.append(trigger.group(3))
     p = Popen(command, stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=False)
     output, error = p.communicate()
-    bot.say('[Ping] ' + error)
+    bot.say('[Ping] {}'.format(error.decode('utf-8')))
 
 
 @commands('cping')
