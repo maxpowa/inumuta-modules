@@ -47,15 +47,13 @@ def status(bot, trigger):
 
     try:
         status = server.status()
-        desc = ' '.join(re.sub('\u00A7.', '', status.description).split())
+        desc = status.description
+        if isinstance(status.description, dict):
+            desc = status.description['text']
+        desc = ' '.join(re.sub('\u00A7.', '', desc).split())
         bot.say('[MCS] {0} | {1} players | {2} ms | {3}'.format(trigger.group(3).strip(), status.players.online, status.latency, desc))
     except Exception as e:
-        try:
-            raw = web.get('http://minespy.net/api/serverping/' + str(server.host) + ':' + str(server.port))
-            status = json.loads(raw)
-            bot.say('[MCS] {0} | {1} players | {2} ms | {3}'.format(trigger.group(3).strip(), str(status['online']), str(status['latency']), str(status['strippedmotd'])))
-        except Exception as e:
-            bot.say('[MCS] Unable to fetch info from \'{}\' ({})'.format(trigger.group(3).strip(), e))
+        bot.say('[MCS] Unable to fetch info from \'{}\' ({})'.format(trigger.group(3).strip(), e))
 
 
 @commands('mcstatus', 'mcs')
