@@ -50,8 +50,17 @@ def status(bot, trigger):
         desc = status.description
         if isinstance(status.description, dict):
             desc = status.description['text']
+        srv_type = 'Vanilla'
+        srv_version = '???'
+        if status.version.name:
+            srv_version = status.version.name
+        modinfo = status.raw.get('modinfo', None)
+        if modinfo:
+            srv_type = modinfo.get('type', '???')
+            mod_count = len(modinfo.get('modList', []))
+            srv_version = '{} ({:,} mods)'.format(srv_version, mod_count)
         desc = ' '.join(re.sub('\u00A7.', '', desc).split())
-        bot.say('[MCS] {0} | {1} players | {2} ms | {3}'.format(trigger.group(3).strip(), status.players.online, status.latency, desc))
+        bot.say('[MCS] {} | {} {} | {} players | {} ms | {}'.format(trigger.group(3).strip(), srv_type, srv_version, status.players.online, status.latency, desc))
     except Exception as e:
         bot.say('[MCS] Unable to fetch info from \'{}\' ({})'.format(trigger.group(3).strip(), e))
 
