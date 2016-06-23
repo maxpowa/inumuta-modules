@@ -168,6 +168,17 @@ def raise_dongers(bot, trigger):
         bot.say('\u30FD\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\uFF89 raise your dongers \u30FD\u0F3C\u0E88\u0644\u035C\u0E88\u0F3D\uFF89')
 
 
+@module.commands('praise')
+def praise_the_sun(bot, trigger):
+    """
+    .praise [the sun] - \[T]/
+    """
+    if trigger.group(2):
+        bot.say('\[T]/ \[T]/ PRAISE {}! \[T]/ \[T]/'.format(trigger.group(2).strip().upper()))
+    else:
+        bot.say('\[T]/ \[T]/ PRAISE THE SUN! \[T]/ \[T]/')
+
+
 @module.commands('fight')
 def fight_me(bot, trigger):
     """
