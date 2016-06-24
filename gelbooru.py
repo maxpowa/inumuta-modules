@@ -96,4 +96,4 @@ def gelbooru_url(bot, trigger):
 
 
 def get_soup(url):
-    return BeautifulSoup(web.get(url), 'lxml')
+    return BeautifulSoup(web.get(url), 'html.parser')
