@@ -55,6 +55,10 @@ def amazon_url(bot, trigger):
 
 
     breadcrumb = soup.find("li", class_='breadcrumb')
+    if not breadcrumb:
+        breadcrumb = soup.find('div', id='wayfinding-breadcrumbs_feature_div')
+    if not breadcrumb:
+        breadcrumb = soup.find('span', class_='cat-link')
     if breadcrumb:
         breadcrumb = ' '.join(breadcrumb.stripped_strings)
     else:
