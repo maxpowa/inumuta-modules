@@ -52,11 +52,11 @@ def ud_search(bot, trigger):
         udoutput = "[UrbanDictionary] %s; %.*s%s | %s >> %s %s" % (query, 445 - length, definition, ellipsies, permalink, thumbsup, thumbsdown)
         if not "spam spam" in udoutput:
             if not trigger.sender.is_nick() and bot.privileges[trigger.sender][trigger.nick] < VOICE:
-                bot.notice(udoutput, recipient=trigger.nick)
+                bot.notice(udoutput, destination=trigger.nick)
             else:
                 bot.say(udoutput)
         else:
             if not trigger.sender.is_nick() and bot.privileges[trigger.sender][trigger.nick] < VOICE:
-                bot.notice('[UrbanDictionary] Negative ghostrider', recipient=trigger.nick)
+                bot.notice('[UrbanDictionary] Negative ghostrider', destination=trigger.nick)
             else:
                 bot.say('[UrbanDictionary] Negative ghostrider')

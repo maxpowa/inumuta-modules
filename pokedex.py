@@ -38,15 +38,15 @@ def pokedex(bot, trigger):
 
     if trigger.group(3).lower() == 'manual':
         bot.action('opens the Pok\u00E9dex man pages (transmitted via notice)')
-        bot.notice('The pok\u00e9dex is operated with two base commands, either .dex or .pokedex', recipient=trigger.nick)
-        bot.notice('\u0081', recipient=trigger.nick)
-        bot.notice('You may use the pokedex to research the following things:', recipient=trigger.nick)
-        bot.notice(' - Pok\u00e9mon         .dex Abra or .dex 63', recipient=trigger.nick)
-        bot.notice(' - Pok\u00e9mon stats   .dex -s Abra or .dex -s 63', recipient=trigger.nick)
-        bot.notice(' - Pok\u00e9mon moves   .dex move:tackle', recipient=trigger.nick)
-        bot.notice(' - Pok\u00e9mon types   .dex type:psychic', recipient=trigger.nick)
-        bot.notice(' - Items           .dex item:master ball', recipient=trigger.nick)
-        bot.notice('For language-specific results, just prepend @<lang code>. (e.g. .dex @en:charge)', recipient=trigger.nick)
+        bot.notice('The pok\u00e9dex is operated with two base commands, either .dex or .pokedex', destination=trigger.nick)
+        bot.notice('\u0081', destination=trigger.nick)
+        bot.notice('You may use the pokedex to research the following things:', destination=trigger.nick)
+        bot.notice(' - Pok\u00e9mon         .dex Abra or .dex 63', destination=trigger.nick)
+        bot.notice(' - Pok\u00e9mon stats   .dex -s Abra or .dex -s 63', destination=trigger.nick)
+        bot.notice(' - Pok\u00e9mon moves   .dex move:tackle', destination=trigger.nick)
+        bot.notice(' - Pok\u00e9mon types   .dex type:psychic', destination=trigger.nick)
+        bot.notice(' - Items           .dex item:master ball', destination=trigger.nick)
+        bot.notice('For language-specific results, just prepend @<lang code>. (e.g. .dex @en:charge)', destination=trigger.nick)
         return
 
     query = trigger.group(2).strip()
@@ -306,4 +306,4 @@ def parse_disambig(bot, soup, sender=None):
     if (len(things) > 10):
         things = things[:10]
     bot.say('[Pok\u00E9dex] Sorry, I couldn\'t find exactly what you\'re looking for. I did find ' + str(len(things)) + ' possible results though. (transmitted via notice)')
-    [bot.notice(' - ' + re.sub(r'\(.+\)$', '', thing), recipient=sender) for thing in things]
+    [bot.notice(' - ' + re.sub(r'\(.+\)$', '', thing), destination=sender) for thing in things]
