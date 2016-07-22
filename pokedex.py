@@ -111,7 +111,7 @@ def follow_redirects(bot, url):
 
 
 def get_soup(url):
-    return BeautifulSoup(web.get(url, headers={'User-Agent': user_agent}), 'lxml')
+    return BeautifulSoup(web.get(url, headers={'User-Agent': user_agent}), 'html.parser')
 
 
 def parse_move(bot, soup):

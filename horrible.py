@@ -29,7 +29,7 @@ def horrible(bot, trigger):
     if latest:
         url = 'http://horriblesubs.info/lib/latest.php'
 
-    soup = BeautifulSoup(web.get(url.format(query)), 'lxml')
+    soup = BeautifulSoup(web.get(url.format(query)), 'html.parser')
 
     ep = soup.find_all('div', {'class': 'episode'})
 

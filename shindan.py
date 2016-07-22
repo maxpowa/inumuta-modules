@@ -53,4 +53,4 @@ def follow_redirects(url):
 
 
 def get_soup(raw):
-    return BeautifulSoup(raw, 'lxml')
+    return BeautifulSoup(raw, 'html.parser')

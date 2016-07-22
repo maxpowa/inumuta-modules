@@ -58,7 +58,7 @@ def steamsearch(bot, trigger):
     if not inp:
         return bot.reply(steamsearch.__doc__.strip())
     page = web.get("http://store.steampowered.com/search/?term=" + inp)
-    soup = BeautifulSoup(page, 'lxml', from_encoding="utf-8")
+    soup = BeautifulSoup(page, 'html.parser', from_encoding="utf-8")
     result = soup.find('a', {'class': 'search_result_row'})
     try:
         return bot.say(get_steam_info(result['href']) + " - " + result['href'].split('?')[0])

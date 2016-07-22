@@ -36,4 +36,4 @@ def request_premium(url_scrape):
 
 
 def get_soup(content):
-    return BeautifulSoup(content, 'lxml')
+    return BeautifulSoup(content, 'html.parser')
