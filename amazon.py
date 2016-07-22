@@ -8,7 +8,7 @@ Licensed under the Eiffel Forum License 2.
 from __future__ import unicode_literals
 from sopel import tools, web
 from sopel.module import commands, rule
-from lxml import html
+from bs4 import BeautifulSoup
 import json
 import re
 import sys
@@ -25,36 +25,54 @@ def setup(sopel):
 
 @rule(r'(https?:\/\/(www\.)?amazon\.com/[^ ]+)')
 def amazon_url(bot, trigger):
-    item = html.fromstring(web.get(trigger.group(1)))
-    try:
-        title = item.xpath("//span[@id='productTitle']/text()")[0]
-    except:
-        title = item.xpath("//span[@id='btAsinTitle']/text()")[0]
-    try:
-        price = item.xpath("//span[@id='priceblock_ourprice']/text()")[0]
-    except:
-        try:
-            price = item.xpath("//span[@id='priceblock_saleprice']/text()")[0]
-        except:
-            try:
-                price = item.xpath("//b[@class='priceLarge']/text()")[0]
-            except:
-                price = "$?"
-    try:
-        rating = item.xpath("//div[@id='avgRating']/span/text()")[0].strip()
-    except:
-        rating = item.xpath("//div[@class='gry txtnormal acrRating']/text()")[0].strip()
-    try:
-        breadcrumb = ' '.join(item.xpath("//li[@class='breadcrumb']")[0].text_content().split())
-    except:
-        breadcrumb = "Unknown"
+    soup = get_soup(trigger.group(1))
 
-    star_count = round(float(rating.split(' ')[0]), 0)
-    stars = ''
-    for x in xrange(0, int(star_count)):
-        stars += u'\u2605'
-    for y in xrange(int(star_count), 5):
-        stars += u'\u2606'
+    title = soup.find(id='productTitle')
+    if not title:
+        title = soup.find(id='btAsinTitle')
+    if title:
+        title = ' '.join(title.stripped_strings)
+    else:
+        title = "Unknown item"
+
+    price = soup.find(id='priceblock_ourprice')
+    if not price:
+        price = soup.find("span", id='priceblock_saleprice')
+    if not price:
+        price = soup.find("b", class_='priceLarge')
+    if price:
+        price = ' '.join(price.stripped_strings)
+    else:
+        price = '$?'
+
+    rating = soup.find(id='reviewStarsLinkedCustomerReviews')
+    if not rating:
+        rating = soup.find(id='avgRating')
+    if not rating:
+        rating = soup.find("div", class_='gry txtnormal acrRating')
+    if rating:
+        rating = ' '.join(rating.stripped_strings)
+
+
+    breadcrumb = soup.find("li", class_='breadcrumb')
+    if breadcrumb:
+        breadcrumb = ' '.join(breadcrumb.stripped_strings)
+    else:
+        breadcrumb = 'Unknown'
+
+    if rating:
+        star_count = round(float(rating.split(' ')[0]), 0)
+        stars = ''
+        for x in xrange(0, int(star_count)):
+            stars += u'\u2605'
+        for y in xrange(int(star_count), 5):
+            stars += u'\u2606'
+    else:
+        stars = '???'
 
     out = ['[Amazon]', title, '|', breadcrumb, '|', stars, '|', price]
     bot.say(' '.join(out))
+
+
+def get_soup(url):
+    return BeautifulSoup(web.get(url), 'html.parser')
