@@ -33,7 +33,8 @@ def neat(bot, trigger):
 @module.rate(10)
 @module.rule('.*(?:l-)?lewd.*')
 def lewd(bot, trigger):
-    bot.say('https://i.imgur.com/reAqk3e.png')
+    messages = ['https://i.imgur.com/reAqk3e.png', 'http://i.imgur.com/I3apoUB.gif', 'http://i.imgur.com/um5vVcC.gif', 'http://i.imgur.com/pTb7vbZ.gif', 'http://i.imgur.com/cqiyR1L.gif', 'http://i.imgur.com/vZnMTFn.gif', 'http://i.imgur.com/Ftuig9v.gif', 'http://i.imgur.com/Gygj9sg.gif', 'http://i.imgur.com/pPVVu2b.gif', 'http://i.imgur.com/7QCizTa.gif', 'http://i.imgur.com/PS12w7X.gif', 'http://i.imgur.com/eBjiGR9.gif', 'http://i.imgur.com/7ncmr6H.png']
+    bot.say("Lewd! " + random.choice(messages))
 
 
 @module.commands('rainbow')
