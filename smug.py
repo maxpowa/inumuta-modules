@@ -1,7 +1,7 @@
 # coding=utf-8
 # Adapted from https://github.com/dasu/syrup-willie-modules/blob/2d737ccf73abbe17edd4e96bee9600b67eab4ba9/smug.py
 
-from willie.module import commands
+from sopel.module import commands
 import random
 
 smuglist = ['MZqGg95.png', 'h6mkYlW.jpg', 'LDhYNOS.png', 'tieHaeH.jpg', 'mfCYU45.jpg', 'kPhNAdN.png', 'zF32B7U.png',
