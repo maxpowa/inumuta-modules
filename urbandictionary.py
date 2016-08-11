@@ -25,7 +25,7 @@ else:
 def ud_search(bot, trigger):
     query = trigger.group(2).strip()
 
-    url = 'http://api.urbandictionary.com/v0/define?term=%s' % (query.encode('utf-8'))
+    url = 'http://api.urbandictionary.com/v0/define?term=%s' % (quote(query))
     #bot.say(url)
     try:
         response = web.get(url)
