@@ -9,11 +9,14 @@ from __future__ import unicode_literals
 from mcstatus import MinecraftServer
 from sopel.module import commands
 from sopel import web
+from sopel.tools.time import get_timezone, format_time
 from sopel.formatting import color, bold
+from dateutil import parser
 import uuid
 import time
 import json
 import re
+import traceback
 
 
 @commands('uuid')
@@ -82,6 +85,55 @@ def mcstats(bot, trigger):
         bot.say(''.join(out))
     except Exception as e:
         bot.say('[MCS] Mojang server status check is currently offline. ({})'.format(e))
+
+
+@commands('mcversion', 'mcv')
+def mcversion(bot, trigger):
+    """
+    .mcversion [version] - Get information on the latest minecraft versions
+    """
+    try:
+        raw = web.get('https://launchermeta.mojang.com/mc/game/version_manifest.json')
+        response = json.loads(raw)
+
+        versions = parse_versions(response, trigger)
+
+        if len(versions) < 1:
+            bot.reply('Unable to find minecraft version matching "{}"'.format(trigger.group(2)))
+        else:
+            for version in versions:
+                version = convert_version(bot, trigger, version)
+                bot.say('{mode} {type} {id} | {releaseTime}'.format(**version))
+
+    except Exception as e:
+        traceback.print_exc()
+        bot.say('Unable to get minecraft version information ({})'.format(e))
+
+
+def parse_versions(response, trigger=None):
+    lookup = response.get('latest', {}).values()
+    mode = 'Latest'
+    if trigger and trigger.group(2):
+        lookup = trigger.group(2).split()
+        mode = 'Found'
+
+    responses = []
+    for version in response.get('versions', []):
+        if version.get('id', '') in lookup:
+            version['mode'] = mode
+            responses.append(version)
+
+    return responses
+
+
+def convert_version(bot, trigger, version):
+    tz = get_timezone(bot.db, bot.config, None, trigger.nick,
+                      trigger.sender)
+    timestamp = format_time(bot.db, bot.config, tz, trigger.nick,
+                            trigger.sender, parser.parse(version.get('releaseTime', '')))
+    version['releaseTime'] = timestamp
+    version['type'] = version.get('type', '').replace('_', ' ')
+    return version
 
 
 @commands('mcpaid', 'haspaid')

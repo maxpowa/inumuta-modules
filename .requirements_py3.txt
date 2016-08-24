@@ -2,6 +2,7 @@ beautifulsoup4
 mcstatus
 tweepy
 wolframalpha
+python-datetim
 pyfiglet
 bottle
 dnspython3
